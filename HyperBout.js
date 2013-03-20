@@ -1,26 +1,24 @@
 var hyperBout = function()
 {
-	var backgroundCanvas = document.getElementById('backgroundCanvas').getContext("2d");
-	var backgroundCanvasContext = document.get
-	var hyperHeight = 700;
-	var hyperWidth = 600;
-	return{
-		backgroundCanvas : backgroundC,
-		height : hyperHeight,
-		width : hyperWidth
-	};
-
+    return new CanvasWrapper('backgroundCanvas', 600, 700);
 };
 
 var Engine = function()
 {
-	this.hyperBout = hyperBout();
-	backgroundImg = new Image();
-	backgroundImg.src = 'images/Background.png';
-	this.hyperBout.backgroundC.drawImage(backGroundImg,0,0);
-}
+    this.hyperBout = hyperBout();
+    var backgroundImg = new Image();
+    backgroundImg.src = 'images/Background.png';
+    this.hyperBout.ctx.drawImage(backgroundImg,0,0);
+};
 
 Engine.prototype.start = function(args)
 {
-	
+    
+};
+
+function CanvasWrapper(domId, width, height) {
+    this.canvas = document.getElementById(domId);
+    this.ctx = this.canvas.getContext('2d');
+    this.width = width;
+    this.height = height;
 }
