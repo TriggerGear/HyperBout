@@ -4,8 +4,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Hyper Bout!</title>
         <link type="text/css" rel="stylesheet" href="style/main.css">
-        <script src="HyperBout.js"></script> 
-        <script type="application/javascript">
+        <script type = "text/javascript" src="HyperBout.js"></script> 
+        <script type="text/javascript">
             function start() {
                 var test = new Engine();
                 test.start();
@@ -14,10 +14,11 @@
     </head>
     <body onload="start()">
         <div id="main">
-            <canvas id="backgroundCanvas" style="border: 10px solid #F00;" height="700" width="600"></canvas>
+            <canvas id="backgroundCanvas" style="border: 10px solid #F00;" height="548" width="1122"></canvas>
         </div>
         <div id="game-images">
             <img src="images/Background.png" id="background" alt="back-ground" style="display:none"/>
+            <img src="images/playerStationary.png" id="playerStanding" alt="player" style="display:none"/>
         </div>
     </body>
 

@@ -1,6 +1,7 @@
+
 var hyperBout = function()
 {
-    return new CanvasWrapper('backgroundCanvas', 600, 700);
+    return new CanvasWrapper('backgroundCanvas', 1122, 548);
 };
 
 var Engine = function()
@@ -8,7 +9,7 @@ var Engine = function()
     this.hyperBout = hyperBout();
     var backgroundImg = new Image();
     backgroundImg.src = 'images/Background.png';
-    this.hyperBout.ctx.drawImage(backgroundImg,0,0);
+    this.hyperBout.ctx.drawImage(backgroundImg, 0, 0);
 };
 
 Engine.prototype.start = function(args)
@@ -22,3 +23,9 @@ function CanvasWrapper(domId, width, height) {
     this.width = width;
     this.height = height;
 }
+
+var Player = function(){
+
+
+};
+
