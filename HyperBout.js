@@ -1,6 +1,7 @@
 var hyperBout = function()
 {
-	var background = document.getElementById('backgroundCanvas').getContext('2d');
+	var backgroundCanvas = document.getElementById('backgroundCanvas').getContext("2d");
+	var backgroundCanvasContext = document.get
 	var hyperHeight = 700;
 	var hyperWidth = 600;
 	return{
@@ -17,8 +18,6 @@ var Engine = function()
 	backgroundImg = new Image();
 	backgroundImg.src = 'images/Background.png';
 	this.hyperBout.backgroundC.drawImage(backGroundImg,0,0);
-
-
 }
 
 Engine.prototype.start = function(args)
