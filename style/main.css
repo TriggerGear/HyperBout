@@ -1,12 +1,6 @@
 @CHARSET "ISO-8859-1";
 
 /*--------------------------------Main----------------------------------------- */
-#main {
-    position: relative;
-    height: 700px;
-    width: 600px;
-    background: #eee;
-}
 #main canvas {
     position: absolute;
     left: 0;
