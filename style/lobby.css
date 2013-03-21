@@ -26,3 +26,7 @@ h2 {
     -moz-box-shadow: 2px 2px 2px #000;
     box-shadow: 2px 2px 2px #000;
 }
+form { 
+    margin: 0 auto; 
+    width:250px;
+}
