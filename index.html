@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Hyper Bout!</title>
         <link type="text/css" rel="stylesheet" href="style/main.css">
+        <script type = "text/javascript" src="jquery.js"></script>
         <script type = "text/javascript" src="HyperBout.js"></script> 
         <script type="text/javascript">
             function start() {
@@ -14,6 +15,7 @@
     <body onload="start()">
         <div id="main">
             <canvas id="backgroundCanvas" style="border: 10px solid #F00;" height="548" width="1122">Not supported.</canvas>
+            <canvas id="entityCanvas" height="548" width="1122"></canvas>
         </div>
         <div id="game-images">
             <img src="images/Background.png" id="background" alt="back-ground" style="display:none"/>

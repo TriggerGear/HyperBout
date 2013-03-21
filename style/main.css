@@ -15,3 +15,6 @@
 #backgroundCanvas {
     z-index: 1;
 }
+#entityCanvas{
+	z-index: 2;
+}
