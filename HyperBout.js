@@ -1,3 +1,22 @@
+//Creating a box2d namespace, so we can call the instances
+//by just doing box2d.b2Vec2 etc.
+var box2d = {
+   b2Vec2 : Box2D.Common.Math.b2Vec2,
+   b2BodyDef : Box2D.Dynamics.b2BodyDef,
+   b2Body : Box2D.Dynamics.b2Body,
+   b2FixtureDef : Box2D.Dynamics.b2FixtureDef,
+   b2Fixture : Box2D.Dynamics.b2Fixture,
+   b2World : Box2D.Dynamics.b2World,
+   b2MassData : Box2D.Collision.Shapes.b2MassData,
+   b2PolygonShape : Box2D.Collision.Shapes.b2PolygonShape,
+   b2CircleShape : Box2D.Collision.Shapes.b2CircleShape,
+   b2DebugDraw : Box2D.Dynamics.b2DebugDraw
+};
+//Box2d measures things in meters, to compensate
+//we are going to be converting it to pixels. Scale to convert
+//is 30. 
+var SCALE = 30;
+var world;
 
 
 var hyperBout = function()
@@ -9,10 +28,6 @@ var hyperBout = function()
 
 var Engine = function()
 {   
-    //Test the update and draw methods
-    this.textX = 0;
-    this.textY = 0;
-
     //Create a new hyperBout object.
     this.hyperBout = hyperBout();
 
@@ -23,18 +38,85 @@ var Engine = function()
 
     //Create the player
     this.player = new Player();
-    
-    //Start the engine
+
+    //Variable reference to this engine
     var self = this;
+    //Set dem physics
+    self.setupPhysics();
+
+
+    entityCanvas.onclick = function()
+    {
+        var fixDef = new box2d.b2FixtureDef();
+        fixDef.density = 1;
+        fixDef.friction = 0.5;
+        fixDef.restiution = 0.5;
+
+        var bodyDef = new box2d.b2BodyDef();
+        bodyDef.type = box2d.b2Body.b2_dynamicBody; //We're setting the ground to static.
+        bodyDef.position.x =Math.random()*1122 / SCALE; //Registration point is in the center for box2d entities.
+        bodyDef.position.y = 0;
+        fixDef.shape = new box2d.b2CircleShape(Math.random()*100 / SCALE); //setting the shape of the ground.
+        
+    
+        world.CreateBody(bodyDef).CreateFixture(fixDef);
+    }
+
+    //Start the engine, vroom!
     $(document).ready(function() { self.start(); });
 };
+//Awe yeah sweeet physaks
+Engine.prototype.setupPhysics = function(){
+    //The b2Vec2 require 2 variables, gravity for X and Y axis. Since we don't want
+    //any gravity on the X axis, we set it to 0 and we'll set Y to 50 for now.
+    //true at the end means we're allowing bodies to sleep, this improves performance
+    //when entities come to a halt.
+    world = new box2d.b2World(new box2d.b2Vec2(0,50), true);
 
+    //Create ground
+    var fixDef = new box2d.b2FixtureDef();
+    fixDef.density = 1;
+    fixDef.friction = 0.5;
+
+    //Now we need to define the body, static (not affected by gravity), dynamic (affected by grav)
+    var bodyDef = new box2d.b2BodyDef();
+    bodyDef.type = box2d.b2Body.b2_staticBody; //We're setting the ground to static.
+    bodyDef.position.x = 1122 / 2 / SCALE; //Registration point is in the center for box2d entities.
+    bodyDef.position.y = 548 / SCALE;
+    fixDef.shape = new box2d.b2PolygonShape; //setting the shape of the ground.
+    fixDef.shape.SetAsBox((1122 / SCALE) / 2, (20 / SCALE)/2);
+    //Add the ground to the world, yeah!
+    world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+    //Box2d has some nice default drawing, so let's draw the ground.
+    var debugDraw = new box2d.b2DebugDraw();
+    debugDraw.SetSprite(document.getElementById("entityCanvas").getContext("2d"));
+    debugDraw.SetDrawScale(SCALE);
+    debugDraw.SetFillAlpha(0.3);
+    debugDraw.SetLineThickness(1.0);
+    //Says what we want to draw
+    debugDraw.SetFlags(box2d.b2DebugDraw.e_shapeBit | box2d.b2DebugDraw.e_jointBit);
+    world.SetDebugDraw(debugDraw);
+}
+//Array of input handlers
 Engine.InputHandlers = [ ];
 
 Engine.InputHandler = function(tag, handler) {
     this.tag = tag;
     this.handler = handler;
 };
+
+Engine.UpdateState = function(){
+    //Stores all of the current powerups on the field
+    var powerUps = new Array();
+    //Stores the time left inside the game.
+    var timeLeft;
+    //STores the number of players currently inside the game.
+    var players;
+    //Top player stores the current player with the most points
+    var topPlayer;
+
+}
 
 Engine.RegisterInputHandler = function(inputHandler) {
     if (!(inputHandler instanceof Engine.InputHandler)) {
@@ -60,8 +142,9 @@ Engine.RemoveInputHandler = function(tag) {
     }
 }
 
-//Set the frames per second to 
+//Set the frames per second to 30
 var FPS = 30;
+
 Engine.prototype.start = function()
 {
     // use jQuery to bind to all key press events
@@ -82,19 +165,19 @@ Engine.prototype.draw = function()
 {
     //Clear the canvas
     this.hyperBout.entityctx.clearRect(0, 0, this.hyperBout.width, this.hyperBout.height);
-    
-    //Test text drawing
-    this.hyperBout.entityctx.fillStyle = "#ffffff";
-    this.hyperBout.entityctx.fillText("TESTING", this.textX, this.textY);
-    this.hyperBout.entityctx.fillText(this.textX, 50,50);
-
-
+    world.Step(
+        1 / FPS
+        , 10
+        , 10
+        );
+    world.DrawDebugData();
+    world.ClearForces();
 }
 //Move the text diagonal
 Engine.prototype.update = function()
 {
-    this.textX += 1;
-    this.textY += 1;
+    
+
 }
 //Canvas wrapper
 function CanvasWrapper(backCanvasId, entityCanvasId, width, height) {
