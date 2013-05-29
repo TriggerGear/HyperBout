@@ -47,6 +47,11 @@ var Engine = function()
 
     entityCanvas.onclick = function()
     {
+        if(mute == false)
+        {
+            var slash = Engine.prototype.MusicPlayer('audiofiles/stab.wav', false);
+        }
+
         var fixDef = new box2d.b2FixtureDef();
         fixDef.density = 1;
         fixDef.friction = 0.5;
@@ -130,11 +135,18 @@ Engine.UpdateState = function(){
 }
 
 //play music without loop if bool sets to false
+//returns the audio object.
 Engine.prototype.MusicPlayer = function(soundFile, bool)
 {
-    var myAudio = new Audio(soundFile);
+    //create a new audio
+    var myAudio = document.createElement('audio');
+    //set the source to soundfile
+    myAudio.setAttribute('src', soundFile);
     myAudio.loop = bool;
+    //audio is not muted at first.
+    myAudio.muted = false;
     myAudio.play();
+    return myAudio;
 }
 
 Engine.RegisterInputHandler = function(inputHandler) {

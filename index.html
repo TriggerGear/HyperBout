@@ -9,9 +9,10 @@
         <script type = "text/javascript" src="HyperBout.js"></script>
         <script type = "text/javascript" src="SoundPlay.js"></script>
         <script type="text/javascript">
-            Engine.prototype.MusicPlayer('audiofiles/advance.wav', true);
+            var mute = false;
+            var bgmAud = Engine.prototype.MusicPlayer('audiofiles/Genesis.wav', true);
             function start() {
-                var test = new Engine();         
+                var test = new Engine();
             }
         </script>
     </head>
@@ -24,6 +25,8 @@
             <img src="images/Background.png" id="background" alt="back-ground" style="display:none"/>
             <img src="images/playerStationary.png" id="playerStanding" alt="player" style="display:none"/>
         </div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <input type="button" onclick="bgmAud.muted = true ; mute = true" value="Mute" />
+        <input type="button" onclick="bgmAud.muted = false ; mute = false" value="Unmute" />
     </body>
-
 </html>
