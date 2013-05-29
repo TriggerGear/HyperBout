@@ -36,14 +36,14 @@ var Engine = function()
     backgroundImg.src = 'images/Background.png';
     this.hyperBout.ctx.drawImage(backgroundImg, 0, 0);
 
-    //Create the player
-    this.player = new Player();
+   
 
     //Variable reference to this engine
     var self = this;
     //Set dem physics
     self.setupPhysics();
-
+    //Create the player
+    this.player = new Player();
 
     entityCanvas.onclick = function()
     {
@@ -88,6 +88,17 @@ Engine.prototype.setupPhysics = function(){
     //Add the ground to the world, yeah!
     world.CreateBody(bodyDef).CreateFixture(fixDef);
 
+    var testFix = new box2d.b2FixtureDef();
+    testFix.density = 1;
+    testFix.friction = 0.5;
+    var testDef = new box2d.b2BodyDef();
+    testDef.type = box2d.b2Body.b2_staticBody;
+    testDef.position.x = 200 / 2 / SCALE;
+    testDef.position.y = 200 / 2 / SCALE;
+    testFix.shape = new box2d.b2PolygonShape;
+    testFix.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
+    world.CreateBody(testDef).CreateFixture(testFix);
+
     //Box2d has some nice default drawing, so let's draw the ground.
     var debugDraw = new box2d.b2DebugDraw();
     debugDraw.SetSprite(document.getElementById("entityCanvas").getContext("2d"));
@@ -116,6 +127,14 @@ Engine.UpdateState = function(){
     //Top player stores the current player with the most points
     var topPlayer;
 
+}
+
+//play music without loop if bool sets to false
+Engine.prototype.MusicPlayer = function(soundFile, bool)
+{
+    var myAudio = new Audio(soundFile);
+    myAudio.loop = bool;
+    myAudio.play();
 }
 
 Engine.RegisterInputHandler = function(inputHandler) {
@@ -210,6 +229,25 @@ var Player = function(){
     //Player image
     this.playerImage = new Image();
     this.playerImage.src = 'images/playerStationary.png';
+
+    var fixDef = new box2d.b2FixtureDef();
+    fixDef.density = 1;
+    fixDef.friction = 0.5;
+
+    //Now we need to define the body, static (not affected by gravity), dynamic (affected by grav)
+    var bodyDef = new box2d.b2BodyDef();
+    bodyDef.type = box2d.b2Body.b2_dynamicBody; //We're setting the ground to static.
+    bodyDef.position.x = this.xpos  / SCALE; //Registration point is in the center for box2d entities.
+    bodyDef.position.y = this.ypos / SCALE;
+    bodyDef.fixedRotation = true;
+    fixDef.shape = new box2d.b2PolygonShape; //setting the shape of the ground.
+    fixDef.shape.SetAsBox((30 / SCALE) / 2, (40 / SCALE)/2);
+    //Add the ground to the world, yeah!
+    playerFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+    
+
+
     var self = this;
     Engine.RegisterInputHandler(new Engine.InputHandler('player', function(event) {
         if (Player.IsMovementKey(event.which)) {
@@ -241,14 +279,14 @@ Player.prototype.onKeyUp = function(event) {
 
 Player.prototype.draw = function(canvasctx)
 {
-    canvasctx.drawImage(this.playerImage, this.xpos, this.ypos);
+    canvasctx.drawImage(this.playerImage, (playerFixture.GetBody().GetPosition().x * SCALE) - 15, (playerFixture.GetBody().GetPosition().y * SCALE) - 20);
 };
 //Movement function for players
 Player.prototype.move = function(args)
 {
     var vec = this.getMoveVector();
-    this.xpos += vec.x;
-    this.ypos += vec.y;
+    //playerFixture.GetBody().GetPosition().x += vec.x / SCALE;
+    //playerFixture.GetBody().GetPosition().y += vec.y / SCALE;
 
     this.xpos = Math.max(this.minx, this.xpos);
     this.ypos = Math.max(this.miny, this.ypos);
@@ -264,14 +302,16 @@ Player.prototype.getMoveVector = function() {
     }
 
     switch(direction) {
-        case Player.MoveLeft: return {
-            x: -2, y: 0
+        case Player.MoveLeft:
+         {
+            playerFixture.GetBody().ApplyForce(new box2d.b2Vec2(-3 * SCALE, 0), playerFixture.GetBody().GetPosition());
+            break;
         };
         case Player.MoveUp: return {
             x: 0, y: -2
         };
-        case Player.MoveRight: return {
-            x: 2, y: 0
+        case Player.MoveRight:{
+            playerFixture.GetBody().ApplyForce(new box2d.b2Vec2(+3 * SCALE, 0), playerFixture.GetBody().GetPosition());
         };
         case Player.MoveDown: return {
             x: 0, y: 2
@@ -300,8 +340,8 @@ Player.prototype.setLocation = function(playerList){
 Player.prototype.combineKey = function(keyCode, direction) {
     switch(keyCode) {
         case HyperKeys.Codes['a']: direction |= 1; break;
-        case HyperKeys.Codes['s']: direction |= 2; break;
-        case HyperKeys.Codes['w']: direction |= 4; break;
+        //case HyperKeys.Codes['s']: direction |= 2; break;
+        //case HyperKeys.Codes['w']: direction |= 4; break;
         case HyperKeys.Codes['d']: direction |= 8; break;
     }
     return direction;
@@ -310,8 +350,8 @@ Player.prototype.combineKey = function(keyCode, direction) {
 Player.prototype.removeKey = function(keyCode, direction) {
     switch(keyCode) {
         case HyperKeys.Codes['a']: direction ^= 1; break;
-        case HyperKeys.Codes['s']: direction ^= 2; break;
-        case HyperKeys.Codes['w']: direction ^= 4; break;
+        //case HyperKeys.Codes['s']: direction ^= 2; break;
+        //case HyperKeys.Codes['w']: direction ^= 4; break;
         case HyperKeys.Codes['d']: direction ^= 8; break;
     }
     return direction;
