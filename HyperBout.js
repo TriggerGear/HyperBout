@@ -47,10 +47,7 @@ var Engine = function()
 
     entityCanvas.onclick = function()
     {
-        if(mute == false)
-        {
-            var slash = Engine.prototype.MusicPlayer('audiofiles/stab.wav', false);
-        }
+        var slash = Engine.prototype.MuteUnmuteAudio('audiofiles/stab.wav', false);
 
         var fixDef = new box2d.b2FixtureDef();
         fixDef.density = 1;
@@ -63,7 +60,6 @@ var Engine = function()
         bodyDef.position.y = 0;
         fixDef.shape = new box2d.b2CircleShape(Math.random()*100 / SCALE); //setting the shape of the ground.
         
-    
         world.CreateBody(bodyDef).CreateFixture(fixDef);
     }
 
@@ -71,7 +67,8 @@ var Engine = function()
     $(document).ready(function() { self.start(); });
 };
 //Awe yeah sweeet physaks
-Engine.prototype.setupPhysics = function(){
+Engine.prototype.setupPhysics = function()
+{
     //The b2Vec2 require 2 variables, gravity for X and Y axis. Since we don't want
     //any gravity on the X axis, we set it to 0 and we'll set Y to 50 for now.
     //true at the end means we're allowing bodies to sleep, this improves performance
@@ -147,6 +144,15 @@ Engine.prototype.MusicPlayer = function(soundFile, bool)
     myAudio.muted = false;
     myAudio.play();
     return myAudio;
+}
+
+//mainly for sound effects. For a check if the mute button is pressed or not.
+Engine.prototype.MuteUnmuteAudio = function(soundFile, bool)
+{
+    if(mute == false)
+    {
+        var slash = Engine.prototype.MusicPlayer(soundFile, bool);
+    }
 }
 
 Engine.RegisterInputHandler = function(inputHandler) {
@@ -256,8 +262,6 @@ var Player = function(){
     fixDef.shape.SetAsBox((30 / SCALE) / 2, (40 / SCALE)/2);
     //Add the ground to the world, yeah!
     playerFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-
-    
 
 
     var self = this;
