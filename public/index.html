@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Hyper Bout!</title>
+        <link type="text/css" rel="stylesheet" href="style/main.css">
+        <script type = "text/javascript" src="js/lib/jquery.js"></script>
+        <script type = "text/javascript" src="js/lib/Box2dWeb-2.1.a.3.js"></script>
+        <script type = "text/javascript" src="js/HyperBout.js"></script>
+		<script type = "text/javascript" src="js/HyperPlayer.js"></script>
+        <script type = "text/javascript" src="SoundPlay.js"></script>
+		<script src="http://localhost:8000/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            var mute = false;
+            var bgmAud = Engine.prototype.MusicPlayer('audiofiles/Genesis.wav', true);
+            bgmAud.muted = true;
+			function start() {
+                var test = new Engine();
+            }
+        </script>
+    </head>
+    <body onload="start()">
+        <div id="main">
+            <canvas id="backgroundCanvas" style="border: 10px solid #F00;" height="548" width="1122">Canvas is not supported.</canvas>
+            <canvas id="entityCanvas" height="548" width="1122"></canvas>
+        </div>
+        <div id="game-images">
+            <img src="images/Background.png" id="background" alt="back-ground" style="display:none"/>
+            <img src="images/playerStationary.png" id="playerStanding" alt="player" style="display:none"/>
+        </div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <input type="button" onclick="bgmAud.muted = true ; mute = true" value="Mute" />
+        <input type="button" onclick="bgmAud.muted = false ; mute = false" value="Unmute" />
+    </body>
+</html>
