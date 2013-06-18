@@ -1,6 +1,6 @@
 # Hyper Bout
 ![Hyper Bout Char](images/playerStationary.png)
-## Client Side Instructions
+## Client Side Folders Instructions
 List of Folders:
 * /public
   * Contains all file needed to run on the client end

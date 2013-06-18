@@ -1,6 +1,24 @@
 # Hyper Bout
 ![Hyper Bout Char](public/images/playerStationary.png)
-## Server Side Instruction
+
+## How to Run
+### Prerequisites
+You need to already have installed nodejs on your machine. http://nodejs.org/download/
+
+1. Open up Node.js Command Prompt and change to directory of game
+![Screenshot 1](public/images/sc1.png)
+
+2. Start the HyperBout server by typing in “node HyperBout.js”
+![Screenshot 2](public/images/sc2.png)
+
+3. Go into the public folder and open up the index.html file in both firefox and chrome
+![Screenshot 3](public/images/sc3.png)
+
+4. Players can see both each other’s movements (however only box2d draw on the local player, not remote players)
+![Screenshot 4](public/images/sc4.png)
+
+
+## Server Side Folders Instruction
 ### Folders and Files
 List of Folders: 
 * /  (root)
@@ -19,6 +37,3 @@ JS Files:
   * Starting node application js file
 * HyperPlayer.js: 
   * Player class of whose data will be sent from client to/from host
-
-### To start the game 
-simply open the index.html file located in public folder
