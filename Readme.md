@@ -1,7 +1,7 @@
 # Hyper Bout
 ![Hyper Bout Char](public/images/playerStationary.png)
 
-### Prerequisites
+## Prerequisites
 You need to already have installed nodejs on your machine. http://nodejs.org/download/
 
 ## How to Run
