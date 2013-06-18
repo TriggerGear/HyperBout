@@ -5,19 +5,19 @@
 ### Prerequisites
 You need to already have installed nodejs on your machine. http://nodejs.org/download/
 
-1. Open up Node.js Command Prompt and change to directory of game
+* Open up Node.js Command Prompt and change to directory of game
 
 ![Screenshot 1](public/images/sc1.png)
 
-2. Start the HyperBout server by typing in “node HyperBout.js”
+* Start the HyperBout server by typing in “node HyperBout.js”
 
 ![Screenshot 2](public/images/sc2.png)
 
-3. Go into the public folder and open up the index.html file in both firefox and chrome
+* Go into the public folder and open up the index.html file in both firefox and chrome
 
 ![Screenshot 3](public/images/sc3.png)
 
-4. Players can see both each other’s movements (however only box2d draw on the local player, not remote players)
+* Players can see both each other’s movements (however only box2d draw on the local player, not remote players)
 
 ![Screenshot 4](public/images/sc4.png)
 
