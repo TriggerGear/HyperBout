@@ -1,6 +1,6 @@
 # Hyper Bout
 
-## Server Instruction
+## Server Side Instruction
 List of Folders: 
 * /  (root)
   * Contains all files needed to run on the server
@@ -10,6 +10,8 @@ List of Folders:
   * Contains socket.io library [No need to touch]
 * public: 
   * Contains files that will be run on the user's machine
+* archive:
+  * contains files of older versions that are no longer in use
 
 JS Files:
 * HyperBout.js: 
