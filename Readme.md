@@ -1,10 +1,10 @@
 # Hyper Bout
 ![Hyper Bout Char](public/images/playerStationary.png)
 
-## How to Run
 ### Prerequisites
 You need to already have installed nodejs on your machine. http://nodejs.org/download/
 
+## How to Run
 * Open up Node.js Command Prompt and change to directory of game
 
 ![Screenshot 1](public/images/sc1.png)
