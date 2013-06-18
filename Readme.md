@@ -1,5 +1,5 @@
 # Hyper Bout
-![Hyper Bout Char]("public/images/playerStationary.png")
+![Hyper Bout Char]("https://github.com/TriggerGear/HyperBout/public/images/playerStationary.png")
 ## Server Side Instruction
 ### Folders and Files
 List of Folders: 
