@@ -1,5 +1,5 @@
 # Hyper Bout
-![Hyper Bout Char](public/images/playerStationary.png)
+![Hyper Bout Char](images/playerStationary.png)
 ## Client Side Instructions
 List of Folders:
 * /public
