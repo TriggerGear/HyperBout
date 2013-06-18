@@ -1,6 +1,7 @@
 # Hyper Bout
 
 ## Server Side Instruction
+### Folders and Files
 List of Folders: 
 * /  (root)
   * Contains all files needed to run on the server
@@ -18,3 +19,6 @@ JS Files:
   * Starting node application js file
 * HyperPlayer.js: 
   * Player class of whose data will be sent from client to/from host
+
+### To start the game 
+simply open the index.html file located in public folder
