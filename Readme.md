@@ -1,7 +1,6 @@
 # Hyper Bout
 
 ## Server Instruction
-
 List of Folders: 
 * /  (root)
   * Contains all files needed to run on the server
