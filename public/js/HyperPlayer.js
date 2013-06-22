@@ -171,6 +171,25 @@ HyperPlayer.prototype.setLocation = function(playerList){
     
 }
 
+HyperPlayer.prototype.bombThrow = function(ev)
+{
+    var x = ev.clientX;
+    var y = ev.clientY;
+ 
+    var fixDef = new box2d.b2FixtureDef();
+    fixDef.density = 1;
+    fixDef.friction = 0.5;
+    fixDef.restiution = 0.5;
+
+    var bodyDef = new box2d.b2BodyDef();
+    bodyDef.type = box2d.b2Body.b2_dynamicBody; //We're setting the ground to static.
+    bodyDef.position.x = playerFixture.GetBody().GetPosition().x; //Registration point is in the center for box2d entities.
+    bodyDef.position.y = (playerFixture.GetBody().GetPosition().y + 40);
+    fixDef.shape = new box2d.b2CircleShape(20 / SCALE); //setting the shape of the ground.
+    world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+}
+
 HyperPlayer.prototype.combineKey = function(keyCode, direction) {
     switch(keyCode) {
         case HyperKeys.Codes['a']: direction |= 1; break;

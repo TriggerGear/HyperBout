@@ -140,6 +140,7 @@ var Engine = function()
     var backgroundImg = new Image();
     backgroundImg.src = 'images/Background.png';
     this.hyperBout.ctx.drawImage(backgroundImg, 0, 0);
+    this.hyperBout.entityCanvas.addEventListener('click', HyperPlayer.prototype.bombThrow, false);
 
     //Variable reference to this engine
     var self = this;
@@ -156,7 +157,7 @@ var Engine = function()
     //Enable Sockets
     setupSockets();
     
-
+    /*
     entityCanvas.onclick = function()
     {
         var slash = Engine.prototype.MuteUnmuteAudio('audiofiles/stab.wav', false);
@@ -175,10 +176,11 @@ var Engine = function()
         world.CreateBody(bodyDef).CreateFixture(fixDef);
         
     }
-
+    */
     //Start the engine, vroom!
     $(document).ready(function() { self.start(); });
 };
+
 
 //Awe yeah sweeet physaks
 Engine.prototype.setupPhysics = function()
