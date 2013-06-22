@@ -318,6 +318,7 @@ Engine.prototype.start = function()
         self.draw();
         localPlayer.draw(self.hyperBout.entityctx);
         localPlayer.move();
+        
         //console.log("Outside Interval: ID:" + localPlayer.id + " XPosition" + localPlayer.getX() + " YPosition" + localPlayer.getY());
 
         //Temporary emit to server, need to find more permanent version
