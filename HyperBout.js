@@ -110,8 +110,8 @@ function onMovePlayer(data) {
         util.log("Player not found: "+this.id);
         return;
     };
-    util.log(data.x);
-    util.log(data.y);
+    //util.log(data.x);
+    //util.log(data.y);
     // Update player position
     movePlayer.setX(data.x);
     movePlayer.setY(data.y);

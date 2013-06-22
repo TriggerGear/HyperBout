@@ -119,19 +119,16 @@ HyperPlayer.prototype.getMoveVector = function() {
             {
                 playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(-0.2 * SCALE, 0), playerFixture.GetBody().GetPosition());
             }
-            
-            break;
         };
         case HyperPlayer.MoveUp: return {
             x: 0, y: -2
         };
         case HyperPlayer.MoveRight:
         {
-            if(playerFixture.GetBody().GetLinearVelocity() > this.maxSpeed)
+            if(playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
             {
                 playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(0.2 * SCALE, 0), playerFixture.GetBody().GetPosition());
             }
-            
         };
         case HyperPlayer.MoveDown: return {
             x: 0, y: 2
