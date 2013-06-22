@@ -14,6 +14,8 @@ var HyperPlayer = function(){
     this.maxx = 1122;
     this.maxy = 548;
 
+    this.maxSpeed = 7;
+
     //Getters and Setters for position
     HyperPlayer.prototype.getX = function() {
         return this.xpos;
@@ -47,6 +49,7 @@ var HyperPlayer = function(){
     bodyDef.fixedRotation = true;
     fixDef.shape = new box2d.b2PolygonShape; //setting the shape of the ground.
     fixDef.shape.SetAsBox((30 / SCALE) / 2, (40 / SCALE)/2);
+    fixDef.friction = 4;
     //Add the ground to the world, yeah!
     playerFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
 
@@ -84,9 +87,9 @@ HyperPlayer.prototype.draw = function(canvasctx)
 {
     //this.xpos = playerFixture.GetBody().GetPosition().x;
     //this.ypos = playerFixture.GetBody().GetPosition().y; 
-    canvasctx.drawImage(this.playerImage, (this.xpos * SCALE) - 15, (this.ypos * SCALE) - 20);
+    //canvasctx.drawImage(this.playerImage, (this.xpos * SCALE) - 15, (this.ypos * SCALE) - 20);
     
-    //canvasctx.drawImage(this.playerImage, (playerFixture.GetBody().GetPosition().x * SCALE) - 15, (playerFixture.GetBody().GetPosition().y * SCALE) - 20);
+    canvasctx.drawImage(this.playerImage, (playerFixture.GetBody().GetPosition().x * SCALE) - 15, (playerFixture.GetBody().GetPosition().y * SCALE) - 20);
 };
 //Movement function for players
 HyperPlayer.prototype.move = function(args)
@@ -112,14 +115,23 @@ HyperPlayer.prototype.getMoveVector = function() {
     switch(direction) {
         case HyperPlayer.MoveLeft:
          {
-            playerFixture.GetBody().ApplyForce(new box2d.b2Vec2(-3 * SCALE, 0), playerFixture.GetBody().GetPosition());
+            if(playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
+            {
+                playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(-0.2 * SCALE, 0), playerFixture.GetBody().GetPosition());
+            }
+            
             break;
         };
         case HyperPlayer.MoveUp: return {
             x: 0, y: -2
         };
-        case HyperPlayer.MoveRight:{
-            playerFixture.GetBody().ApplyForce(new box2d.b2Vec2(+3 * SCALE, 0), playerFixture.GetBody().GetPosition());
+        case HyperPlayer.MoveRight:
+        {
+            if(playerFixture.GetBody().GetLinearVelocity() > this.maxSpeed)
+            {
+                playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(0.2 * SCALE, 0), playerFixture.GetBody().GetPosition());
+            }
+            
         };
         case HyperPlayer.MoveDown: return {
             x: 0, y: 2
