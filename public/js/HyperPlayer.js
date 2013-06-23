@@ -182,13 +182,14 @@ HyperPlayer.prototype.bombThrow = function(ev)
     fixDef.restiution = 0.5;
 
     var bodyDef = new box2d.b2BodyDef();
-    bodyDef.type = box2d.b2Body.b2_dynamicBody; //We're setting the ground to static.
-    bodyDef.position.x = ((playerFixture.GetBody().GetPosition().x)); //Registration point is in the center for box2d entities.
+    bodyDef.type = box2d.b2Body.b2_dynamicBody; 
+    bodyDef.position.x = ((playerFixture.GetBody().GetPosition().x)); 
     bodyDef.position.y = ((playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
-    fixDef.shape = new box2d.b2CircleShape(20 / SCALE); //setting the shape of the ground.
-    bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+    fixDef.shape = new box2d.b2CircleShape(20 / SCALE); 
 
-    bombFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(((x / SCALE) - bombFixture.GetBody().GetPosition().x) *10, ((y / SCALE) - bombFixture.GetBody().GetPosition().y) *10 , bombFixture.GetBody().GetPosition()));
+    var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+    bombFixture.GetBody().ApplyImpulse((new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x) *10, ((y / SCALE) - bodyDef.position.y) *10)) , bombFixture.GetBody().GetPosition());
 
 }
 
