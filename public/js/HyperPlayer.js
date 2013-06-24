@@ -51,7 +51,7 @@ var HyperPlayer = function(){
     fixDef.shape.SetAsBox((30 / SCALE) / 2, (40 / SCALE)/2);
     fixDef.friction = 4;
     //Add the ground to the world, yeah!
-    playerFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+    this.playerFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
 
 
     var self = this;
@@ -89,14 +89,14 @@ HyperPlayer.prototype.draw = function(canvasctx)
     //this.ypos = playerFixture.GetBody().GetPosition().y; 
     //canvasctx.drawImage(this.playerImage, (this.xpos * SCALE) - 15, (this.ypos * SCALE) - 20);
     
-    canvasctx.drawImage(this.playerImage, (playerFixture.GetBody().GetPosition().x * SCALE) - 15, (playerFixture.GetBody().GetPosition().y * SCALE) - 20);
+    canvasctx.drawImage(this.playerImage, (this.playerFixture.GetBody().GetPosition().x * SCALE) - 15, (this.playerFixture.GetBody().GetPosition().y * SCALE) - 20);
 };
 //Movement function for players
 HyperPlayer.prototype.move = function(args)
 {
     var vec = this.getMoveVector();
-    this.xpos = playerFixture.GetBody().GetPosition().x += vec.x / SCALE;
-    this.ypos = playerFixture.GetBody().GetPosition().y += vec.y / SCALE;
+    this.xpos = this.playerFixture.GetBody().GetPosition().x += vec.x / SCALE;
+    this.ypos = this.playerFixture.GetBody().GetPosition().y += vec.y / SCALE;
     /*
     this.xpos = Math.max(this.minx, this.xpos);
     this.ypos = Math.max(this.miny, this.ypos);
@@ -115,25 +115,25 @@ HyperPlayer.prototype.getMoveVector = function() {
     switch(direction) {
         case HyperPlayer.MoveLeft:
          {
-            if(playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
+            if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
             {
-                playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(-0.2 * SCALE, 0), playerFixture.GetBody().GetPosition());
+                this.playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(-0.2 * SCALE, 0), this.playerFixture.GetBody().GetPosition());
             }
             break;
         };
         case HyperPlayer.MoveUp: 
         {
-            if(playerFixture.GetBody().GetLinearVelocity().y == 0)
+            if(this.playerFixture.GetBody().GetLinearVelocity().y == 0)
             {
-                playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(0, -1 * SCALE), playerFixture.GetBody().GetPosition());
+                this.playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(0, -1 * SCALE), this.playerFixture.GetBody().GetPosition());
             }
             break;
         };
         case HyperPlayer.MoveRight:
         {
-            if(playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
+            if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
             {
-                playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(0.2 * SCALE, 0), playerFixture.GetBody().GetPosition());
+                this.playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(0.2 * SCALE, 0), this.playerFixture.GetBody().GetPosition());
             }
             break;
         };
@@ -142,9 +142,9 @@ HyperPlayer.prototype.getMoveVector = function() {
         };
         case HyperPlayer.MoveLeft | HyperPlayer.MoveUp :
         {
-            if(playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && playerFixture.GetBody().GetLinearVelocity().y == 0)
+            if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
             {
-                playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(-0.2 * SCALE, -1 * SCALE), playerFixture.GetBody().GetPosition());
+                this.playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(-0.2 * SCALE, -1 * SCALE), this.playerFixture.GetBody().GetPosition());
             }
             break;
         };
@@ -153,9 +153,9 @@ HyperPlayer.prototype.getMoveVector = function() {
         };
         case HyperPlayer.MoveRight | HyperPlayer.MoveUp: 
         {
-            if(playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && playerFixture.GetBody().GetLinearVelocity().y == 0)
+            if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
             {
-                playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(0.2 * SCALE, -1 * SCALE), playerFixture.GetBody().GetPosition());
+                this.playerFixture.GetBody().ApplyImpulse(new box2d.b2Vec2(0.2 * SCALE, -1 * SCALE), this.playerFixture.GetBody().GetPosition());
             }
             break;
         };
@@ -183,8 +183,8 @@ HyperPlayer.prototype.bombThrow = function(ev)
 
     var bodyDef = new box2d.b2BodyDef();
     bodyDef.type = box2d.b2Body.b2_dynamicBody; 
-    bodyDef.position.x = ((playerFixture.GetBody().GetPosition().x)); 
-    bodyDef.position.y = ((playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
+    bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
+    bodyDef.position.y = ((this.playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
     fixDef.shape = new box2d.b2CircleShape(20 / SCALE); 
 
     var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);

@@ -77,12 +77,10 @@ function onSocketDisconnect() {
 
 // New player
 function onNewPlayer(data) {
-    
     console.log("New player connected: "+data.id);
     // Initialise the new player
     var newPlayer = new HyperPlayer();
     newPlayer.id = data.id;
-
     // Add new player to the remote players array
     remotePlayers.push(newPlayer);
 };
@@ -140,7 +138,7 @@ var Engine = function()
     var backgroundImg = new Image();
     backgroundImg.src = 'images/Background.png';
     this.hyperBout.ctx.drawImage(backgroundImg, 0, 0);
-    this.hyperBout.entityCanvas.addEventListener('click', HyperPlayer.prototype.bombThrow, false);
+
 
     //Variable reference to this engine
     var self = this;
@@ -150,7 +148,7 @@ var Engine = function()
    
     //Create the player
     localPlayer = new HyperPlayer();
-
+    this.hyperBout.entityCanvas.addEventListener('click', function(event) {localPlayer.bombThrow(event);}, false);
     // Initialise remote players array
     remotePlayers = [];
 
