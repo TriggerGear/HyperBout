@@ -3,7 +3,7 @@
 **************************************************/
 var util = require("util"),                                 // Utility resources (logging, object inspection, etc)
     io = require("socket.io"),                              // Socket.IO
-    HyperPlayer = require("./HyperPlayer").HyperPlayer;     // HyperPlayer class
+    HyperPlayer = require("./ServerPlayer").HyperPlayer;     // HyperPlayer class
 
 
 /**************************************************
