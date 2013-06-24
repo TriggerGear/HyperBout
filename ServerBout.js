@@ -46,7 +46,7 @@ var setEventHandlers = function() {
 };
 
 // New socket connection
-function onSocketConnection(client) {
+function onSocketConnection(client) {  
     util.log("New player has connected: "+client.id);
     
     // Listen for client disconnected
@@ -94,8 +94,7 @@ function onNewPlayer(data) {
     for (i = 0; i < players.length; i++) {
         existingPlayer = players[i];
         this.emit("new player", {id: existingPlayer.id, x: existingPlayer.getX(), y: existingPlayer.getY()});
-    };
-        
+    };   
     // Add new player to the players array
     players.push(newPlayer);
 };

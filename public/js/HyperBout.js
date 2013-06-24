@@ -327,7 +327,7 @@ Engine.prototype.start = function()
         for (i = 0; i < remotePlayers.length; i++) 
         {
             
-            console.log("Inside Interval: ID:" + remotePlayers[i].id + " XPosition" + remotePlayers[i].getX() + " YPosition" + remotePlayers[i].getY());
+            //console.log("Inside Interval: ID:" + remotePlayers[i].id + " XPosition" + remotePlayers[i].getX() + " YPosition" + remotePlayers[i].getY());
             remotePlayers[i].draw(self.hyperBout.entityctx);
         };
     }, 1000/FPS);
