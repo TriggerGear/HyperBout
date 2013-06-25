@@ -112,11 +112,12 @@ function onMovePlayer(data) {
     //util.log(data.x);
     //util.log(data.y);
     // Update player position
-    movePlayer.setX(data.x);
-    movePlayer.setY(data.y);
+    //movePlayer.setX(data.x);
+    //movePlayer.setY(data.y);
 
     // Broadcast updated position to connected socket clients
-    this.broadcast.emit("move player", {id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY()});
+    data.id = this.id
+    this.broadcast.emit("move player", data);
 };
 
 

@@ -97,8 +97,11 @@ function onMovePlayer(data) {
     };
 
     // Update player position
-    movePlayer.setX(data.x);
-    movePlayer.setY(data.y);
+    //movePlayer.setX(data.x);
+    //movePlayer.setY(data.y);
+    console.log(data);
+    movePlayer.remotePlayerMove(data);
+    
     //console.log(movePlayer.id + " moved to x position " + movePlayer.getX() + "and y position "+ movePlayer.getY());
 
 };
@@ -315,13 +318,14 @@ Engine.prototype.start = function()
         self.update();
         self.draw();
         localPlayer.draw(self.hyperBout.entityctx);
-        localPlayer.move();
+        
         
         //console.log("Outside Interval: ID:" + localPlayer.id + " XPosition" + localPlayer.getX() + " YPosition" + localPlayer.getY());
 
         //Temporary emit to server, need to find more permanent version
-        socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
-
+        var playerVectorAndDirection = localPlayer.move();
+        socket.emit("move player", playerVectorAndDirection);
+        
         for (i = 0; i < remotePlayers.length; i++) 
         {
             
