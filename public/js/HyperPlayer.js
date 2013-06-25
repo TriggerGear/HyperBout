@@ -100,7 +100,6 @@ HyperPlayer.prototype.move = function(args)
 
 HyperPlayer.prototype.getMoveVector = function() {
     var direction = this.direction;
-
     switch(direction) {
         case HyperPlayer.MoveLeft:
          {
@@ -132,9 +131,6 @@ HyperPlayer.prototype.getMoveVector = function() {
             }
             break;
         };
-        case HyperPlayer.MoveDown: return {
-            x: 0, y: 2
-        };
         case HyperPlayer.MoveLeft | HyperPlayer.MoveUp :
         {
             if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
@@ -144,9 +140,6 @@ HyperPlayer.prototype.getMoveVector = function() {
                 return {playerVector: vec, direction: "leftup"};
             }
             break;
-        };
-        case HyperPlayer.MoveLeft | HyperPlayer.MoveDown: return {
-            x: -HyperPlayer.DiagLength, y: HyperPlayer.DiagLength
         };
         case HyperPlayer.MoveRight | HyperPlayer.MoveUp: 
         {
@@ -158,14 +151,12 @@ HyperPlayer.prototype.getMoveVector = function() {
             }
             break;
         };
-        case HyperPlayer.MoveRight | HyperPlayer.MoveDown: return {
-            x: HyperPlayer.DiagLength, y: HyperPlayer.DiagLength
-        };
     }
-    return { x: 0, y: 0 };
+    return false;
 };
 HyperPlayer.prototype.remotePlayerMove = function(args) {
     var direction = args.direction;
+    console.log(args);
 
     switch(direction) {
         case "left":
@@ -173,7 +164,6 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
             if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
             {
                 this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
-                return vector;
             }
             break;
         };
@@ -181,9 +171,7 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         {
             if(this.playerFixture.GetBody().GetLinearVelocity().y == 0)
             {
-                var vec = vector;
                 this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
-                return vector;
             }
             break;
         };
@@ -192,12 +180,8 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
             if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
             {
                 this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
-                return vector;
             }
             break;
-        };
-        case HyperPlayer.MoveDown: return {
-            x: 0, y: 2
         };
         case "leftup":
         {
@@ -208,9 +192,6 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
             }
             break;
         };
-        case HyperPlayer.MoveLeft | HyperPlayer.MoveDown: return {
-            x: -HyperPlayer.DiagLength, y: HyperPlayer.DiagLength
-        };
         case "rightup": 
         {
             if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
@@ -220,11 +201,7 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
             }
             break;
         };
-        case HyperPlayer.MoveRight | HyperPlayer.MoveDown: return {
-            x: HyperPlayer.DiagLength, y: HyperPlayer.DiagLength
-        };
     }
-    return { x: 0, y: 0 };
 };
 //Sets the location for each player based on the player number.
 HyperPlayer.prototype.setLocation = function(playerList){

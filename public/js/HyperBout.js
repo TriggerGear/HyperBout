@@ -324,7 +324,10 @@ Engine.prototype.start = function()
 
         //Temporary emit to server, need to find more permanent version
         var playerVectorAndDirection = localPlayer.move();
-        socket.emit("move player", playerVectorAndDirection);
+        if(playerVectorAndDirection) {
+            socket.emit("move player", playerVectorAndDirection);            
+        }
+
         
         for (i = 0; i < remotePlayers.length; i++) 
         {

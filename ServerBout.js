@@ -116,7 +116,7 @@ function onMovePlayer(data) {
     //movePlayer.setY(data.y);
 
     // Broadcast updated position to connected socket clients
-    data.id = this.id
+    data.id = this.id;
     this.broadcast.emit("move player", data);
 };
 
