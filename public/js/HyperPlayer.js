@@ -2,6 +2,7 @@
 var HyperPlayer = function(){
     this.healthPoints = 5;
     this.id = 1;
+    this.playerNumber = -1;
     this.direction = 0;
     //Movement and location variables
     this.xpos = 100;
@@ -98,59 +99,188 @@ HyperPlayer.prototype.move = function(args)
     return vec;
 };
 
+HyperPlayer.prototype.moveToSpawn = function()
+{
+    if (this.playerNumber == 1)
+    {
+        var pos = this.playerFixture.GetBody().GetPosition();
+        pos.x = 6.83;
+        pos.y = 2.33;
+        this.playerImage.src = 'images/Player1Right.png';
+        this.playerFixture.GetBody().SetPosition(pos);
+    }
+    else if (this.playerNumber == 2)
+    {
+        var pos = this.playerFixture.GetBody().GetPosition();
+        pos.x = 30.83;
+        pos.y = 2.33;
+        this.playerImage.src = 'images/Player2Left.png';
+        this.playerFixture.GetBody().SetPosition(pos);
+    }
+    else if (this.playerNumber == 3)
+    {
+        var pos = this.playerFixture.GetBody().GetPosition();
+        pos.x = 6.83;
+        pos.y = 12.33;
+        this.playerImage.src = 'images/Player3Right.png';
+        this.playerFixture.GetBody().SetPosition(pos);
+    }
+    else if (this.playerNumber == 4)
+    {
+        var pos = this.playerFixture.GetBody().GetPosition();
+        pos.x = 30.83;
+        pos.y = 12.33;
+        this.playerImage.src = 'images/Player4Left.png';
+        this.playerFixture.GetBody().SetPosition(pos);
+    }
+};
+
 HyperPlayer.prototype.getMoveVector = function() {
     var direction = this.direction;
     switch(direction) {
-        case HyperPlayer.MoveLeft:
-         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
-            {
-                var vec = new box2d.b2Vec2(-0.2 * SCALE, 0);
-                this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
-                return {playerVector: vec, direction: "left"};
-            }
-            break;
-        };
-        case HyperPlayer.MoveUp: 
+    
+    case HyperPlayer.MoveLeft:
+        if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+            var vec = new box2d.b2Vec2(-0.2 * SCALE, 0);
+            this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
+
+            //Set Direction
+            if (this.playerNumber == 1)
             {
-                var vec = new box2d.b2Vec2(0, -1 * SCALE);
-                this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
-                return {playerVector: vec, direction: "up"};
+                this.playerImage.src = 'images/Player1Left.png';
             }
-            break;
-        };
-        case HyperPlayer.MoveRight:
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = 'images/Player2Left.png';
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = 'images/Player3Left.png';
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = 'images/Player4Left.png';
+            }
+
+            return {playerVector: vec, direction: "left"};
+            /* SELF NOTES
+            var x = this.playerFixture.GetBody().GetPosition().x;
+            var y = this.playerFixture.GetBody().GetPosition().y;
+            console.log("POS:::"+x+" "+y);
+            var pos = this.playerFixture.GetBody().GetPosition();
+            console.log(" OBJ" + this.playerFixture.GetBody().SetPosition );
+
+                      //  this.playerFixture.GetBody().position.Set(x, y+ 55);
+                                            console.log("y "+pos.y);
+
+                      pos.y = (y-4);
+                      console.log("y "+pos.y);
+                      console.log("x "+pos.x);
+                        this.playerFixture.GetBody().SetPosition(pos );
+            */
+        }
+        break;
+
+    case HyperPlayer.MoveUp:
+        if(this.playerFixture.GetBody().GetLinearVelocity().y == 0)
         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
-            {
-                var vec = new box2d.b2Vec2(0.2 * SCALE, 0);
-                this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
-                return {playerVector: vec, direction: "right"};
-            }
-            break;
-        };
-        case HyperPlayer.MoveLeft | HyperPlayer.MoveUp :
+            var vec = new box2d.b2Vec2(0, -1 * SCALE);
+            this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
+            return {playerVector: vec, direction: "up"};
+        }
+        break;
+
+    case HyperPlayer.MoveRight:
+        if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+            var vec = new box2d.b2Vec2(0.2 * SCALE, 0);
+            this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
+
+            //Set Direction
+            if (this.playerNumber == 1)
             {
-                var vec = new box2d.b2Vec2(-0.2 * SCALE, -1 * SCALE);
-                this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
-                return {playerVector: vec, direction: "leftup"};
+                this.playerImage.src = 'images/Player1Right.png';
             }
-            break;
-        };
-        case HyperPlayer.MoveRight | HyperPlayer.MoveUp: 
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = 'images/Player2Right.png';
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = 'images/Player3Right.png';
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = 'images/Player4Right.png';
+            }
+
+            return {playerVector: vec, direction: "right"};
+        }
+        break;
+
+    case HyperPlayer.MoveLeft | HyperPlayer.MoveUp :
+        if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+            var vec = new box2d.b2Vec2(-0.2 * SCALE, -1 * SCALE);
+            this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
+            
+            //Set Direction
+            if (this.playerNumber == 1)
             {
-                var vec = new box2d.b2Vec2(0.2 * SCALE, -1 * SCALE);
-                this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
-                return {playerVector: vec, direction: "rightup"};
+                this.playerImage.src = 'images/Player1Left.png';
             }
-            break;
-        };
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = 'images/Player2Left.png';
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = 'images/Player3Left.png';
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = 'images/Player4Left.png';
+            }
+
+            return {playerVector: vec, direction: "leftup"};
+        }
+        break;
+
+    case HyperPlayer.MoveRight | HyperPlayer.MoveUp:
+        if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+        {
+            var vec = new box2d.b2Vec2(0.2 * SCALE, -1 * SCALE);
+            this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
+            
+            //Set Direction
+            if (this.playerNumber == 1)
+            {
+                this.playerImage.src = 'images/Player1Right.png';
+            }
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = 'images/Player2Right.png';
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = 'images/Player3Right.png';
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = 'images/Player4Right.png';
+            }
+
+            return {playerVector: vec, direction: "rightup"};
+        }
+        break;
+
+    case HyperPlayer.MoveDown:
+        var x = this.playerFixture.GetBody().GetPosition().x;
+        var y = this.playerFixture.GetBody().GetPosition().y;
+        console.log("POS:::"+x+" "+y);
+        console.log("Player Server ID: "+ this.id);
+        console.log("Player Number: "+ this.playerNumber);
     }
     return false;
 };
@@ -159,48 +289,44 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
     console.log(args);
 
     switch(direction) {
-        case "left":
-         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
-            {
-                this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
-            }
-            break;
-        };
-        case "up": 
+    case "left":
+        if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().y == 0)
-            {
-                this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
-            }
-            break;
-        };
-        case "right":
+            this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
+        }
+        break;
+
+    case "up":
+        if(this.playerFixture.GetBody().GetLinearVelocity().y == 0)
         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
-            {
-                this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
-            }
-            break;
-        };
-        case "leftup":
+            this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
+        }
+        break;
+
+    case "right":
+        if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
-            {
-                this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
-                return vector;
-            }
-            break;
-        };
-        case "rightup": 
+            this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
+        }
+        break;
+    case "leftup":
+        if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
         {
-            if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
-            {
-                this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
-                return vector;
-            }
-            break;
-        };
+            this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
+            return vector;
+        }
+        break;
+
+    case "rightup":
+        if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+        {
+            this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
+            return vector;
+        }
+        break;
+
+    case "s":
+        this.playerFixture.GetBody().position.Set(22,22);
     }
 };
 //Sets the location for each player based on the player number.
@@ -233,7 +359,7 @@ HyperPlayer.prototype.bombThrow = function(ev)
 HyperPlayer.prototype.combineKey = function(keyCode, direction) {
     switch(keyCode) {
         case HyperKeys.Codes['a']: direction |= 1; break;
-        //case HyperKeys.Codes['s']: direction |= 2; break;
+        case HyperKeys.Codes['s']: direction |= 2; break;
         case HyperKeys.Codes['space']: direction |= 4; break;
         case HyperKeys.Codes['d']: direction |= 8; break;
     }
@@ -243,7 +369,7 @@ HyperPlayer.prototype.combineKey = function(keyCode, direction) {
 HyperPlayer.prototype.removeKey = function(keyCode, direction) {
     switch(keyCode) {
         case HyperKeys.Codes['a']: direction ^= 1; break;
-        //case HyperKeys.Codes['s']: direction ^= 2; break;
+        case HyperKeys.Codes['s']: direction ^= 2; break;
         case HyperKeys.Codes['space']: direction ^= 4; break;
         case HyperKeys.Codes['d']: direction ^= 8; break;
     }

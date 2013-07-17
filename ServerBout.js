@@ -83,17 +83,18 @@ function onNewPlayer(data) {
     // Create a new player
     var newPlayer = new HyperPlayer();
     newPlayer.id = this.id;
-
-    this.emit("update id", {id: newPlayer.id});
+    newPlayer.playerNumber = players.length + 1;
+    util.log("YAY " + players.length);
+    this.emit("update id", {id: newPlayer.id, playerNumber: newPlayer.playerNumber});
 
     // Broadcast new player to connected socket clients
-    this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY()});
+    this.broadcast.emit("new player", {id: newPlayer.id, playerNumber: newPlayer.playerNumber, x: newPlayer.getX(), y: newPlayer.getY()});
 
     // Send existing players to the new player
     var i, existingPlayer;
     for (i = 0; i < players.length; i++) {
         existingPlayer = players[i];
-        this.emit("new player", {id: existingPlayer.id, x: existingPlayer.getX(), y: existingPlayer.getY()});
+        this.emit("new player", {id: existingPlayer.id, playerNumber: existingPlayer.playerNumber, x: existingPlayer.getX(), y: existingPlayer.getY()});
     };   
     // Add new player to the players array
     players.push(newPlayer);

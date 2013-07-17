@@ -2,6 +2,7 @@
 var HyperPlayer = function(){
     var healthPoints = 5,
     id = 1,
+    playerNumber = -1,
     direction = 0,
     
     //Movement and location variables
@@ -38,7 +39,8 @@ var HyperPlayer = function(){
         getY: getY,
         setX: setX,
         setY: setY,
-        id: id
+        id: id,
+        playerNumber: playerNumber
     }
 };
 

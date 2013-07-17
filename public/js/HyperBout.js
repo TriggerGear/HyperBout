@@ -61,6 +61,7 @@ var setupSockets = function()
 
 function updateID(data){
     localPlayer.id = data.id;
+    localPlayer.playerNumber = data.playerNumber;
 }
 
 function onSocketConnected() {
@@ -78,11 +79,28 @@ function onSocketDisconnect() {
 // New player
 function onNewPlayer(data) {
     console.log("New player connected: "+data.id);
+    
     // Initialise the new player
     var newPlayer = new HyperPlayer();
     newPlayer.id = data.id;
+    newPlayer.playerNumber = data.playerNumber;
+    
     // Add new player to the remote players array
     remotePlayers.push(newPlayer);
+
+    //Refresh the game so everyone starts back at their spawn points
+    setTimeout(function()
+    {
+        localPlayer.moveToSpawn();
+        for(i = 0; i < remotePlayers.length; i++) 
+        {        
+            console.log("HIT");
+            console.log(remotePlayers[i].id);
+            console.log(remotePlayers[i].playerNumber);
+            remotePlayers[i].moveToSpawn();
+        }
+    }, 1000)
+
 };
 
 // Move player
@@ -204,19 +222,65 @@ Engine.prototype.setupPhysics = function()
     bodyDef.position.y = 548 / SCALE;
     fixDef.shape = new box2d.b2PolygonShape; //setting the shape of the ground.
     fixDef.shape.SetAsBox((1122 / SCALE) / 2, (20 / SCALE)/2);
+    
     //Add the ground to the world, yeah!
     world.CreateBody(bodyDef).CreateFixture(fixDef);
 
+    /***Create Platforms***/
+    var platformImage = new Image();
+    platformImage.src = 'images/log.png';
+
+    //Top Left - P1 Start
     var testFix = new box2d.b2FixtureDef();
     testFix.density = 1;
     testFix.friction = 0.5;
     var testDef = new box2d.b2BodyDef();
     testDef.type = box2d.b2Body.b2_staticBody;
-    testDef.position.x = 200 / 2 / SCALE;
+    testDef.position.x = 400 / 2 / SCALE;
     testDef.position.y = 200 / 2 / SCALE;
     testFix.shape = new box2d.b2PolygonShape;
     testFix.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
     world.CreateBody(testDef).CreateFixture(testFix);
+    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6, testDef.position.y * 25);
+
+    //Top Right - P2 Start
+    var testFix2 = new box2d.b2FixtureDef();
+    testFix2.density = 1;
+    testFix2.friction = 0.5;
+    var testDef2 = new box2d.b2BodyDef();
+    testDef2.type = box2d.b2Body.b2_staticBody;
+    testDef2.position.x = 1800 / 2 / SCALE;
+    testDef2.position.y = 200 / 2 / SCALE;
+    testFix2.shape = new box2d.b2PolygonShape;
+    testFix2.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
+    world.CreateBody(testDef2).CreateFixture(testFix2);
+    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6, testDef.position.y * 115);
+
+    //Bottom Left - P3 Start
+    var testFix3 = new box2d.b2FixtureDef();
+    testFix3.density = 1;
+    testFix3.friction = 0.5;
+    var testDef3 = new box2d.b2BodyDef();
+    testDef3.type = box2d.b2Body.b2_staticBody;
+    testDef3.position.x = 400 / 2 / SCALE;
+    testDef3.position.y = 800 / 2 / SCALE;
+    testFix3.shape = new box2d.b2PolygonShape;
+    testFix3.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
+    world.CreateBody(testDef3).CreateFixture(testFix3);
+    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 111, testDef.position.y * 25);
+
+    //Bottom Right - P4 Start
+    var testFix4 = new box2d.b2FixtureDef();
+    testFix4.density = 1;
+    testFix4.friction = 0.5;
+    var testDef4 = new box2d.b2BodyDef();
+    testDef4.type = box2d.b2Body.b2_staticBody;
+    testDef4.position.x = 1800 / 2 / SCALE;
+    testDef4.position.y = 800 / 2 / SCALE;
+    testFix4.shape = new box2d.b2PolygonShape;
+    testFix4.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
+    world.CreateBody(testDef4).CreateFixture(testFix4);
+    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 111, testDef.position.y * 115);
 
     //Box2d has some nice default drawing, so let's draw the ground.
     var debugDraw = new box2d.b2DebugDraw();
@@ -312,9 +376,24 @@ Engine.prototype.start = function()
     $(document).keydown(Engine.HandleInput);
     $(document).keyup(Engine.HandleInput);
 
+    //Currently set to wait 2 second so that all players can have a position assigned to them
+    setTimeout(function()
+    {
+        localPlayer.moveToSpawn();
+        for(i = 0; i < remotePlayers.length; i++) 
+        {        
+            console.log("HIT");
+            console.log(remotePlayers[i].id);
+            console.log(remotePlayers[i].playerNumber);
+            remotePlayers[i].moveToSpawn();
+        }
+    }, 1000)
+
     var self = this;
+
     setInterval(function()
     {
+
         self.update();
         self.draw();
         localPlayer.draw(self.hyperBout.entityctx);
