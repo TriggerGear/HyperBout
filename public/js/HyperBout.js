@@ -210,6 +210,10 @@ Engine.prototype.setupPhysics = function()
     //when entities come to a halt.
     world = new box2d.b2World(new box2d.b2Vec2(0,50), true);
 
+    //Ground Image
+    var floorImage = new Image();
+    floorImage.src = 'images/floor.png';
+
     //Create ground
     var fixDef = new box2d.b2FixtureDef();
     fixDef.density = 1;
@@ -224,7 +228,8 @@ Engine.prototype.setupPhysics = function()
     fixDef.shape.SetAsBox((1122 / SCALE) / 2, (20 / SCALE)/2);
     
     //Add the ground to the world, yeah!
-    world.CreateBody(bodyDef).CreateFixture(fixDef);
+    var floorFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+    this.hyperBout.ctx.drawImage(floorImage, (floorFixture.GetBody().GetPosition().x ) - 20, (floorFixture.GetBody().GetPosition().y * SCALE) - 20);
 
     /***Create Platforms***/
     var platformImage = new Image();
@@ -254,7 +259,7 @@ Engine.prototype.setupPhysics = function()
     testFix2.shape = new box2d.b2PolygonShape;
     testFix2.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
     world.CreateBody(testDef2).CreateFixture(testFix2);
-    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6, testDef.position.y * 115);
+    this.hyperBout.ctx.drawImage(platformImage, testDef2.position.x * 25 - 6, testDef2.position.y * 25);
 
     //Bottom Left - P3 Start
     var testFix3 = new box2d.b2FixtureDef();
@@ -267,7 +272,7 @@ Engine.prototype.setupPhysics = function()
     testFix3.shape = new box2d.b2PolygonShape;
     testFix3.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
     world.CreateBody(testDef3).CreateFixture(testFix3);
-    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 111, testDef.position.y * 25);
+    this.hyperBout.ctx.drawImage(platformImage, testDef3.position.x * 6, testDef3.position.y *28 + 10);
 
     //Bottom Right - P4 Start
     var testFix4 = new box2d.b2FixtureDef();
@@ -280,7 +285,7 @@ Engine.prototype.setupPhysics = function()
     testFix4.shape = new box2d.b2PolygonShape;
     testFix4.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
     world.CreateBody(testDef4).CreateFixture(testFix4);
-    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 111, testDef.position.y * 115);
+    this.hyperBout.ctx.drawImage(platformImage, testDef4.position.x * 25 - 6 , testDef4.position.y *28 + 10);
 
     //Box2d has some nice default drawing, so let's draw the ground.
     var debugDraw = new box2d.b2DebugDraw();
@@ -291,6 +296,7 @@ Engine.prototype.setupPhysics = function()
     //Says what we want to draw
     debugDraw.SetFlags(box2d.b2DebugDraw.e_shapeBit | box2d.b2DebugDraw.e_jointBit);
     world.SetDebugDraw(debugDraw);
+    
 }
 
 //Array of input handlers
@@ -373,10 +379,12 @@ var FPS = 30;
 Engine.prototype.start = function()
 {
     // use jQuery to bind to all key press events
+
     $(document).keydown(Engine.HandleInput);
     $(document).keyup(Engine.HandleInput);
+    
 
-    //Currently set to wait 2 second so that all players can have a position assigned to them
+    //Currently set to wait 1 second so that all players can have a position assigned to them
     setTimeout(function()
     {
         localPlayer.moveToSpawn();

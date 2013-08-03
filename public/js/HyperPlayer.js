@@ -17,6 +17,8 @@ var HyperPlayer = function(){
 
     this.maxSpeed = 7;
 
+    this.bombArray = new Array();
+
     //Getters and Setters for position
     HyperPlayer.prototype.getX = function() {
         return this.xpos;
@@ -38,6 +40,9 @@ var HyperPlayer = function(){
     this.playerImage = new Image();
     this.playerImage.src = 'images/playerStationary.png';
 
+    this.playerBomb = new Image();
+    this.playerBomb.src = 'images/projectileBladeBomb.png';
+
     var fixDef = new box2d.b2FixtureDef();
     fixDef.density = 1;
     fixDef.friction = 0.5;
@@ -51,7 +56,7 @@ var HyperPlayer = function(){
     fixDef.shape = new box2d.b2PolygonShape; //setting the shape of the ground.
     fixDef.shape.SetAsBox((30 / SCALE) / 2, (40 / SCALE)/2);
     fixDef.friction = 4;
-    //Add the ground to the world, yeah!
+
     this.playerFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
 
 
@@ -91,6 +96,12 @@ HyperPlayer.prototype.draw = function(canvasctx)
     //canvasctx.drawImage(this.playerImage, (this.xpos * SCALE) - 15, (this.ypos * SCALE) - 20);
     
     canvasctx.drawImage(this.playerImage, (this.playerFixture.GetBody().GetPosition().x * SCALE) - 15, (this.playerFixture.GetBody().GetPosition().y * SCALE) - 20);
+        
+    //Draws each of the player's bombs. Need to restructure so bombs are held in a global array accessable to all players.
+    for (i=0;i<this.bombArray.length;i++)
+    {
+        canvasctx.drawImage(this.playerBomb, (this.bombArray[i].GetBody().GetPosition().x * SCALE) - 25, (this.bombArray[i].GetBody().GetPosition().y * SCALE) - 25);
+    }
 };
 //Movement function for players
 HyperPlayer.prototype.move = function(args)
@@ -348,12 +359,14 @@ HyperPlayer.prototype.bombThrow = function(ev)
     bodyDef.type = box2d.b2Body.b2_dynamicBody; 
     bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
     bodyDef.position.y = ((this.playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
-    fixDef.shape = new box2d.b2CircleShape(20 / SCALE); 
+
+
+    fixDef.shape = new box2d.b2CircleShape(20 / SCALE);                
 
     var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-
     bombFixture.GetBody().ApplyImpulse((new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x) *10, ((y / SCALE) - bodyDef.position.y) *10)) , bombFixture.GetBody().GetPosition());
-
+    this.bombArray.push(bombFixture);
+    //DUDE canvasctx.drawImage(this.playerBomb, (this.bombFixture.GetBody().GetPosition().x * SCALE) - 15, (this.bombFixture.GetBody().GetPosition().y * SCALE) - 20);
 }
 
 HyperPlayer.prototype.combineKey = function(keyCode, direction) {

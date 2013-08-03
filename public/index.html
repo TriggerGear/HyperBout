@@ -19,6 +19,14 @@
             }
         </script>
     </head>
+	
+	<style>
+		body
+		{
+			background-color:#4E8EC7;
+		}
+	</style>
+
     <body onload="start()">
         <div id="main">
             <canvas id="backgroundCanvas" style="border: 10px solid #F00;" height="548" width="1122">Canvas is not supported.</canvas>
@@ -27,6 +35,8 @@
         <div id="game-images">
             <img src="images/Background.png" id="background" alt="back-ground" style="display:none"/>
             <img src="images/playerStationary.png" id="playerStanding" alt="player" style="display:none"/>
+			<img src="images/log.png" id="playerStanding" alt="player" style="display:none"/>
+			<img src="images/floor.png" id="playerStanding" alt="player" style="display:none"/>
         </div>
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <input type="button" onclick="bgmAud.muted = true ; mute = true" value="Mute" />
