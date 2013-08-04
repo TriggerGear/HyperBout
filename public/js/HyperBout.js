@@ -201,6 +201,7 @@ var Engine = function()
 };
 
 
+
 //Awe yeah sweeet physaks
 Engine.prototype.setupPhysics = function()
 {
@@ -383,6 +384,19 @@ Engine.prototype.start = function()
     $(document).keydown(Engine.HandleInput);
     $(document).keyup(Engine.HandleInput);
     
+    //Center the Canvas
+    //If you wish to place it back to 0,0 remove this chunk and replace the bomb click function back to SCALE instead of 40
+    var canvas = document.getElementById('main');
+    var viewportWidth = window.innerWidth;
+    var viewportHeight = window.innerHeight;
+    var canvasWidth = viewportWidth * 0.8;
+    var canvasHeight = canvasWidth / 2;
+
+    canvas.style.position = "absolute";
+    canvas.setAttribute("width", canvasWidth);
+    canvas.setAttribute("height", canvasHeight);
+    canvas.style.top = (viewportHeight - canvasHeight) / 2 + "px";
+    canvas.style.left = (viewportWidth - canvasWidth) / 2 + "px";
 
     //Currently set to wait 1 second so that all players can have a position assigned to them
     setTimeout(function()

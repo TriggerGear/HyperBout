@@ -363,10 +363,10 @@ HyperPlayer.prototype.bombThrow = function(ev)
 
     fixDef.shape = new box2d.b2CircleShape(20 / SCALE);                
 
+    //Note before center adjustment x was divided by SCALE
     var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    bombFixture.GetBody().ApplyImpulse((new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x) *10, ((y / SCALE) - bodyDef.position.y) *10)) , bombFixture.GetBody().GetPosition());
+    bombFixture.GetBody().ApplyImpulse((new box2d.b2Vec2(((x / 40) - bodyDef.position.x) *10, ((y / 40) - bodyDef.position.y) *10)) , bombFixture.GetBody().GetPosition());
     this.bombArray.push(bombFixture);
-    //DUDE canvasctx.drawImage(this.playerBomb, (this.bombFixture.GetBody().GetPosition().x * SCALE) - 15, (this.bombFixture.GetBody().GetPosition().y * SCALE) - 20);
 }
 
 HyperPlayer.prototype.combineKey = function(keyCode, direction) {
