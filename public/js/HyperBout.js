@@ -147,7 +147,7 @@ var hyperBout = function()
 {
     this.width = 1122;
     this.height = 548;
-    return new CanvasWrapper('backgroundCanvas', 'entityCanvas', width, height);
+    return new CanvasWrapper('backgroundCanvas', 'entityCanvas', 'animationCanvas', width, height);
 };
 
 var Engine = function()
@@ -161,7 +161,7 @@ var Engine = function()
     this.hyperBout.ctx.drawImage(backgroundImg, 0, 0);
 
 
-    //Variable reference to this engine
+    //Variable reference to this eventngine
     var self = this;
     
     //Set dem physics
@@ -398,6 +398,29 @@ Engine.prototype.start = function()
     canvas.style.top = (viewportHeight - canvasHeight) / 2 + "px";
     canvas.style.left = (viewportWidth - canvasWidth) / 2 + "px";
 
+    var cloudOneImageOne = new Image();
+    cloudOneImageOne.src = 'images/clouds.png';
+    var x1 = 0;
+
+    var cloudOneImageTwo = new Image();
+    cloudOneImageTwo.src = 'images/clouds.png';
+    var x2 = 1120;
+
+    var cloudTwoImageOne = new Image();
+    cloudTwoImageOne.src = 'images/clouds2.png';
+    var x21 = -20;
+
+    var cloudTwoImageTwo = new Image();
+    cloudTwoImageTwo.src = 'images/clouds2.png';
+    var x22 = 1100
+
+    var cloudThreeImageOne = new Image();
+    cloudThreeImageOne.src = 'images/clouds3.png';
+    var x31 = -20;
+
+    var cloudThreeImageTwo = new Image();
+    cloudThreeImageTwo.src = 'images/clouds3.png';
+    var x32 = 1100;
     //Currently set to wait 1 second so that all players can have a position assigned to them
     setTimeout(function()
     {
@@ -418,6 +441,37 @@ Engine.prototype.start = function()
 
         self.update();
         self.draw();
+        x1 = x1 - 4;
+        x2 = x2 - 4;
+        x21 = x21 - 2;
+        x22 = x22 - 2;
+        x31 = x31 - 1;
+        x32 = x32 - 1;
+        if(x1 <= -1120)
+        {
+            x1 = 1120;
+        }
+        if(x2 <= -1120)
+        {
+            x2 = 1120;
+        }
+        if(x21 <= -1140)
+        {
+            x21 = 1100;
+        }
+        if(x22 <= -1140)
+        {
+            x22 = 1100;
+        }
+        if(x31 <= -1140)
+        {
+            x31 = 1100;
+        }
+        if(x32 <= - 1140)
+        {
+            x32 = 1100;
+        }
+        self.animateClouds(cloudOneImageOne, x1, cloudOneImageTwo, x2, cloudTwoImageOne, x21, cloudTwoImageTwo, x22, cloudThreeImageOne, x31, cloudThreeImageTwo, x32);
         localPlayer.draw(self.hyperBout.entityctx);
         
         
@@ -444,6 +498,8 @@ Engine.prototype.draw = function()
 {
     //Clear the canvas
     this.hyperBout.entityctx.clearRect(0, 0, this.hyperBout.width, this.hyperBout.height);
+    this.hyperBout.animationctx.clearRect(0, 0, this.hyperBout.width, this.hyperBout.height);
+
     world.Step(
         1 / FPS
         , 10
@@ -452,6 +508,17 @@ Engine.prototype.draw = function()
     world.DrawDebugData();
     world.ClearForces();
 }
+Engine.prototype.animateClouds = function(cloudImageOne,  x1, cloudImageTwo, x2, cloudTwoImageOne, x21, cloudTwoImageTwo, x22, cloudThreeImageOne, x31, cloudThreeImageTwo, x32)
+{
+    this.hyperBout.animationctx.drawImage(cloudThreeImageOne, x31, 40);
+    this.hyperBout.animationctx.drawImage(cloudThreeImageTwo, x32, 40);
+
+    this.hyperBout.animationctx.drawImage(cloudTwoImageOne, x21, 20);
+    this.hyperBout.animationctx.drawImage(cloudTwoImageTwo, x22, 20);
+
+    this.hyperBout.animationctx.drawImage(cloudImageOne, x1, 0);
+    this.hyperBout.animationctx.drawImage(cloudImageTwo, x2, 0);
+}
 //Move the text diagonal
 Engine.prototype.update = function()
 {
@@ -459,13 +526,17 @@ Engine.prototype.update = function()
 
 }
 //Canvas wrapper
-function CanvasWrapper(backCanvasId, entityCanvasId, width, height) {
+function CanvasWrapper(backCanvasId, entityCanvasId, animationCanvasId, width, height) {
     //Canvas for storing the background image
     this.canvas = document.getElementById(backCanvasId);
     this.ctx = this.canvas.getContext('2d');
     //Canvas for drawing entities such as players and projectiles.
     this.entityCanvas = document.getElementById(entityCanvasId);
     this.entityctx = this.entityCanvas.getContext('2d');
+    //Canvas for animating clouds and what not
+    this.animationCanvas = document.getElementById(animationCanvasId);
+    this.animationctx = this.animationCanvas.getContext('2d');
+
     this.width = width;
     this.height = height;
 }

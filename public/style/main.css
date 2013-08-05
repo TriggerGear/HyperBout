@@ -11,9 +11,11 @@
 #backgroundCanvas {
     z-index: 1;
 }
-
-#entityCanvas{
+#animationCanvas{
 	z-index: 2;
+}
+#entityCanvas{
+	z-index: 3;
 }
 
 #title {
