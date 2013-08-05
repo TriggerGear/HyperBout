@@ -421,6 +421,31 @@ Engine.prototype.start = function()
     var cloudThreeImageTwo = new Image();
     cloudThreeImageTwo.src = 'images/clouds3.png';
     var x32 = 1100;
+
+    var starZero = new Image();
+    var starOne = new Image();
+    var starTwo = new Image();
+    var starThree = new Image();
+    var starFour = new Image();
+    var starFive = new Image();
+    var starSix = new Image();
+    starZero.src = 'images/stars/star0.png';
+    starOne.src = 'images/stars/star1.png';
+    starTwo.src = 'images/stars/star2.png';
+    starThree.src = 'images/stars/star3.png';
+    starFour.src = 'images/stars/star4.png';
+    starFive.src = 'images/stars/star5.png';
+    starSix.src = 'images/stars/star6.png';
+    var starArray = new Array();
+    starArray[0] = starZero;
+    starArray[1] = starOne;
+    starArray[2] = starTwo;
+    starArray[3] = starThree;
+    starArray[4] = starFour;
+    starArray[5] = starFive;
+    starArray[6] = starSix;
+    var starIndex = 0;
+    var slowAnimation = 0;
     //Currently set to wait 1 second so that all players can have a position assigned to them
     setTimeout(function()
     {
@@ -441,6 +466,7 @@ Engine.prototype.start = function()
 
         self.update();
         self.draw();
+        //CloudAnimation--------------------------------------------------------------------------------------------------------------------------------------------------
         x1 = x1 - 4;
         x2 = x2 - 4;
         x21 = x21 - 2;
@@ -472,6 +498,27 @@ Engine.prototype.start = function()
             x32 = 1100;
         }
         self.animateClouds(cloudOneImageOne, x1, cloudOneImageTwo, x2, cloudTwoImageOne, x21, cloudTwoImageTwo, x22, cloudThreeImageOne, x31, cloudThreeImageTwo, x32);
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        //Star animation--------------------------------------------------------------------------------------------------------------------------------------------------
+        if(starIndex > 5)
+        {
+            starIndex = 0;
+        }
+        self.animateStars(starArray, starIndex);
+
+        
+        if(slowAnimation == 3)
+        {
+            starIndex++;
+            slowAnimation = 0;
+        }
+        else
+        {
+            slowAnimation++;
+        }
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
         localPlayer.draw(self.hyperBout.entityctx);
         
         
@@ -519,6 +566,18 @@ Engine.prototype.animateClouds = function(cloudImageOne,  x1, cloudImageTwo, x2,
     this.hyperBout.animationctx.drawImage(cloudImageOne, x1, 0);
     this.hyperBout.animationctx.drawImage(cloudImageTwo, x2, 0);
 }
+Engine.prototype.animateStars = function(starArray, starIndex)
+{
+    this.hyperBout.animationctx.drawImage(starArray[starIndex], 500, 110);
+   
+    starIndex = starIndex + 2;
+    if(starIndex > 5)
+    {
+        starIndex = 0;
+    }
+    this.hyperBout.animationctx.drawImage(starArray[starIndex], 1000, 160);
+}
+
 //Move the text diagonal
 Engine.prototype.update = function()
 {
