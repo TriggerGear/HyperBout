@@ -379,8 +379,8 @@ var FPS = 30;
 
 Engine.prototype.start = function()
 {
+    var gameStartTime = new Date().getTime();
     // use jQuery to bind to all key press events
-
     $(document).keydown(Engine.HandleInput);
     $(document).keyup(Engine.HandleInput);
     
@@ -398,6 +398,140 @@ Engine.prototype.start = function()
     canvas.style.top = (viewportHeight - canvasHeight) / 2 + "px";
     canvas.style.left = (viewportWidth - canvasWidth) / 2 + "px";
 
+    //Load cloud images and their x coordinates.
+    var cloudArray = this.loadClouds();
+    //Load star images.
+    var starArray = this.loadStars();
+    //Current frame for the star animation.
+    var starIndex = 0;
+
+    //Currently set to wait 1 second so that all players can have a position assigned to them
+    setTimeout(function()
+    {
+        localPlayer.moveToSpawn();
+        for(i = 0; i < remotePlayers.length; i++) 
+        {        
+            console.log("HIT");
+            console.log(remotePlayers[i].id);
+            console.log(remotePlayers[i].playerNumber);
+            remotePlayers[i].moveToSpawn();
+        }
+    }, 1000)
+
+    var self = this;
+    var starIndexLast = starIndex;
+    var starAnimationTime = new Date().getTime();
+
+    setInterval(function()
+    {
+        self.update();
+        self.draw();
+
+        //CloudAnimation--------------------------------------------------------------------------------------------------------------------------------------------------
+        cloudArray = self.updateCloudInformation(cloudArray).splice(0);
+        self.animateClouds(cloudArray);
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        //Star animation--------------------------------------------------------------------------------------------------------------------------------------------------
+        starIndex = self.animateStars(starArray, starIndex, starAnimationTime, gameStartTime);
+
+        if(starIndexLast != starIndex)
+        {
+            starIndexLast = starIndex;
+            starAnimationTime = gameStartTime;
+        }
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        localPlayer.draw(self.hyperBout.entityctx);
+        
+        
+        //console.log("Outside Interval: ID:" + localPlayer.id + " XPosition" + localPlayer.getX() + " YPosition" + localPlayer.getY());
+
+        //Temporary emit to server, need to find more permanent version
+        var playerVectorAndDirection = localPlayer.move();
+        if(playerVectorAndDirection) {
+            socket.emit("move player", playerVectorAndDirection);            
+        }
+
+        
+        for (i = 0; i < remotePlayers.length; i++) 
+        {
+            //console.log("Inside Interval: ID:" + remotePlayers[i].id + " XPosition" + remotePlayers[i].getX() + " YPosition" + remotePlayers[i].getY());
+            remotePlayers[i].draw(self.hyperBout.entityctx);
+        };
+        gameStartTime = new Date().getTime();
+    }, 1000/FPS);
+};
+
+//Draw text to test updating
+Engine.prototype.draw = function()
+{
+    //Clear the canvas
+    this.hyperBout.entityctx.clearRect(0, 0, this.hyperBout.width, this.hyperBout.height);
+    this.hyperBout.animationctx.clearRect(0, 0, this.hyperBout.width, this.hyperBout.height);
+
+    world.Step(
+        1 / FPS
+        , 10
+        , 10
+        );
+    world.DrawDebugData();
+    world.ClearForces();
+}
+Engine.prototype.animateClouds = function(cloudArrayInformation)
+{
+    this.hyperBout.animationctx.drawImage(cloudArrayInformation[8], cloudArrayInformation[9], 40);
+    this.hyperBout.animationctx.drawImage(cloudArrayInformation[10], cloudArrayInformation[11], 40);
+
+    this.hyperBout.animationctx.drawImage(cloudArrayInformation[4], cloudArrayInformation[5], 20);
+    this.hyperBout.animationctx.drawImage(cloudArrayInformation[6], cloudArrayInformation[7], 20);
+
+    this.hyperBout.animationctx.drawImage(cloudArrayInformation[0], cloudArrayInformation[1], 0);
+    this.hyperBout.animationctx.drawImage(cloudArrayInformation[2], cloudArrayInformation[3], 0);
+}
+Engine.prototype.animateStars = function(starArray, starIndex, starAnimation, gameTime)
+{
+    if((gameTime - starAnimation) > 100)
+    {
+        starIndex++;
+    }
+    if(starIndex > 5)
+    {
+        starIndex = 0;
+    }
+    this.hyperBout.animationctx.drawImage(starArray[starIndex], 500, 110);
+    this.hyperBout.animationctx.drawImage(starArray[starIndex], 1000, 160);
+    return starIndex;
+}
+Engine.prototype.loadStars = function()
+{
+    var starZero = new Image();
+    var starOne = new Image();
+    var starTwo = new Image();
+    var starThree = new Image();
+    var starFour = new Image();
+    var starFive = new Image();
+    var starSix = new Image();
+    starZero.src = 'images/stars/star0.png';
+    starOne.src = 'images/stars/star1.png';
+    starTwo.src = 'images/stars/star2.png';
+    starThree.src = 'images/stars/star3.png';
+    starFour.src = 'images/stars/star4.png';
+    starFive.src = 'images/stars/star5.png';
+
+    var stars = new Array();
+    stars[0] = starZero;
+    stars[1] = starOne;
+    stars[2] = starTwo;
+    stars[3] = starThree;
+    stars[4] = starFour;
+    stars[5] = starFive;
+    stars[6] = starSix;
+
+    return stars;
+}
+Engine.prototype.loadClouds = function()
+{
     var cloudOneImageOne = new Image();
     cloudOneImageOne.src = 'images/clouds.png';
     var x1 = 0;
@@ -422,167 +556,85 @@ Engine.prototype.start = function()
     cloudThreeImageTwo.src = 'images/clouds3.png';
     var x32 = 1100;
 
-    var starZero = new Image();
-    var starOne = new Image();
-    var starTwo = new Image();
-    var starThree = new Image();
-    var starFour = new Image();
-    var starFive = new Image();
-    var starSix = new Image();
-    starZero.src = 'images/stars/star0.png';
-    starOne.src = 'images/stars/star1.png';
-    starTwo.src = 'images/stars/star2.png';
-    starThree.src = 'images/stars/star3.png';
-    starFour.src = 'images/stars/star4.png';
-    starFive.src = 'images/stars/star5.png';
-    starSix.src = 'images/stars/star6.png';
-    var starArray = new Array();
-    starArray[0] = starZero;
-    starArray[1] = starOne;
-    starArray[2] = starTwo;
-    starArray[3] = starThree;
-    starArray[4] = starFour;
-    starArray[5] = starFive;
-    starArray[6] = starSix;
-    var starIndex = 0;
-    var slowAnimation = 0;
-    //Currently set to wait 1 second so that all players can have a position assigned to them
-    setTimeout(function()
-    {
-        localPlayer.moveToSpawn();
-        for(i = 0; i < remotePlayers.length; i++) 
-        {        
-            console.log("HIT");
-            console.log(remotePlayers[i].id);
-            console.log(remotePlayers[i].playerNumber);
-            remotePlayers[i].moveToSpawn();
-        }
-    }, 1000)
+    var cloudInformation = new Array();
 
-    var self = this;
+    cloudInformation.push(cloudOneImageOne);
+    cloudInformation.push(x1);
+    cloudInformation.push(cloudOneImageTwo);
+    cloudInformation.push(x2);
+    cloudInformation.push(cloudTwoImageOne);
+    cloudInformation.push(x21);
+    cloudInformation.push(cloudTwoImageTwo);
+    cloudInformation.push(x22);
+    cloudInformation.push(cloudThreeImageOne);
+    cloudInformation.push(x31);
+    cloudInformation.push(cloudThreeImageTwo);
+    cloudInformation.push(x32);
 
-    setInterval(function()
-    {
-
-        self.update();
-        self.draw();
-        //CloudAnimation--------------------------------------------------------------------------------------------------------------------------------------------------
-        x1 = x1 - 4;
-        x2 = x2 - 4;
-        x21 = x21 - 2;
-        x22 = x22 - 2;
-        x31 = x31 - 1;
-        x32 = x32 - 1;
-        if(x1 <= -1120)
-        {
-            x1 = 1120;
-        }
-        if(x2 <= -1120)
-        {
-            x2 = 1120;
-        }
-        if(x21 <= -1140)
-        {
-            x21 = 1100;
-        }
-        if(x22 <= -1140)
-        {
-            x22 = 1100;
-        }
-        if(x31 <= -1140)
-        {
-            x31 = 1100;
-        }
-        if(x32 <= - 1140)
-        {
-            x32 = 1100;
-        }
-        self.animateClouds(cloudOneImageOne, x1, cloudOneImageTwo, x2, cloudTwoImageOne, x21, cloudTwoImageTwo, x22, cloudThreeImageOne, x31, cloudThreeImageTwo, x32);
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        //Star animation--------------------------------------------------------------------------------------------------------------------------------------------------
-        if(starIndex > 5)
-        {
-            starIndex = 0;
-        }
-        self.animateStars(starArray, starIndex);
-
-        
-        if(slowAnimation == 3)
-        {
-            starIndex++;
-            slowAnimation = 0;
-        }
-        else
-        {
-            slowAnimation++;
-        }
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        localPlayer.draw(self.hyperBout.entityctx);
-        
-        
-        //console.log("Outside Interval: ID:" + localPlayer.id + " XPosition" + localPlayer.getX() + " YPosition" + localPlayer.getY());
-
-        //Temporary emit to server, need to find more permanent version
-        var playerVectorAndDirection = localPlayer.move();
-        if(playerVectorAndDirection) {
-            socket.emit("move player", playerVectorAndDirection);            
-        }
-
-        
-        for (i = 0; i < remotePlayers.length; i++) 
-        {
-            
-            //console.log("Inside Interval: ID:" + remotePlayers[i].id + " XPosition" + remotePlayers[i].getX() + " YPosition" + remotePlayers[i].getY());
-            remotePlayers[i].draw(self.hyperBout.entityctx);
-        };
-    }, 1000/FPS);
-};
-
-//Draw text to test updating
-Engine.prototype.draw = function()
-{
-    //Clear the canvas
-    this.hyperBout.entityctx.clearRect(0, 0, this.hyperBout.width, this.hyperBout.height);
-    this.hyperBout.animationctx.clearRect(0, 0, this.hyperBout.width, this.hyperBout.height);
-
-    world.Step(
-        1 / FPS
-        , 10
-        , 10
-        );
-    world.DrawDebugData();
-    world.ClearForces();
+    return cloudInformation;
 }
-Engine.prototype.animateClouds = function(cloudImageOne,  x1, cloudImageTwo, x2, cloudTwoImageOne, x21, cloudTwoImageTwo, x22, cloudThreeImageOne, x31, cloudThreeImageTwo, x32)
+Engine.prototype.updateCloudInformation = function(cloudInformationArray)
 {
-    this.hyperBout.animationctx.drawImage(cloudThreeImageOne, x31, 40);
-    this.hyperBout.animationctx.drawImage(cloudThreeImageTwo, x32, 40);
+        cloudInformationArray[1] = cloudInformationArray[1] - 4;
+        cloudInformationArray[3] = cloudInformationArray[3] - 4;
+        cloudInformationArray[5] = cloudInformationArray[5] - 2;
+        cloudInformationArray[7] = cloudInformationArray[7] - 2;
+        cloudInformationArray[9] = cloudInformationArray[9] - 1;
+        cloudInformationArray[11] = cloudInformationArray[11] - 1;
 
-    this.hyperBout.animationctx.drawImage(cloudTwoImageOne, x21, 20);
-    this.hyperBout.animationctx.drawImage(cloudTwoImageTwo, x22, 20);
-
-    this.hyperBout.animationctx.drawImage(cloudImageOne, x1, 0);
-    this.hyperBout.animationctx.drawImage(cloudImageTwo, x2, 0);
+        if(cloudInformationArray[1] <= -1120)
+        {
+            cloudInformationArray[1] = 1120;
+        }
+        if(cloudInformationArray[3] <= -1120)
+        {
+            cloudInformationArray[3] = 1120;
+        }
+        if(cloudInformationArray[5] <= -1140)
+        {
+            cloudInformationArray[5] = 1100;
+        }
+        if(cloudInformationArray[7] <= -1140)
+        {
+            cloudInformationArray[7] = 1100;
+        }
+        if(cloudInformationArray[9] <= -1140)
+        {
+            cloudInformationArray[9]= 1100;
+        }
+        if(cloudInformationArray[11] <= - 1140)
+        {
+            cloudInformationArray[11] = 1100;
+        }
+        return cloudInformationArray;
 }
-Engine.prototype.animateStars = function(starArray, starIndex)
-{
-    this.hyperBout.animationctx.drawImage(starArray[starIndex], 500, 110);
-   
-    starIndex = starIndex + 2;
-    if(starIndex > 5)
-    {
-        starIndex = 0;
-    }
-    this.hyperBout.animationctx.drawImage(starArray[starIndex], 1000, 160);
-}
-
 //Move the text diagonal
 Engine.prototype.update = function()
 {
     
 
+}
+Engine.prototype.addContactListener = function(callbacks)
+{
+    var listener = new Box2D.Dynamics.b2ContactListener;
+
+    if (callbacks.BeginContact) listener.BeginContact = function(contact) 
+    {
+        callbacks.BeginContact(contact.GetFixtureA().GetBody().GetUserData(),
+                               contact.GetFixtureB().GetBody().GetUserData());
+    }
+    if (callbacks.EndContact) listener.EndContact = function(contact) 
+    {
+        callbacks.EndContact(contact.GetFixtureA().GetBody().GetUserData(),
+                             contact.GetFixtureB().GetBody().GetUserData());
+    }
+    if (callbacks.PostSolve) listener.PostSolve = function(contact, impulse) 
+    {
+        callbacks.PostSolve(contact.GetFixtureA().GetBody().GetUserData(),
+                             contact.GetFixtureB().GetBody().GetUserData(),
+                             impulse.normalImpulses[0]);
+    }
+    this.world.SetContactListener(listener);
 }
 //Canvas wrapper
 function CanvasWrapper(backCanvasId, entityCanvasId, animationCanvasId, width, height) {
