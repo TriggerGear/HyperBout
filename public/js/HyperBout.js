@@ -230,9 +230,9 @@ Engine.prototype.setupPhysics = function()
     testDef.position.y = 200 / 2 / SCALE;
     testFix.shape = new box2d.b2PolygonShape;
     testFix.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
-    world.CreateBody(testDef).CreateFixture(testFix);
+    var topLeftFloor = world.CreateBody(testDef).CreateFixture(testFix);
     this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6, testDef.position.y * 25);
-
+    topLeftFloor.SetUserData('TopLeftFloor');
     //Top Right - P2 Start
     var testFix2 = new box2d.b2FixtureDef();
     testFix2.density = 1;
@@ -243,9 +243,9 @@ Engine.prototype.setupPhysics = function()
     testDef2.position.y = 200 / 2 / SCALE;
     testFix2.shape = new box2d.b2PolygonShape;
     testFix2.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
-    world.CreateBody(testDef2).CreateFixture(testFix2);
+    var topRightFloor = world.CreateBody(testDef2).CreateFixture(testFix2);
     this.hyperBout.ctx.drawImage(platformImage, testDef2.position.x * 25 - 6, testDef2.position.y * 25);
-
+    topRightFloor.SetUserData('TopRightFloor');
     //Bottom Left Platform- P3 Start
     var testFix3 = new box2d.b2FixtureDef();
     testFix3.density = 1;
@@ -256,8 +256,9 @@ Engine.prototype.setupPhysics = function()
     testDef3.position.y = 840 / 2 / SCALE;
     testFix3.shape = new box2d.b2PolygonShape;
     testFix3.shape.SetAsBox((660/SCALE)/2, (20 / SCALE) / 2);
-    world.CreateBody(testDef3).CreateFixture(testFix3);
+    var bottomLeft = world.CreateBody(testDef3).CreateFixture(testFix3);
     this.hyperBout.ctx.drawImage(platformImage, testDef3.position.x * 6, testDef3.position.y *28 + 10);
+    bottomLeft.SetUserData("BottomLeftFloor");
 
     //Bottom Right - P4 Start
     var testFix4 = new box2d.b2FixtureDef();
@@ -269,9 +270,9 @@ Engine.prototype.setupPhysics = function()
     testDef4.position.y = 840 / 2 / SCALE;
     testFix4.shape = new box2d.b2PolygonShape;
     testFix4.shape.SetAsBox((640/SCALE)/2, (20 / SCALE) / 2);
-    world.CreateBody(testDef4).CreateFixture(testFix4);
+    var bottomRightFloor = world.CreateBody(testDef4).CreateFixture(testFix4);
     this.hyperBout.ctx.drawImage(platformImage, testDef4.position.x * 25 - 6 , testDef4.position.y *28 + 10);
-
+    bottomRightFloor.SetUserData("BottomRightFloor");
     //Box2d has some nice default drawing, so let's draw the ground.
     var debugDraw = new box2d.b2DebugDraw();
     debugDraw.SetSprite(document.getElementById("entityCanvas").getContext("2d"));
@@ -361,8 +362,28 @@ Engine.prototype.MuteUnmuteAudio = function(soundFile, bool)
 //Set the frames per second to 30
 var FPS = 30;
 
+
 Engine.prototype.start = function()
 {
+    var graveYard = new Array();
+    var listener = Box2D.Dynamics.b2ContactListener;
+    listener.BeginContact = function(contact)
+    {
+        console.log(contact.GetFixtureA().GetUserData());
+        console.log(contact.GetFixtureB().GetUserData());
+        
+    }
+    listener.EndContact = function(contact) {
+    // console.log(contact.GetFixtureA().GetBody().GetUserData());
+    }
+    listener.PostSolve = function(contact, impulse) 
+    {
+    }
+    listener.PreSolve = function(contact, oldManifold) {
+    // PreSolve
+    }
+    world.SetContactListener(listener);
+
     var gameStartTime = new Date().getTime();
     // use jQuery to bind to all key press events
     $(document).keydown(Engine.HandleInput);
@@ -394,6 +415,9 @@ Engine.prototype.start = function()
     var lightsArray = this.loadLights();
     var lightsIndex = 0;
 
+    var starIndexLast = starIndex;
+    var starAnimationTime = new Date().getTime();
+    var lightsAnimationTime = new Date().getTime();
     //Currently set to wait 1 second so that all players can have a position assigned to them
     setTimeout(function()
     {
@@ -408,10 +432,6 @@ Engine.prototype.start = function()
     }, 1000)
 
     var self = this;
-    var starIndexLast = starIndex;
-    var starAnimationTime = new Date().getTime();
-    var lightsAnimationTime = new Date().getTime();
-   
 
     setInterval(function()
     {
@@ -445,13 +465,10 @@ Engine.prototype.start = function()
          {
             lightsIndex = 0;
          }
-        
-
         //Lights animation end----------------------------------------------------------------------------------------------------------------------------------------------
 
         localPlayer.draw(self.hyperBout.entityctx);
-        
-        
+
         //console.log("Outside Interval: ID:" + localPlayer.id + " XPosition" + localPlayer.getX() + " YPosition" + localPlayer.getY());
 
         //Temporary emit to server, need to find more permanent version
@@ -465,6 +482,10 @@ Engine.prototype.start = function()
         {
             //console.log("Inside Interval: ID:" + remotePlayers[i].id + " XPosition" + remotePlayers[i].getX() + " YPosition" + remotePlayers[i].getY());
             remotePlayers[i].draw(self.hyperBout.entityctx);
+        };
+        for(i = 0; i < graveYard.length; i++)
+        {
+            world.DestroyBody(graveYard[i]);
         };
         gameStartTime = new Date().getTime();
     }, 1000/FPS);
@@ -778,28 +799,7 @@ Engine.prototype.update = function()
     
 
 }
-Engine.prototype.addContactListener = function(callbacks)
-{
-    var listener = new Box2D.Dynamics.b2ContactListener;
 
-    if (callbacks.BeginContact) listener.BeginContact = function(contact) 
-    {
-        callbacks.BeginContact(contact.GetFixtureA().GetBody().GetUserData(),
-                               contact.GetFixtureB().GetBody().GetUserData());
-    }
-    if (callbacks.EndContact) listener.EndContact = function(contact) 
-    {
-        callbacks.EndContact(contact.GetFixtureA().GetBody().GetUserData(),
-                             contact.GetFixtureB().GetBody().GetUserData());
-    }
-    if (callbacks.PostSolve) listener.PostSolve = function(contact, impulse) 
-    {
-        callbacks.PostSolve(contact.GetFixtureA().GetBody().GetUserData(),
-                             contact.GetFixtureB().GetBody().GetUserData(),
-                             impulse.normalImpulses[0]);
-    }
-    this.world.SetContactListener(listener);
-}
 //Canvas wrapper
 function CanvasWrapper(backCanvasId, entityCanvasId, animationCanvasId, width, height) {
     //Canvas for storing the background image

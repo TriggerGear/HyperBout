@@ -46,7 +46,8 @@ var HyperPlayer = function(){
     var fixDef = new box2d.b2FixtureDef();
     fixDef.density = 1;
     fixDef.friction = 0.5;
-
+    fixDef.filter.categoryBits = 0x0002;
+    fixDef.filter.maskBits = 0x0001;
     //Now we need to define the body, static (not affected by gravity), dynamic (affected by grav)
     var bodyDef = new box2d.b2BodyDef();
     bodyDef.type = box2d.b2Body.b2_dynamicBody; //We're setting the ground to static.
@@ -58,7 +59,6 @@ var HyperPlayer = function(){
     fixDef.friction = 4;
 
     this.playerFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-
 
     var self = this;
     Engine.RegisterInputHandler(new Engine.InputHandler('player', function(event) {
@@ -196,7 +196,7 @@ HyperPlayer.prototype.getMoveVector = function() {
     case HyperPlayer.MoveUp:
         if(this.playerFixture.GetBody().GetLinearVelocity().y == 0)
         {
-            var vec = new box2d.b2Vec2(0, -1 * SCALE);
+            var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
             return {playerVector: vec, direction: "up"};
         }
@@ -233,7 +233,7 @@ HyperPlayer.prototype.getMoveVector = function() {
     case HyperPlayer.MoveLeft | HyperPlayer.MoveUp :
         if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
         {
-            var vec = new box2d.b2Vec2(-0.2 * SCALE, -1 * SCALE);
+            var vec = new box2d.b2Vec2(-0.2 * SCALE, -0.8 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
             
             //Set Direction
@@ -261,7 +261,7 @@ HyperPlayer.prototype.getMoveVector = function() {
     case HyperPlayer.MoveRight | HyperPlayer.MoveUp:
         if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
         {
-            var vec = new box2d.b2Vec2(0.2 * SCALE, -1 * SCALE);
+            var vec = new box2d.b2Vec2(0.2 * SCALE, -0.8 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
             
             //Set Direction
@@ -354,7 +354,8 @@ HyperPlayer.prototype.bombThrow = function(ev)
     fixDef.density = 1;
     fixDef.friction = 0.5;
     fixDef.restiution = 0.5;
-
+    fixDef.filter.categoryBits = 0x0004;
+    fixDef.filter.maskBits = 0x0001;
     var bodyDef = new box2d.b2BodyDef();
     bodyDef.type = box2d.b2Body.b2_dynamicBody; 
     bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
@@ -365,6 +366,8 @@ HyperPlayer.prototype.bombThrow = function(ev)
 
     //Note before center adjustment x was divided by SCALE
     var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+    bombFixture.SetUserData('Bomb');
+    
     bombFixture.GetBody().ApplyImpulse((new box2d.b2Vec2(((x / 40) - bodyDef.position.x) *10, ((y / 40) - bodyDef.position.y) *10)) , bombFixture.GetBody().GetPosition());
     this.bombArray.push(bombFixture);
 }
