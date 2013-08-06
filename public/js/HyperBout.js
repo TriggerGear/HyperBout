@@ -232,7 +232,7 @@ Engine.prototype.setupPhysics = function()
     testFix.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
     var topLeftFloor = world.CreateBody(testDef).CreateFixture(testFix);
     this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6, testDef.position.y * 25);
-    topLeftFloor.SetUserData('TopLeftFloor');
+    topLeftFloor.SetUserData('Floor');
     //Top Right - P2 Start
     var testFix2 = new box2d.b2FixtureDef();
     testFix2.density = 1;
@@ -245,7 +245,7 @@ Engine.prototype.setupPhysics = function()
     testFix2.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
     var topRightFloor = world.CreateBody(testDef2).CreateFixture(testFix2);
     this.hyperBout.ctx.drawImage(platformImage, testDef2.position.x * 25 - 6, testDef2.position.y * 25);
-    topRightFloor.SetUserData('TopRightFloor');
+    topRightFloor.SetUserData('Floor');
     //Bottom Left Platform- P3 Start
     var testFix3 = new box2d.b2FixtureDef();
     testFix3.density = 1;
@@ -258,7 +258,7 @@ Engine.prototype.setupPhysics = function()
     testFix3.shape.SetAsBox((660/SCALE)/2, (20 / SCALE) / 2);
     var bottomLeft = world.CreateBody(testDef3).CreateFixture(testFix3);
     this.hyperBout.ctx.drawImage(platformImage, testDef3.position.x * 6, testDef3.position.y *28 + 10);
-    bottomLeft.SetUserData("BottomLeftFloor");
+    bottomLeft.SetUserData("Floor");
 
     //Bottom Right - P4 Start
     var testFix4 = new box2d.b2FixtureDef();
@@ -272,7 +272,7 @@ Engine.prototype.setupPhysics = function()
     testFix4.shape.SetAsBox((640/SCALE)/2, (20 / SCALE) / 2);
     var bottomRightFloor = world.CreateBody(testDef4).CreateFixture(testFix4);
     this.hyperBout.ctx.drawImage(platformImage, testDef4.position.x * 25 - 6 , testDef4.position.y *28 + 10);
-    bottomRightFloor.SetUserData("BottomRightFloor");
+    bottomRightFloor.SetUserData("Floor");
     //Box2d has some nice default drawing, so let's draw the ground.
     var debugDraw = new box2d.b2DebugDraw();
     debugDraw.SetSprite(document.getElementById("entityCanvas").getContext("2d"));
@@ -369,8 +369,21 @@ Engine.prototype.start = function()
     var listener = Box2D.Dynamics.b2ContactListener;
     listener.BeginContact = function(contact)
     {
-        console.log(contact.GetFixtureA().GetUserData());
-        console.log(contact.GetFixtureB().GetUserData());
+        var contactA = contact.GetFixtureA();
+        var contactB = contact.GetFixtureB();
+        console.log(contactA.GetUserData());
+        console.log(contactB.GetUserData());
+        if(contactA.GetUserData() == 'Bomb' || contactB.GetUserData() == 'Bomb')
+        {
+            if(contactA.GetUserData() == 'Floor')
+            {
+                graveYard.push(contactB.GetBody());
+            }
+            else if(contactB.GetUserData() == 'Floor')
+            {
+                graveYard.push(contactB.GetBody());
+            }
+        }
         
     }
     listener.EndContact = function(contact) {
