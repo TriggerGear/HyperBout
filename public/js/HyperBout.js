@@ -391,6 +391,9 @@ Engine.prototype.start = function()
     //Platform images
     var platformArray = this.loadPlatformImages();
 
+    var lightsArray = this.loadLights();
+    var lightsIndex = 0;
+
     //Currently set to wait 1 second so that all players can have a position assigned to them
     setTimeout(function()
     {
@@ -407,6 +410,8 @@ Engine.prototype.start = function()
     var self = this;
     var starIndexLast = starIndex;
     var starAnimationTime = new Date().getTime();
+    var lightsAnimationTime = new Date().getTime();
+   
 
     setInterval(function()
     {
@@ -427,6 +432,22 @@ Engine.prototype.start = function()
             starAnimationTime = gameStartTime;
         }
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        //Lights Animation-------------------------------------------------------------------------------------------------------------------------------------------------
+        if(self.animateLights(lightsArray, lightsIndex, lightsAnimationTime, gameStartTime) == true)
+        {
+            lightsAnimationTime = gameStartTime;
+            lightsIndex++;
+        }
+        
+      
+        if(lightsIndex > 11)
+         {
+            lightsIndex = 0;
+         }
+        
+
+        //Lights animation end----------------------------------------------------------------------------------------------------------------------------------------------
 
         localPlayer.draw(self.hyperBout.entityctx);
         
@@ -518,6 +539,59 @@ Engine.prototype.animateStars = function(starArray, starIndex, starAnimation, ga
     this.hyperBout.animationctx.drawImage(starArray[starIndexTemp], 1000, 160);
     return starIndex;
 }
+Engine.prototype.animateLights = function(lightsArray, lightsIndex, lightAnimationTime, gameTime)
+{
+    if((gameTime - lightAnimationTime) > 60)
+    {
+        this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 50, 431);
+        lightsIndex = animateLightsHelper(lightsIndex);
+        this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 146, 431);
+        lightsIndex = animateLightsHelper(lightsIndex);
+        this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 242, 431);
+        lightsIndex = animateLightsHelper(lightsIndex);
+        this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 338, 431);
+        lightsIndex = animateLightsHelper(lightsIndex);
+        this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 660, 431);
+        lightsIndex = animateLightsHelper(lightsIndex);
+        this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 755, 431);
+        lightsIndex = animateLightsHelper(lightsIndex);
+        this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 851, 431);
+        lightsIndex = animateLightsHelper(lightsIndex);
+        this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 947, 431);
+        lightsIndex = animateLightsHelper(lightsIndex);
+        this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 1043, 431);
+        return true;
+    }
+     this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 50, 431);
+    lightsIndex = animateLightsHelper(lightsIndex);
+    this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 146, 431);
+    lightsIndex = animateLightsHelper(lightsIndex);
+    this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 242, 431);
+    lightsIndex = animateLightsHelper(lightsIndex);
+    this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 338, 431);
+    lightsIndex = animateLightsHelper(lightsIndex);
+    this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 660, 431);
+    lightsIndex = animateLightsHelper(lightsIndex);
+     this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 755, 431);
+     lightsIndex = animateLightsHelper(lightsIndex);
+     this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 851, 431);
+     lightsIndex = animateLightsHelper(lightsIndex);
+    this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 947, 431);
+    lightsIndex = animateLightsHelper(lightsIndex);
+    this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 1043, 431);
+
+    return false;
+      
+}
+animateLightsHelper = function(currentIndex)
+{
+    currentIndex++;
+    if(currentIndex == 12)
+    {
+        currentIndex = 0;
+    }
+    return currentIndex;
+}
 Engine.prototype.loadStars = function()
 {
     var starZero = new Image();
@@ -544,6 +618,51 @@ Engine.prototype.loadStars = function()
     stars[6] = starSix;
 
     return stars;
+}
+Engine.prototype.loadLights = function()
+{
+    var lights0 = new Image();
+    var lights1 = new Image();
+    var lights2 = new Image();
+    var lights3 = new Image();
+    var lights4 = new Image();
+    var lights5 = new Image();
+    var lights6 = new Image();
+    var lights7 = new Image();
+    var lights8 = new Image();
+    var lights9 = new Image();
+    var lights10 = new Image();
+    var lights11 = new Image();
+
+    lights0.src = 'images/lights/lights0.png';
+    lights1.src = 'images/lights/lights1.png';
+    lights2.src = 'images/lights/lights2.png';
+    lights3.src = 'images/lights/lights3.png';
+    lights4.src = 'images/lights/lights4.png';
+    lights5.src = 'images/lights/lights5.png';
+    lights6.src = 'images/lights/lights6.png';
+    lights7.src = 'images/lights/lights7.png';
+    lights8.src = 'images/lights/lights8.png';
+    lights9.src = 'images/lights/lights9.png';
+    lights10.src = 'images/lights/lights10.png';
+    lights11.src = 'images/lights/lights11.png';
+
+    var lights = new Array();
+
+    lights.push(lights0);
+    lights.push(lights1);
+    lights.push(lights2);
+    lights.push(lights3);
+    lights.push(lights4);
+    lights.push(lights5);
+    lights.push(lights6);
+    lights.push(lights7);
+    lights.push(lights8);
+    lights.push(lights9);
+    lights.push(lights10);
+    lights.push(lights11);
+
+    return lights;
 }
 Engine.prototype.loadClouds = function()
 {
