@@ -215,22 +215,6 @@ Engine.prototype.setupPhysics = function()
     var floorImage = new Image();
     floorImage.src = 'images/floor.png';
 
-    //Create ground
-    var fixDef = new box2d.b2FixtureDef();
-    fixDef.density = 1;
-    fixDef.friction = 0.5;
-
-    //Now we need to define the body, static (not affected by gravity), dynamic (affected by grav)
-    var bodyDef = new box2d.b2BodyDef();
-    bodyDef.type = box2d.b2Body.b2_staticBody; //We're setting the ground to static.
-    bodyDef.position.x = 1122 / 2 / SCALE; //Registration point is in the center for box2d entities.
-    bodyDef.position.y = 548 / SCALE;
-    fixDef.shape = new box2d.b2PolygonShape; //setting the shape of the ground.
-    fixDef.shape.SetAsBox((1122 / SCALE) / 2, (20 / SCALE)/2);
-    
-    //Add the ground to the world, yeah!
-    var floorFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    this.hyperBout.ctx.drawImage(floorImage, (floorFixture.GetBody().GetPosition().x ) - 20, (floorFixture.GetBody().GetPosition().y * SCALE) - 20);
 
     /***Create Platforms***/
     var platformImage = new Image();
@@ -262,16 +246,16 @@ Engine.prototype.setupPhysics = function()
     world.CreateBody(testDef2).CreateFixture(testFix2);
     this.hyperBout.ctx.drawImage(platformImage, testDef2.position.x * 25 - 6, testDef2.position.y * 25);
 
-    //Bottom Left - P3 Start
+    //Bottom Left Platform- P3 Start
     var testFix3 = new box2d.b2FixtureDef();
     testFix3.density = 1;
     testFix3.friction = 0.5;
     var testDef3 = new box2d.b2BodyDef();
     testDef3.type = box2d.b2Body.b2_staticBody;
-    testDef3.position.x = 400 / 2 / SCALE;
-    testDef3.position.y = 800 / 2 / SCALE;
+    testDef3.position.x = 280/ 2 / SCALE;
+    testDef3.position.y = 840 / 2 / SCALE;
     testFix3.shape = new box2d.b2PolygonShape;
-    testFix3.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
+    testFix3.shape.SetAsBox((660/SCALE)/2, (20 / SCALE) / 2);
     world.CreateBody(testDef3).CreateFixture(testFix3);
     this.hyperBout.ctx.drawImage(platformImage, testDef3.position.x * 6, testDef3.position.y *28 + 10);
 
@@ -281,10 +265,10 @@ Engine.prototype.setupPhysics = function()
     testFix4.friction = 0.5;
     var testDef4 = new box2d.b2BodyDef();
     testDef4.type = box2d.b2Body.b2_staticBody;
-    testDef4.position.x = 1800 / 2 / SCALE;
-    testDef4.position.y = 800 / 2 / SCALE;
+    testDef4.position.x = 1940 / 2 / SCALE;
+    testDef4.position.y = 840 / 2 / SCALE;
     testFix4.shape = new box2d.b2PolygonShape;
-    testFix4.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
+    testFix4.shape.SetAsBox((640/SCALE)/2, (20 / SCALE) / 2);
     world.CreateBody(testDef4).CreateFixture(testFix4);
     this.hyperBout.ctx.drawImage(platformImage, testDef4.position.x * 25 - 6 , testDef4.position.y *28 + 10);
 
@@ -404,6 +388,8 @@ Engine.prototype.start = function()
     var starArray = this.loadStars();
     //Current frame for the star animation.
     var starIndex = 0;
+    //Platform images
+    var platformArray = this.loadPlatformImages();
 
     //Currently set to wait 1 second so that all players can have a position assigned to them
     setTimeout(function()
@@ -431,7 +417,7 @@ Engine.prototype.start = function()
         cloudArray = self.updateCloudInformation(cloudArray).splice(0);
         self.animateClouds(cloudArray);
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+        self.drawPlatforms(platformArray);
         //Star animation--------------------------------------------------------------------------------------------------------------------------------------------------
         starIndex = self.animateStars(starArray, starIndex, starAnimationTime, gameStartTime);
 
@@ -478,6 +464,20 @@ Engine.prototype.draw = function()
     world.DrawDebugData();
     world.ClearForces();
 }
+Engine.prototype.drawPlatforms = function(platformArray)
+{
+    this.hyperBout.animationctx.drawImage(platformArray[0] , 0, 400);
+}
+Engine.prototype.loadPlatformImages = function()
+{
+    var bottomLeftPlatform = new Image();
+    bottomLeftPlatform.src = 'images/platforms/platformBottomLeft.png';
+
+    var platforms = new Array();
+    platforms.push(bottomLeftPlatform);
+
+    return platforms;
+}
 Engine.prototype.animateClouds = function(cloudArrayInformation)
 {
     this.hyperBout.animationctx.drawImage(cloudArrayInformation[8], cloudArrayInformation[9], 40);
@@ -488,9 +488,13 @@ Engine.prototype.animateClouds = function(cloudArrayInformation)
 
     this.hyperBout.animationctx.drawImage(cloudArrayInformation[0], cloudArrayInformation[1], 0);
     this.hyperBout.animationctx.drawImage(cloudArrayInformation[2], cloudArrayInformation[3], 0);
+
+    this.hyperBout.animationctx.drawImage(cloudArrayInformation[12], cloudArrayInformation[13], 500);
+    this.hyperBout.animationctx.drawImage(cloudArrayInformation[14], cloudArrayInformation[15], 500);
 }
 Engine.prototype.animateStars = function(starArray, starIndex, starAnimation, gameTime)
 {
+    var starIndexTemp = starIndex;
     if((gameTime - starAnimation) > 100)
     {
         starIndex++;
@@ -500,7 +504,18 @@ Engine.prototype.animateStars = function(starArray, starIndex, starAnimation, ga
         starIndex = 0;
     }
     this.hyperBout.animationctx.drawImage(starArray[starIndex], 500, 110);
-    this.hyperBout.animationctx.drawImage(starArray[starIndex], 1000, 160);
+    starIndexTemp = (starIndexTemp + 2);
+    if(starIndexTemp == 6)
+    {
+        starIndexTemp = 0;
+    }
+    if(starIndexTemp == 7)
+    {
+        starIndexTemp = 1;
+    }
+    
+
+    this.hyperBout.animationctx.drawImage(starArray[starIndexTemp], 1000, 160);
     return starIndex;
 }
 Engine.prototype.loadStars = function()
@@ -556,20 +571,40 @@ Engine.prototype.loadClouds = function()
     cloudThreeImageTwo.src = 'images/clouds3.png';
     var x32 = 1100;
 
+    var waterImageOne = new Image();
+    waterImageOne.src = 'images/water.png';
+    var waterX1 = 0;
+
+    var waterImageTwo = new Image();
+    waterImageTwo.src = 'images/water.png';
+    var waterX2 = 1120;
+
     var cloudInformation = new Array();
 
+    //0
     cloudInformation.push(cloudOneImageOne);
     cloudInformation.push(x1);
+    //2
     cloudInformation.push(cloudOneImageTwo);
     cloudInformation.push(x2);
+    //4
     cloudInformation.push(cloudTwoImageOne);
     cloudInformation.push(x21);
+    //6
     cloudInformation.push(cloudTwoImageTwo);
     cloudInformation.push(x22);
+    //8
     cloudInformation.push(cloudThreeImageOne);
     cloudInformation.push(x31);
+    //10
     cloudInformation.push(cloudThreeImageTwo);
     cloudInformation.push(x32);
+    //12
+    cloudInformation.push(waterImageOne);
+    cloudInformation.push(waterX1);
+    //14
+    cloudInformation.push(waterImageTwo);
+    cloudInformation.push(waterX2);
 
     return cloudInformation;
 }
@@ -581,6 +616,8 @@ Engine.prototype.updateCloudInformation = function(cloudInformationArray)
         cloudInformationArray[7] = cloudInformationArray[7] - 2;
         cloudInformationArray[9] = cloudInformationArray[9] - 1;
         cloudInformationArray[11] = cloudInformationArray[11] - 1;
+        cloudInformationArray[13] = cloudInformationArray[13] - 0.4;
+        cloudInformationArray[15] = cloudInformationArray[15] - 0.4;
 
         if(cloudInformationArray[1] <= -1120)
         {
@@ -605,6 +642,14 @@ Engine.prototype.updateCloudInformation = function(cloudInformationArray)
         if(cloudInformationArray[11] <= - 1140)
         {
             cloudInformationArray[11] = 1100;
+        }
+        if(cloudInformationArray[13] <= - 1120)
+        {
+            cloudInformationArray[13] = 1120;
+        }
+        if(cloudInformationArray[15] <= -1120)
+        {
+            cloudInformationArray[15] = 1120;
         }
         return cloudInformationArray;
 }
