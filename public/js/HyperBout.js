@@ -375,13 +375,15 @@ Engine.prototype.start = function()
         console.log(contactB.GetUserData());
         if(contactA.GetUserData() == 'Bomb' || contactB.GetUserData() == 'Bomb')
         {
+            //If contact B is the bomb, then push contactB's body into the graveYard.
             if(contactA.GetUserData() == 'Floor')
             {
                 graveYard.push(contactB.GetBody());
             }
+            //If contact A is the bomb, then push contactA's body into the graveyard.
             else if(contactB.GetUserData() == 'Floor')
             {
-                graveYard.push(contactB.GetBody());
+                graveYard.push(contactA.GetBody());
             }
         }
         
@@ -498,12 +500,35 @@ Engine.prototype.start = function()
         };
         for(i = 0; i < graveYard.length; i++)
         {
+            console.log(graveYard[i].GetPosition());
+            self.createExplosion(graveYard[i]);
             world.DestroyBody(graveYard[i]);
+            graveYard.splice(i);
         };
         gameStartTime = new Date().getTime();
     }, 1000/FPS);
 };
+Engine.prototype.createExplosion = function(bombBody)
+{
+    //Top Left - P1 Start
+    var testFix = new box2d.b2FixtureDef();
+    testFix.density = 1;
+    testFix.friction = 0.5;
+    var testDef = new box2d.b2BodyDef();
+    testDef.type = box2d.b2Body.b2_staticBody;
+    testDef.position.x = bombBody.GetPosition().x;
+    testDef.position.y = bombBody.GetPosition().y - (20 / SCALE);
+    testFix.shape = new box2d.b2PolygonShape;
+    testFix.shape.SetAsBox((25/SCALE)/2, (70 / SCALE) / 2);
+    var bombExplosion = world.CreateBody(testDef).CreateFixture(testFix);
+    
+    bombExplosion.SetUserData('explosion');
 
+    //bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
+    //bodyDef.position.y = ((this.playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
+
+
+}
 //Draw text to test updating
 Engine.prototype.draw = function()
 {
