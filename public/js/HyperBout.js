@@ -9,6 +9,7 @@ var socket;
 //Scale to convert is 30. 
 var SCALE = 30;
 var world;
+var gBombArray = new Array();
 
 /**************************************************
 ** BOX2D NAMESPACE CREATION
@@ -246,6 +247,7 @@ Engine.prototype.setupPhysics = function()
     var topRightFloor = world.CreateBody(testDef2).CreateFixture(testFix2);
     this.hyperBout.ctx.drawImage(platformImage, testDef2.position.x * 25 - 6, testDef2.position.y * 25);
     topRightFloor.SetUserData('Floor');
+    
     //Bottom Left Platform- P3 Start
     var testFix3 = new box2d.b2FixtureDef();
     testFix3.density = 1;
@@ -273,6 +275,7 @@ Engine.prototype.setupPhysics = function()
     var bottomRightFloor = world.CreateBody(testDef4).CreateFixture(testFix4);
     this.hyperBout.ctx.drawImage(platformImage, testDef4.position.x * 25 - 6 , testDef4.position.y *28 + 10);
     bottomRightFloor.SetUserData("Floor");
+    
     //Box2d has some nice default drawing, so let's draw the ground.
     var debugDraw = new box2d.b2DebugDraw();
     debugDraw.SetSprite(document.getElementById("entityCanvas").getContext("2d"));
@@ -454,7 +457,9 @@ Engine.prototype.start = function()
     {
         self.update();
         self.draw();
-
+        //Global Bomb Drawing---------------------------------------------------------------------------------------------------------------------------------------------
+        self.drawBombs();
+        gBombArray = [];
         //CloudAnimation--------------------------------------------------------------------------------------------------------------------------------------------------
         cloudArray = self.updateCloudInformation(cloudArray).splice(0);
         self.animateClouds(cloudArray);
@@ -498,12 +503,16 @@ Engine.prototype.start = function()
             socket.emit("move player", playerVectorAndDirection);            
         }
 
-        
+        //Tell each player to draw themselves on the canvas
+        gBombArray = gBombArray.concat(localPlayer.bombArray);
         for (i = 0; i < remotePlayers.length; i++) 
         {
-            //console.log("Inside Interval: ID:" + remotePlayers[i].id + " XPosition" + remotePlayers[i].getX() + " YPosition" + remotePlayers[i].getY());
+            //Ask for each player's array
+            gBombArray = gBombArray.concat(remotePlayers[i].bombArray)
             remotePlayers[i].draw(self.hyperBout.entityctx);
         };
+
+
         for(i = 0; i < graveYard.length; i++)
         {
             console.log(graveYard[i].GetPosition());
@@ -514,6 +523,16 @@ Engine.prototype.start = function()
         gameStartTime = new Date().getTime();
     }, 1000/FPS);
 };
+
+Engine.prototype.drawBombs = function()
+{
+    var playerBomb = new Image();
+    playerBomb.src = 'images/projectileBladeBomb.png';
+    for (i=0;i<gBombArray.length;i++)
+    {
+        this.hyperBout.entityctx.drawImage(playerBomb, (gBombArray[i].GetBody().GetPosition().x * SCALE) - 25, (gBombArray[i].GetBody().GetPosition().y * SCALE) - 25);
+    }
+}
 Engine.prototype.createExplosion = function(bombBody, explosions)
 {
     //Top Left - P1 Start

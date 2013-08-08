@@ -98,10 +98,13 @@ HyperPlayer.prototype.draw = function(canvasctx)
     canvasctx.drawImage(this.playerImage, (this.playerFixture.GetBody().GetPosition().x * SCALE) - 15, (this.playerFixture.GetBody().GetPosition().y * SCALE) - 20);
         
     //Draws each of the player's bombs. Need to restructure so bombs are held in a global array accessable to all players.
+    /*
     for (i=0;i<this.bombArray.length;i++)
     {
-        canvasctx.drawImage(this.playerBomb, (this.bombArray[i].GetBody().GetPosition().x * SCALE) - 25, (this.bombArray[i].GetBody().GetPosition().y * SCALE) - 25);
+        //canvasctx.drawImage(this.playerBomb, (this.bombArray[i].GetBody().GetPosition().x * SCALE) - 25, (this.bombArray[i].GetBody().GetPosition().y * SCALE) - 25);
     }
+    */
+    
 };
 //Movement function for players
 HyperPlayer.prototype.move = function(args)
@@ -347,6 +350,12 @@ HyperPlayer.prototype.setLocation = function(playerList){
 
 HyperPlayer.prototype.bombThrow = function(ev)
 {
+    var canvas = document.getElementById('main');
+    //console.log("Canvas is offset on x by:" + canvas.offsetLeft);
+    //console.log("Canvas is offset on y by:" + canvas.offsetTop);
+    console.log("Clicked at x point:" + ev.clientX/SCALE);
+    console.log("Clicked at y point:" + ev.clientY/SCALE);
+
     var x = ev.clientX;
     var y = ev.clientY;
  
@@ -364,11 +373,11 @@ HyperPlayer.prototype.bombThrow = function(ev)
 
     fixDef.shape = new box2d.b2CircleShape(20 / SCALE);                
 
-    //Note before center adjustment x was divided by SCALE
     var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
     bombFixture.SetUserData('Bomb');
-    
-    bombFixture.GetBody().ApplyImpulse((new box2d.b2Vec2(((x / 40) - bodyDef.position.x) *10, ((y / 40) - bodyDef.position.y) *10)) , bombFixture.GetBody().GetPosition());
+
+    //To calculate Bomb Trajectory: Click Region/Pixel to Box2d Scale - Player Position - Canvas Offset/Scale - Image Offset/Scale (+1 and -2 are slight alterations)   
+    bombFixture.GetBody().ApplyImpulse((new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x - (canvas.offsetLeft/SCALE)-(25/SCALE)+1)*5, ((y / SCALE) - bodyDef.position.y - (canvas.offsetTop/SCALE)-(25/SCALE)-2) *5)) , bombFixture.GetBody().GetPosition());
     this.bombArray.push(bombFixture);
 }
 
