@@ -486,7 +486,10 @@ Engine.prototype.start = function()
 
         localPlayer.draw(self.hyperBout.entityctx);
         //Animate the explosions
-        self.animateExplosions(explosionAnimationTime, gameStartTime, explosions, graveYard);
+        if(self.animateExplosions(explosionAnimationTime, gameStartTime, explosions, graveYard) == true)
+        {
+            explosionAnimationTime = gameStartTime;
+        }
         //console.log("Outside Interval: ID:" + localPlayer.id + " XPosition" + localPlayer.getX() + " YPosition" + localPlayer.getY());
 
         //Temporary emit to server, need to find more permanent version
@@ -517,6 +520,8 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
     var testFix = new box2d.b2FixtureDef();
     testFix.density = 1;
     testFix.friction = 0.5;
+    testFix.categoryBits = 0x0008;
+    testFix.filter.maskBits = 0x0001;
     var testDef = new box2d.b2BodyDef();
     testDef.type = box2d.b2Body.b2_staticBody;
     testDef.position.x = bombBody.GetPosition().x;
@@ -532,18 +537,22 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
     //bodyDef.position.y = ((this.playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
 
 
+
 }
 Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, explosions, graveYard)
 {
-    if(gameTime - explosionAnimationTime > 200)
+    if(gameTime - explosionAnimationTime > 60000)
     {
         for(i = 0; i < explosions.length; i ++)
         {
             if(explosions[i].GetUserData() == 'explosion0')
             {
-                console.log(explosions[i].GetUserData());
                 world.DestroyBody(explosions[i].GetBody());
                 explosions.splice(i);
+            }
+            else if(explosions[i].GetUserData() == 'explosion1')
+            {
+
             }
         }
         return true;
