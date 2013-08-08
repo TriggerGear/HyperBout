@@ -433,6 +433,8 @@ Engine.prototype.start = function()
     var starIndexLast = starIndex;
     var starAnimationTime = new Date().getTime();
     var lightsAnimationTime = new Date().getTime();
+    var explosionAnimationTime = new Date().getTime();
+    var explosions = new Array();
     //Currently set to wait 1 second so that all players can have a position assigned to them
     setTimeout(function()
     {
@@ -483,7 +485,8 @@ Engine.prototype.start = function()
         //Lights animation end----------------------------------------------------------------------------------------------------------------------------------------------
 
         localPlayer.draw(self.hyperBout.entityctx);
-
+        //Animate the explosions
+        self.animateExplosions(explosionAnimationTime, gameStartTime, explosions, graveYard);
         //console.log("Outside Interval: ID:" + localPlayer.id + " XPosition" + localPlayer.getX() + " YPosition" + localPlayer.getY());
 
         //Temporary emit to server, need to find more permanent version
@@ -501,14 +504,14 @@ Engine.prototype.start = function()
         for(i = 0; i < graveYard.length; i++)
         {
             console.log(graveYard[i].GetPosition());
-            self.createExplosion(graveYard[i]);
+            self.createExplosion(graveYard[i], explosions);
             world.DestroyBody(graveYard[i]);
             graveYard.splice(i);
         };
         gameStartTime = new Date().getTime();
     }, 1000/FPS);
 };
-Engine.prototype.createExplosion = function(bombBody)
+Engine.prototype.createExplosion = function(bombBody, explosions)
 {
     //Top Left - P1 Start
     var testFix = new box2d.b2FixtureDef();
@@ -522,12 +525,30 @@ Engine.prototype.createExplosion = function(bombBody)
     testFix.shape.SetAsBox((25/SCALE)/2, (70 / SCALE) / 2);
     var bombExplosion = world.CreateBody(testDef).CreateFixture(testFix);
     
-    bombExplosion.SetUserData('explosion');
+    bombExplosion.SetUserData('explosion0');
+    explosions.push(bombExplosion);
 
     //bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
     //bodyDef.position.y = ((this.playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
 
 
+}
+Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, explosions, graveYard)
+{
+    if(gameTime - explosionAnimationTime > 200)
+    {
+        for(i = 0; i < explosions.length; i ++)
+        {
+            if(explosions[i].GetUserData() == 'explosion0')
+            {
+                console.log(explosions[i].GetUserData());
+                world.DestroyBody(explosions[i].GetBody());
+                explosions.splice(i);
+            }
+        }
+        return true;
+    }
+    return false;
 }
 //Draw text to test updating
 Engine.prototype.draw = function()
