@@ -9,7 +9,7 @@ You need to already have installed nodejs on your machine. http://nodejs.org/dow
 
 ![Screenshot 1](public/images/sc1.png)
 
-* Start the HyperBout server by typing in “node HyperBout.js”
+* Start the HyperBout server by typing in “node ServerBout.js”
 
 ![Screenshot 2](public/images/sc2.png)
 

@@ -330,7 +330,7 @@ Engine.RemoveInputHandler = function(tag) {
             Engine.InputHandlers.splice(i, 1);
         }
     }
-}
+};
 
 /**************************************************
 ** AUDIO
@@ -348,7 +348,7 @@ Engine.prototype.MusicPlayer = function(soundFile, bool)
     myAudio.muted = false;
     myAudio.play();
     return myAudio;
-}
+};
 
 //mainly for sound effects. For a check if the mute button is pressed or not.
 Engine.prototype.MuteUnmuteAudio = function(soundFile, bool)
@@ -357,7 +357,7 @@ Engine.prototype.MuteUnmuteAudio = function(soundFile, bool)
     {
         var slash = Engine.prototype.MusicPlayer(soundFile, bool);
     }
-}
+};
 
 /**************************************************
 ** GAME START
