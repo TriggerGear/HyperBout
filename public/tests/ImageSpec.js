@@ -1,3 +1,6 @@
 describe("Image Spec", function(){
-    it("Should ")
+    it("Should load and show Hyper Bout title", function()
+    {
+        expect($('#HBTitleImage').length).not.toEqual(0);
+    });
 });

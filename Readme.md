@@ -37,7 +37,7 @@ List of Folders:
   * contains files of older versions that are no longer in use
 
 JS Files:
-* HyperBout.js: 
+* ServerBout.js: 
   * Starting node application js file
-* HyperPlayer.js: 
+* ServerPlayer.js: 
   * Player class of whose data will be sent from client to/from host

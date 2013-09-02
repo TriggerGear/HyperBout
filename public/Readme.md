@@ -16,3 +16,5 @@ List of Folders:
   * Contains files currently not in use
 * index: 
   * HTML Page to open 
+* tests: 
+  * Contains unit tests and all the library files associated with it.
