@@ -1,8 +1,5 @@
 {
     "framework" : "jasmine",
-    "launch_in_ci": [
-        "Chrome"
-    ], 
     "src_files": [
         "public/tests/HyperPlayerSpec.js",
         "public/js/HyperPlayer.js",
