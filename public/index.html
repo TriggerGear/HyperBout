@@ -4,17 +4,19 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Hyper Bout!</title>
         <link type="text/css" rel="stylesheet" href="style/main.css">
+        <!-- for testing purpose 
+            <link type="text/css" rel="stylesheet" href="tests/lib/jasmine.css"> 
+        -->
         <script type = "text/javascript" src="js/lib/jquery.js"></script>
         <script type = "text/javascript" src="js/lib/Box2dWeb-2.1.a.3.js"></script>
         <script type = "text/javascript" src="js/HyperBout.js"></script>
-        <script type = "text/javascript" src="js/HyperPlayer.js"></script>
-        <script type = "text/javascript" src="SoundPlay.js"></script>
-        <script src="http://localhost:8000/socket.io/socket.io.js"></script>
+		<script type = "text/javascript" src="js/HyperPlayer.js"></script>
+		<script src="http://localhost:8000/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             var mute = false;
             var bgmAud = Engine.prototype.MusicPlayer('audiofiles/Genesis.wav', true);
             bgmAud.muted = true;
-            function start() {
+			function start() {
                 var test = new Engine();
             }
         </script>
@@ -28,22 +30,22 @@
         <div id="main">
             <canvas id="backgroundCanvas" height="548" width="1122">Canvas is not supported.</canvas>
             <canvas id="entityCanvas" height="548" width="1122"></canvas>
-            <canvas id="animationCanvas" height="548" width="1122"></canvas>
+			<canvas id="animationCanvas" height="548" width="1122"></canvas>
         </div>
         <div id="game-images">
             <img src="images/Background.png" id="background" alt="back-ground" style="display:none"/>
             <img src="images/playerStationary.png" id="playerStanding" alt="player" style="display:none"/>
-            <img src="images/log.png" id="playerStanding" alt="player" style="display:none"/>
-            <img src="images/floor.png" id="playerStanding" alt="player" style="display:none"/>
-            <img src="images/clouds.png" id="clouds" style="display:none"/>
-            <img src="images/clouds2.png" id="clouds2" style="display:none"/>
-            <img src="images/clouds3.png" id="clouds3" style="display:none"/>
-            <img src="images/stars/star0.png" id="star0" style="display:none"/>
-            <img src="images/stars/star1.png" id="star1" style="display:none"/>
-            <img src="images/stars/star2.png" id="star2" style="display:none"/>
-            <img src="images/stars/star3.png" id="star3" style="display:none"/>
-            <img src="images/stars/star4.png" id="star4" style="display:none"/>
-            <img src="images/stars/star5.png" id="star5" style="display:none"/>
+			<img src="images/log.png" id="playerStanding" alt="player" style="display:none"/>
+			<img src="images/floor.png" id="playerStanding" alt="player" style="display:none"/>
+			<img src="images/clouds.png" id="clouds" style="display:none"/>
+			<img src="images/clouds2.png" id="clouds2" style="display:none"/>
+			<img src="images/clouds3.png" id="clouds3" style="display:none"/>
+			<img src="images/stars/star0.png" id="star0" style="display:none"/>
+			<img src="images/stars/star1.png" id="star1" style="display:none"/>
+			<img src="images/stars/star2.png" id="star2" style="display:none"/>
+			<img src="images/stars/star3.png" id="star3" style="display:none"/>
+			<img src="images/stars/star4.png" id="star4" style="display:none"/>
+			<img src="images/stars/star5.png" id="star5" style="display:none"/>
             <img src="images/water.png" id="water" style="display:none"/>
             <img src="images/platforms/platformBottomLeft.png" id="water" style="display:none"/>
             <img src="images/lights/lights0.png" id="lights0" style="display:none"/>
@@ -75,5 +77,16 @@
             <input type="button" onclick="bgmAud.muted = true ; mute = true" value="Mute" />
             <input type="button" onclick="bgmAud.muted = false ; mute = false" value="Unmute" />
         </div>
+
+        <!-- for testing purpose 
+-       <div id="HTMLReporter" class="jasmine_reporter">
+-            <script type = "text/javascript" src="tests/lib/jasmine.js"></script>
+-            <script type = "text/javascript" src="tests/lib/jasmine-html.js"></script>
+-            <script type = "text/javascript" src="tests/lib/jasmine-env.js"></script>
+-            <script type = "text/javascript" src="tests/lib/jasmine-jquery.js"></script>
+-            <script type = "text/javascript" src="tests/lib/testem.js"></script>
+-           <!-- <script type = "text/javascript" src="tests/lib/jasmine-reporter.js"></script> 
+-            <script type = "text/javascript" src="tests/HyperPlayerSpec.js"></script>
+-       </div> -->
     </body>
 </html>
