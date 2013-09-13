@@ -31,6 +31,14 @@
             <img src="images/HyberboutTitle.gif" id="HBTitleImage" alt="TitleImage" />
         </div>
 
+        <div id = "audioControls">
+            <a href="pages/help.html" onclick="Popup=window.open('pages/help.html','Popup','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no, width=420,height=400,left=430,top=23'); return false;">
+            How to Play</a>
+            <input type="button" onclick="bgmAud.muted = true ; mute = true" value="Mute" />
+            <br>
+            <input type="button" onclick="bgmAud.muted = false ; mute = false" value="Unmute" />
+        </div>
+
         <div id="main">
             <canvas id="backgroundCanvas" height="548" width="1122">Canvas is not supported.</canvas>
             <canvas id="entityCanvas" height="548" width="1122"></canvas>
@@ -75,11 +83,6 @@
             <img src="images/explosions/exp8.png" id="exp8" alt="exp8 tiles" style="display:none"/>
             <img src="images/explosions/exp9.png" id="exp9" alt="exp9 tiles" style="display:none"/>
             <img src="images/explosions/exp10.png" id="exp10" alt="exp1 0 tiles" style="display:none"/>
-        </div>
-        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        <div id = "audioControls">
-            <input type="button" onclick="bgmAud.muted = true ; mute = true" value="Mute" />
-            <input type="button" onclick="bgmAud.muted = false ; mute = false" value="Unmute" />
         </div>
 
         <script>

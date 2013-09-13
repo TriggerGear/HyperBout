@@ -33,3 +33,7 @@
 body { 
 	background-color: #000000;
 } 
+
+input {
+    width:100px;
+}
