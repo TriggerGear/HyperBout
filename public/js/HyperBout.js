@@ -57,6 +57,8 @@ var setupSockets = function()
 
     // Recieve player position updates from Server
     socket.on("update player positions", updatePositions);
+
+    socket.on("remote bomb throw", handleRemoteBombs);
 };
 
 /**************************************************
@@ -162,14 +164,23 @@ function updatePositions(data) {
     var yPos;
     for(i = 0; i < remotePlayers.length; i++) 
     {        
-        console.log("Player ID is: " + remotePlayers[i].id);
-        console.log("Player Number is: " +remotePlayers[i].playerNumber);
+        //console.log("Player ID is: " + remotePlayers[i].id);
+        //console.log("Player Number is: " +remotePlayers[i].playerNumber);
         xPos = xPositions[remotePlayers[i].playerNumber-1];
         yPos = yPositions[remotePlayers[i].playerNumber-1];
         remotePlayers[i].movePlayerToPosition(xPos, yPos);
     }
 };
 
+function handleRemoteBombs(data) {
+    var bodyDef = data.bodyDef;
+    var fixDef = data.fixDef;
+    var impulse = data.impulse;
+    var remoteBomb = world.CreateBody(bodyDef).CreateFixture(fixDef);
+    console.log(remoteBomb.SetUserData("B"+data.playerNumber));
+    remoteBomb.GetBody().ApplyImpulse(impulse, remoteBomb.GetBody().GetPosition());
+
+};
 
 
 /**************************************************

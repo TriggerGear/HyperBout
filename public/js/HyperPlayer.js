@@ -466,9 +466,12 @@ HyperPlayer.prototype.bombThrow = function(ev)
     var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
     bombFixture.SetUserData('Bomb');
 
-    //To calculate Bomb Trajectory: Click Region/Pixel to Box2d Scale - Player Position - Canvas Offset/Scale - Image Offset/Scale (+1 and -2 are slight alterations)   
-    bombFixture.GetBody().ApplyImpulse((new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x - (canvas.offsetLeft/SCALE)-(25/SCALE)+1)*5, ((y / SCALE) - bodyDef.position.y - (canvas.offsetTop/SCALE)-(25/SCALE)-2) *5)) , bombFixture.GetBody().GetPosition());
+    //To calculate Bomb Trajectory: Click Region/Pixel to Box2d Scale - Player Position - Canvas Offset/Scale - Image Offset/Scale (+1 and -2 are slight alterations) 
+    var impulseVector =  new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x - (canvas.offsetLeft/SCALE)-(25/SCALE)+1)*5, ((y / SCALE) - bodyDef.position.y - (canvas.offsetTop/SCALE)-(25/SCALE)-2) *5); 
+    bombFixture.GetBody().ApplyImpulse(impulseVector, bombFixture.GetBody().GetPosition());
     this.bombArray.push(bombFixture);
+    //bombFixture.SetUserData("B"+playerNumber);
+    socket.emit("bomb throw", {fixDef: fixDef, bodyDef: bodyDef, impulse: impulseVector, playerNumber: this.playerNumber});
 }
 
 HyperPlayer.prototype.combineKey = function(keyCode, direction) {

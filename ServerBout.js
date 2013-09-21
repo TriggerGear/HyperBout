@@ -67,6 +67,10 @@ function onSocketConnection(client) {
 
     //Listen for player position request of other players
     client.on("request position", onRequestPosition);
+
+    //Listen for player throwing bomb
+    client.on("bomb throw", onBombThrow);
+
 };
 
 // Socket client has disconnected
@@ -144,7 +148,10 @@ function onRequestPosition() {
     //this.broadcast.emit("update player positions", {xPositions: xPositions, yPositions: yPositions});
 }
 
-
+function onBombThrow(data) {
+    util.log("BOMB THROW");
+    this.broadcast.emit("remote bomb throw", data);
+}
 /**************************************************
 ** GAME HELPER FUNCTIONS
 **************************************************/
