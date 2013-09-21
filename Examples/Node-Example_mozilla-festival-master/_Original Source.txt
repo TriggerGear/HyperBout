@@ -1,5 +1,0 @@
-http://rawkes.com/articles/creating-a-real-time-multiplayer-game-with-websockets-and-node.html
-
-May help if we set up the networking of our game to follow this example
-
-Credit of Node.js simple game framework is given to author of site

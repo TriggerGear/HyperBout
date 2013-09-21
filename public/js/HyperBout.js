@@ -173,13 +173,23 @@ function updatePositions(data) {
 };
 
 function handleRemoteBombs(data) {
-    var bodyDef = data.bodyDef;
-    var fixDef = data.fixDef;
+    
+    var fixDef = new box2d.b2FixtureDef();
+    fixDef.density = 1;
+    fixDef.friction = 0.5;
+    fixDef.restitution = 0.5;
+    fixDef.filter.categoryBits = 0x0004;
+    fixDef.filter.maskBits = 0x0001;
+    var bodyDef = new box2d.b2BodyDef();
+    bodyDef.type = box2d.b2Body.b2_dynamicBody; 
+    bodyDef.position.x = (data.playerX); 
+    bodyDef.position.y = (data.playerY);
     var impulse = data.impulse;
+    fixDef.shape = new box2d.b2CircleShape(20 / SCALE);  
     var remoteBomb = world.CreateBody(bodyDef).CreateFixture(fixDef);
     console.log(remoteBomb.SetUserData("B"+data.playerNumber));
     remoteBomb.GetBody().ApplyImpulse(impulse, remoteBomb.GetBody().GetPosition());
-
+    gBombArray.push(remoteBomb);
 };
 
 
@@ -418,7 +428,7 @@ Engine.prototype.start = function()
         var contactB = contact.GetFixtureB();
         console.log(contactA.GetUserData());
         console.log(contactB.GetUserData());
-        if(contactA.GetUserData() == 'Bomb' || contactB.GetUserData() == 'Bomb')
+        if(contactA.GetUserData().charAt(0) == 'B' || contactB.GetUserData().charAt(0) == 'B')
         {
             //If contact B is the bomb, then push contactB's body into the graveYard.
             if(contactA.GetUserData() == 'Floor')

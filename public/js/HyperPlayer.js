@@ -452,7 +452,7 @@ HyperPlayer.prototype.bombThrow = function(ev)
     var fixDef = new box2d.b2FixtureDef();
     fixDef.density = 1;
     fixDef.friction = 0.5;
-    fixDef.restiution = 0.5;
+    fixDef.restitution = 0.5;
     fixDef.filter.categoryBits = 0x0004;
     fixDef.filter.maskBits = 0x0001;
     var bodyDef = new box2d.b2BodyDef();
@@ -471,7 +471,8 @@ HyperPlayer.prototype.bombThrow = function(ev)
     bombFixture.GetBody().ApplyImpulse(impulseVector, bombFixture.GetBody().GetPosition());
     this.bombArray.push(bombFixture);
     //bombFixture.SetUserData("B"+playerNumber);
-    socket.emit("bomb throw", {fixDef: fixDef, bodyDef: bodyDef, impulse: impulseVector, playerNumber: this.playerNumber});
+
+    socket.emit("bomb throw", {playerX: bodyDef.position.x, playerY: bodyDef.position.y, impulse: impulseVector, playerNumber: this.playerNumber});
 }
 
 HyperPlayer.prototype.combineKey = function(keyCode, direction) {
