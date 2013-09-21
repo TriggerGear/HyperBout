@@ -10,7 +10,9 @@ var util = require("util"),                                 // Utility resources
 ** GAME VARIABLES
 **************************************************/
 var socket,     // Socket controller
-    players;    // Array of connected players
+    players,    // Array of connected players
+    xPositions,
+    yPositions;
 
 
 /**************************************************
@@ -19,6 +21,8 @@ var socket,     // Socket controller
 function init() {
     // Create an empty array to store players
     players = [];
+    xPositions = [];
+    yPositions = [];
 
     // Set up Socket.IO to listen on port 8000
     socket = io.listen(8000);
@@ -57,6 +61,12 @@ function onSocketConnection(client) {
 
     // Listen for move player message
     client.on("move player", onMovePlayer);
+
+    //Listen for player update position
+    client.on("get position", onGetPosition);
+
+    //Listen for player position request of other players
+    client.on("request position", onRequestPosition);
 };
 
 // Socket client has disconnected
@@ -120,6 +130,19 @@ function onMovePlayer(data) {
     data.id = this.id;
     this.broadcast.emit("move player", data);
 };
+
+function onGetPosition(data) {
+    var playerNumber = data.playerNumber;
+    var xPos = data.x;
+    var yPos = data.y;
+    xPositions[playerNumber-1] = xPos;
+    yPositions[playerNumber-1] = yPos;
+}
+
+function onRequestPosition() {
+    this.emit("update player positions", {xPositions: xPositions, yPositions: yPositions});
+    //this.broadcast.emit("update player positions", {xPositions: xPositions, yPositions: yPositions});
+}
 
 
 /**************************************************

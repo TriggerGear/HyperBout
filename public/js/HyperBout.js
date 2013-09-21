@@ -52,7 +52,11 @@ var setupSockets = function()
     // Player removed message received
     socket.on("remove player", onRemovePlayer);
 
+    //Update the players ID
     socket.on("update id", updateID);
+
+    // Recieve player position updates from Server
+    socket.on("update player positions", updatePositions);
 };
 
 /**************************************************
@@ -139,6 +143,33 @@ function onRemovePlayer(data) {
     // Remove player from array
     remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
 };
+
+
+function sendPosition()
+{
+    var xPos = localPlayer.getXPosition();
+    var yPos = localPlayer.getYPosition();
+    var playerNumber = localPlayer.playerNumber;
+    socket.emit("get position", {playerNumber: playerNumber, x: xPos, y: yPos});
+    socket.emit("request position");
+
+};
+
+function updatePositions(data) {
+    var xPositions = data.xPositions;
+    var yPositions = data.yPositions;
+    var xPos;
+    var yPos;
+    for(i = 0; i < remotePlayers.length; i++) 
+    {        
+        console.log("Player ID is: " + remotePlayers[i].id);
+        console.log("Player Number is: " +remotePlayers[i].playerNumber);
+        xPos = xPositions[remotePlayers[i].playerNumber-1];
+        yPos = yPositions[remotePlayers[i].playerNumber-1];
+        remotePlayers[i].movePlayerToPosition(xPos, yPos);
+    }
+};
+
 
 
 /**************************************************
@@ -528,6 +559,8 @@ Engine.prototype.start = function()
         };
         gameStartTime = new Date().getTime();
     }, 1000/FPS);
+    
+    setInterval(sendPosition, 10);
 };
 
 Engine.prototype.drawBombs = function()

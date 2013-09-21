@@ -149,6 +149,26 @@ HyperPlayer.prototype.moveToSpawn = function()
     }
 };
 
+HyperPlayer.prototype.movePlayerToPosition = function(xPos, yPos)
+{
+        var pos = this.playerFixture.GetBody().GetPosition();
+        pos.x = xPos;
+        pos.y = yPos;
+        this.playerFixture.GetBody().SetPosition(pos);
+};
+
+HyperPlayer.prototype.getXPosition = function()
+{
+    var pos = this.playerFixture.GetBody().GetPosition();
+    return pos.x;
+};
+
+HyperPlayer.prototype.getYPosition = function()
+{
+    var pos = this.playerFixture.GetBody().GetPosition();
+    return pos.y;
+};
+
 HyperPlayer.prototype.getMoveVector = function() {
     var direction = this.direction;
     switch(direction) {
