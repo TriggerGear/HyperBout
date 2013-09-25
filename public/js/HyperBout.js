@@ -702,17 +702,97 @@ Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, 
     }
     return false;
 }
-Engine.prototype.animateExplosionSprite = function(explosionArray, entCanas)
+Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
 {
     for(i = 0; i < explosionArray.length; i++)
     {
-        if(explosionArray[i].GetBody().GetUserData() == 'explosion0')
+        if(explosionArray[i].GetUserData() == 'explosion0')
         {
 
             var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/explosion0.png';
+            explosionImage.src = 'images/explosions/exp0.png';
 
-           entCanvas.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 15, (explosionArray[i].GetBody().GetPosition().y * SCALE) - 20);
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion1')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp1.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion2')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp2.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion3')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp3.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion4')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp4.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion5')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp5.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion6')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp6.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion7')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp7.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion8')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp8.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion9')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp9.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+        }
+        else if(explosionArray[i].GetUserData() == 'explosion10')
+        {
+
+            var explosionImage = new Image();
+            explosionImage.src = 'images/explosions/exp10.png';
+
+           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
         }
     }
 }
