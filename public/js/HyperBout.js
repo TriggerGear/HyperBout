@@ -478,6 +478,8 @@ Engine.prototype.start = function()
             var playerWhoGotHit = contactA.GetUserData().charAt(6);
             var playerHitNum = parseInt(playerWhoGotHit);
             var playerNumInArray = -1; //in remote array
+            var allPlayerArray = remotePlayers.slice(0);
+            allPlayerArray.push(localPlayer); //add the local player too so all player is in this array.
             console.log("Hit1");
 
             if (playerWhoShoots != playerWhoGotHit)
@@ -486,15 +488,15 @@ Engine.prototype.start = function()
                 console.log("Hit2" + localPlayer.hp);
                 if (localPlayer.hp != 0);
                 {
-                    for(var i = 0; i < remotePlayers.length; i++)
+                    for(var i = 0; i < allPlayerArray.length; i++)
                     {
-                        if (remotePlayers[i].playerNumber == playerHitNum)
+                        if (allPlayerArray[i].playerNumber == playerHitNum)
                         {
                             playerNumInArray = i;
                         }
                     }
                     var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
-                    remotePlayers[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, remotePlayers[playerNumInArray].playerFixture.GetBody().GetPosition());
+                    allPlayerArray[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, allPlayerArray[playerNumInArray].playerFixture.GetBody().GetPosition());
                 }
             }
             else if(contactA.GetUserData().charAt(6) == contactB.GetUserData().charAt(0))
@@ -509,6 +511,8 @@ Engine.prototype.start = function()
             var playerWhoGotHit = contactB.GetUserData().charAt(6);
             var playerHitNum = parseInt(playerWhoGotHit);
             var playerNumInArray = -1; //in remote array
+            var allPlayerArray = remotePlayers.slice(0);
+            allPlayerArray.push(localPlayer); //add the local player too so all player is in this array.
             console.log("Hit1");
 
             if (playerWhoShoots != playerWhoGotHit)
@@ -517,15 +521,15 @@ Engine.prototype.start = function()
                 console.log("Hit2" + localPlayer.hp);
                 if (localPlayer.hp != 0);
                 {
-                    for(var i = 0; i < remotePlayers.length; i++)
+                    for(var i = 0; i < allPlayerArray.length; i++)
                     {
-                        if (remotePlayers[i].playerNumber == playerHitNum)
+                        if (allPlayerArray[i].playerNumber == playerHitNum)
                         {
                             playerNumInArray = i;
                         }
                     }
                     var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
-                    remotePlayers[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, remotePlayers[playerNumInArray].playerFixture.GetBody().GetPosition());
+                    allPlayerArray[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, allPlayerArray[playerNumInArray].playerFixture.GetBody().GetPosition());
                 }
                 socket.emit("on hit", {  
                                         hp: localPlayer.hp, 
