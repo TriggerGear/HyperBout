@@ -471,11 +471,25 @@ Engine.prototype.start = function()
         contactB = contact.GetFixtureB();
         console.log("Contact A2 " + contactA.GetUserData());
         console.log("Contact B2 " + contactB.GetUserData());
-        if(contactA.GetUserData().substring(0, 6) == 'player' && contactB.GetUserData().substring(1, 10) == 'explosion')
+        if(contactA.GetUserData().substring(0, 6) == 'player' && 
+            contactB.GetUserData().substring(1, 10) == 'explosion' ||
+            contactB.GetUserData().substring(0, 6) == 'player' && 
+            contactA.GetUserData().substring(1, 10) == 'explosion'
+            )
         {
+            var playerWhoShoots, playerWhoGotHit;
+            if(contactA.GetUserData().substring(0, 6) == 'player')
+            {
+                playerWhoShoots = contactB.GetUserData().charAt(0);
+                playerWhoGotHit = contactA.GetUserData().charAt(6);
+            }
+            else
+            {
+                playerWhoShoots = contactA.GetUserData().charAt(0);
+                playerWhoGotHit = contactB.GetUserData().charAt(6);
+            }
             //only gets points for kill
-            var playerWhoShoots = contactB.GetUserData().charAt(0);
-            var playerWhoGotHit = contactA.GetUserData().charAt(6);
+            
             var playerHitNum = parseInt(playerWhoGotHit);
             var playerNumInArray = -1; //in remote array
             var allPlayerArray = remotePlayers.slice(0);
@@ -498,44 +512,6 @@ Engine.prototype.start = function()
                     var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
                     allPlayerArray[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, allPlayerArray[playerNumInArray].playerFixture.GetBody().GetPosition());
                 }
-            }
-            else if(contactA.GetUserData().charAt(6) == contactB.GetUserData().charAt(0))
-            {
-
-            }
-        }
-        else if(contactB.GetUserData().substring(0, 6) == 'player' && contactA.GetUserData().substring(1, 10) == 'explosion')
-        {
-            //only gets points for kill
-            var playerWhoShoots = contactA.GetUserData().charAt(0);
-            var playerWhoGotHit = contactB.GetUserData().charAt(6);
-            var playerHitNum = parseInt(playerWhoGotHit);
-            var playerNumInArray = -1; //in remote array
-            var allPlayerArray = remotePlayers.slice(0);
-            allPlayerArray.push(localPlayer); //add the local player too so all player is in this array.
-            console.log("Hit1");
-
-            if (playerWhoShoots != playerWhoGotHit)
-            {
-                localPlayer.hp -= 1;
-                console.log("Hit2" + localPlayer.hp);
-                if (localPlayer.hp != 0);
-                {
-                    for(var i = 0; i < allPlayerArray.length; i++)
-                    {
-                        if (allPlayerArray[i].playerNumber == playerHitNum)
-                        {
-                            playerNumInArray = i;
-                        }
-                    }
-                    var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
-                    allPlayerArray[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, allPlayerArray[playerNumInArray].playerFixture.GetBody().GetPosition());
-                }
-                socket.emit("on hit", {  
-                                        hp: localPlayer.hp, 
-                                        playerWhoShoots: playerWhoShoots, 
-                                        playerWhoGotHit: playerWhoGotHit
-                                     });
             }
             else if(contactA.GetUserData().charAt(6) == contactB.GetUserData().charAt(0))
             {
