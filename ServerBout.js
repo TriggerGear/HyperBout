@@ -71,6 +71,9 @@ function onSocketConnection(client) {
     //Listen for player throwing bomb
     client.on("bomb throw", onBombThrow);
 
+    //Listen for player who got hit
+    client.on("on hit", onHit);
+
 };
 
 // Socket client has disconnected
@@ -149,9 +152,15 @@ function onRequestPosition() {
 }
 
 function onBombThrow(data) {
-    util.log("BOMB THROW");
+    //util.log("BOMB THROW");
     this.broadcast.emit("remote bomb throw", data);
 }
+
+function onHit(data) {
+    util.log("GOT HIT");
+    this.emit("hit received", data);
+}
+
 /**************************************************
 ** GAME HELPER FUNCTIONS
 **************************************************/

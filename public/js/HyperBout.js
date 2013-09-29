@@ -59,6 +59,8 @@ var setupSockets = function()
     socket.on("update player positions", updatePositions);
 
     socket.on("remote bomb throw", handleRemoteBombs);
+
+    socket.on("hit received", handleHit);
 };
 
 /**************************************************
@@ -192,6 +194,23 @@ function handleRemoteBombs(data) {
     gBombArray.push(remoteBomb);
 };
 
+function handleHit(data) {
+    if(data.hp == 0)
+    {
+        // "on hit", {  
+        //                                 hp: localPlayer.hp, 
+        //                                 playerWhoShoots: playerWhoShoots, 
+        //                                 playerWhoGotHit: playerWhoGotHit
+        //                              });
+        if(localPlayer.playerNumber == data.playerWhoShoots)
+        {
+            localPlayer.points++;
+            socket.emit("point increase", {
+                                            points: localPlayer.points
+                                          });
+        }
+    }
+};
 
 /**************************************************
 ** ENGINE
@@ -433,8 +452,8 @@ Engine.prototype.start = function()
             //If contact B is the bomb, then push contactB's body into the graveYard.
             if(contactA.GetUserData() == 'Floor')
             {
-                contactB.SetUserData('dead'+contactB.GetUserData().charAt(4))
-                contactB.GetBody().SetUserData('dead'+contactB.GetUserData().charAt(4));
+                contactB.SetUserData('dead'+contactB.GetUserData().charAt(4)); //for the gBombArray and the blade bomb
+                contactB.GetBody().SetUserData('dead'+contactB.GetUserData().charAt(4)); //for passing into graveyard
                 console.log(contactB.GetUserData());
                 graveYard.push(contactB.GetBody());
             }
@@ -445,6 +464,32 @@ Engine.prototype.start = function()
                 contactA.GetBody().SetUserData('dead'+contactA.GetUserData().charAt(4));
                 console.log(contactA.GetUserData());
                 graveYard.push(contactA.GetBody());
+            }
+        }
+
+        if(contactA.GetUserData().substring(0, 6) == 'player' || contactB.GetUserData().substring(1, 10) == 'explosion')
+        {
+            //only gets points for kill
+            var playerWhoShoots = contactA.GetUserData().charAt(6);
+            var playerWhoGotHit = contactB.GetUserData().charAt(0);
+            if (playerWhoShoots != playerWhoGotHit)
+            {
+                localPlayer.hp -= 1;
+                if (localPlayer.hp != 0);
+                {
+                    console.log("here");
+                    var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
+                    localPlayer.playerFixture.GetBody().ApplyImpulse(vec, localPlayer.playerFixture.GetBody().GetPosition());
+                }
+                socket.emit("on hit", {  
+                                        hp: localPlayer.hp, 
+                                        playerWhoShoots: playerWhoShoots, 
+                                        playerWhoGotHit: playerWhoGotHit
+                                     });
+            }
+            else if(contactA.GetUserData().charAt(6) == contactB.GetUserData().charAt(0))
+            {
+
             }
         }
         

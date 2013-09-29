@@ -1,9 +1,10 @@
 //Player class
 var HyperPlayer = function(){
-    this.healthPoints = 5;
+    this.hp = 5;
     this.id = 1;
     this.playerNumber = -1;
     this.direction = 0;
+    this.points = 0;
     //Movement and location variables
     this.xpos = 100;
     this.ypos = 68;
@@ -59,7 +60,7 @@ var HyperPlayer = function(){
     fixDef.friction = 4;
 
     this.playerFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    this.playerFixture.SetUserData('player');
+    this.playerFixture.SetUserData('player' + this.playerNumber);
 
     var self = this;
     Engine.RegisterInputHandler(new Engine.InputHandler('player', function(event) {
