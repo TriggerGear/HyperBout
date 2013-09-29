@@ -445,8 +445,8 @@ Engine.prototype.start = function()
     {
         var contactA = contact.GetFixtureA();
         var contactB = contact.GetFixtureB();
-        console.log(contactA.GetUserData());
-        console.log(contactB.GetUserData());
+        console.log("Contact A " + contactA.GetUserData());
+        console.log("Contact B " + contactB.GetUserData());
         if(contactA.GetUserData().charAt(0) == 'B' || contactB.GetUserData().charAt(0) == 'B')
         {
             //If contact B is the bomb, then push contactB's body into the graveYard.
@@ -467,17 +467,20 @@ Engine.prototype.start = function()
             }
         }
 
-        if(contactA.GetUserData().substring(0, 6) == 'player' || contactB.GetUserData().substring(1, 10) == 'explosion')
+        if(contactA.GetUserData().substring(0, 6) == 'player' && contactB.GetUserData().substring(1, 10) == 'explosion')
         {
             //only gets points for kill
             var playerWhoShoots = contactA.GetUserData().charAt(6);
             var playerWhoGotHit = contactB.GetUserData().charAt(0);
+            console.log("Hit1");
+
             if (playerWhoShoots != playerWhoGotHit)
             {
                 localPlayer.hp -= 1;
+                console.log("Hit2" + localPlayer.hp);
                 if (localPlayer.hp != 0);
                 {
-                    console.log("here");
+                    console.log("Hit3");
                     var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
                     localPlayer.playerFixture.GetBody().ApplyImpulse(vec, localPlayer.playerFixture.GetBody().GetPosition());
                 }
@@ -658,7 +661,7 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
     testFix.density = 1;
     testFix.friction = 0.5;
     testFix.categoryBits = 0x0008;
-    testFix.filter.maskBits = 0x0001;
+    //testFix.filter.maskBits = 0x0001;
     var testDef = new box2d.b2BodyDef();
     testDef.type = box2d.b2Body.b2_staticBody;
     testDef.position.x = bombBody.GetPosition().x;
@@ -668,6 +671,7 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
     var bombExplosion = world.CreateBody(testDef).CreateFixture(testFix);
     
     bombExplosion.SetUserData(bombBody.GetUserData().charAt(4)+'explosion0');
+
     explosions.push(bombExplosion);
 
     //bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
@@ -678,72 +682,72 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
 }
 Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, explosions, graveYard, animateType)
 {
-    var playerNumber = -1;
+    var playerNumber = -2;
     if(gameTime - explosionAnimationTime > 0)
     {
        for(i = 0; i < explosions.length; i++)
        {
-            console.log(explosions[i].GetUserData());
+            //console.log(explosions[i].GetUserData());
             playerNumber = explosions[i].GetUserData().charAt(0);
             if(explosions[i].GetUserData().substring(1) == 'explosion0')
             {
                 explosions[i].GetShape().SetAsBox((25/SCALE)/2, (70 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion1');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion1')
             {
                 explosions[i].GetShape().SetAsBox((25/SCALE)/2, (60 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion2');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion2')
             {
                 explosions[i].GetShape().SetAsBox((23/SCALE)/2, (50 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion3');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion3')
             {
                 explosions[i].GetShape().SetAsBox((20/SCALE)/2, (40 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion4');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion4')
             {
                 explosions[i].GetShape().SetAsBox((18/SCALE)/2, (30 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion5');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion5')
             {
                 explosions[i].GetShape().SetAsBox((16/SCALE)/2, (20 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion6');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion6')
             {
                 explosions[i].GetShape().SetAsBox((12/SCALE)/2, (15 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion7');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion7')
             {
                 explosions[i].GetShape().SetAsBox((8/SCALE)/2, (10 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion8');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion8')
             {
                 explosions[i].GetShape().SetAsBox((6/SCALE)/2, (4 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion9');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion9')
             {
                 explosions[i].GetShape().SetAsBox((4/SCALE)/2, (2 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion10');
-                break;
+                
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion10')
             {
