@@ -187,7 +187,7 @@ function handleRemoteBombs(data) {
     var impulse = data.impulse;
     fixDef.shape = new box2d.b2CircleShape(20 / SCALE);  
     var remoteBomb = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    console.log(remoteBomb.SetUserData("B"+data.playerNumber));
+    console.log(remoteBomb.SetUserData("Bomb"+data.playerNumber));
     remoteBomb.GetBody().ApplyImpulse(impulse, remoteBomb.GetBody().GetPosition());
     gBombArray.push(remoteBomb);
 };
@@ -433,13 +433,15 @@ Engine.prototype.start = function()
             //If contact B is the bomb, then push contactB's body into the graveYard.
             if(contactA.GetUserData() == 'Floor')
             {
-                contactB.SetUserData('dead');
+                contactB.GetBody().SetUserData('dead'+contactB.GetUserData().charAt(4));
+                console.log(contactB.GetUserData());
                 graveYard.push(contactB.GetBody());
             }
             //If contact A is the bomb, then push contactA's body into the graveyard.
             else if(contactB.GetUserData() == 'Floor')
             {
-                contactA.SetUserData('dead');
+                contactA.GetBody().SetUserData('dead'+contactA.GetUserData().charAt(4));
+                console.log(contactA.GetUserData());
                 graveYard.push(contactA.GetBody());
             }
         }
@@ -514,7 +516,7 @@ Engine.prototype.start = function()
         self.draw();
         //Global Bomb Drawing---------------------------------------------------------------------------------------------------------------------------------------------
         self.drawBombs();
-        gBombArray = [];
+        //gBombArray = [];
         //CloudAnimation--------------------------------------------------------------------------------------------------------------------------------------------------
         cloudArray = self.updateCloudInformation(cloudArray).splice(0);
         self.animateClouds(cloudArray);
@@ -573,7 +575,7 @@ Engine.prototype.start = function()
 
         for(i = 0; i < graveYard.length; i++)
         {
-            console.log(graveYard[i].GetPosition());
+            //console.log(graveYard[i].GetPosition());
             self.createExplosion(graveYard[i], explosions);
             world.DestroyBody(graveYard[i]);
             graveYard.splice(i);
@@ -590,9 +592,11 @@ Engine.prototype.drawBombs = function()
     playerBomb.src = 'images/projectileBladeBomb.png';
     for (i=0;i<gBombArray.length;i++)
     {
-        if(gBombArray[i].GetUserData == 'dead')
-        {
-            gBombArray.splice[i];
+        console.log(gBombArray[i].GetUserData());
+        if(gBombArray[i].GetUserData().substring(0,4) == 'dead')
+        {   
+            console.log("WORKSasdsadasdad");
+            gBombArray.splice(i, 1);
         }
         else
         {
@@ -602,7 +606,6 @@ Engine.prototype.drawBombs = function()
 }
 Engine.prototype.createExplosion = function(bombBody, explosions)
 {
-    
     var testFix = new box2d.b2FixtureDef();
     testFix.density = 1;
     testFix.friction = 0.5;
@@ -616,7 +619,7 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
     testFix.shape.SetAsBox((25/SCALE)/2, (70 / SCALE) / 2);
     var bombExplosion = world.CreateBody(testDef).CreateFixture(testFix);
     
-    bombExplosion.SetUserData('explosion0');
+    bombExplosion.SetUserData(bombBody.GetUserData().charAt(4)+'explosion0');
     explosions.push(bombExplosion);
 
     //bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
@@ -627,71 +630,74 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
 }
 Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, explosions, graveYard, animateType)
 {
+    var playerNumber = -1;
     if(gameTime - explosionAnimationTime > 0)
     {
        for(i = 0; i < explosions.length; i++)
        {
-            if(explosions[i].GetUserData() == 'explosion0')
+            console.log(explosions[i].GetUserData());
+            playerNumber = explosions[i].GetUserData().charAt(0);
+            if(explosions[i].GetUserData().substring(1) == 'explosion0')
             {
                 explosions[i].GetShape().SetAsBox((25/SCALE)/2, (70 / SCALE) / 2);
-                explosions[i].SetUserData('explosion1');
+                explosions[i].SetUserData(playerNumber+'explosion1');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion1')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion1')
             {
                 explosions[i].GetShape().SetAsBox((25/SCALE)/2, (60 / SCALE) / 2);
-                explosions[i].SetUserData('explosion2');
+                explosions[i].SetUserData(playerNumber+'explosion2');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion2')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion2')
             {
                 explosions[i].GetShape().SetAsBox((23/SCALE)/2, (50 / SCALE) / 2);
-                explosions[i].SetUserData('explosion3');
+                explosions[i].SetUserData(playerNumber+'explosion3');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion3')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion3')
             {
                 explosions[i].GetShape().SetAsBox((20/SCALE)/2, (40 / SCALE) / 2);
-                explosions[i].SetUserData('explosion4');
+                explosions[i].SetUserData(playerNumber+'explosion4');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion4')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion4')
             {
                 explosions[i].GetShape().SetAsBox((18/SCALE)/2, (30 / SCALE) / 2);
-                explosions[i].SetUserData('explosion5');
+                explosions[i].SetUserData(playerNumber+'explosion5');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion5')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion5')
             {
                 explosions[i].GetShape().SetAsBox((16/SCALE)/2, (20 / SCALE) / 2);
-                explosions[i].SetUserData('explosion6');
+                explosions[i].SetUserData(playerNumber+'explosion6');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion6')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion6')
             {
                 explosions[i].GetShape().SetAsBox((12/SCALE)/2, (15 / SCALE) / 2);
-                explosions[i].SetUserData('explosion7');
+                explosions[i].SetUserData(playerNumber+'explosion7');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion7')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion7')
             {
                 explosions[i].GetShape().SetAsBox((8/SCALE)/2, (10 / SCALE) / 2);
-                explosions[i].SetUserData('explosion8');
+                explosions[i].SetUserData(playerNumber+'explosion8');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion8')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion8')
             {
                 explosions[i].GetShape().SetAsBox((6/SCALE)/2, (4 / SCALE) / 2);
-                explosions[i].SetUserData('explosion9');
+                explosions[i].SetUserData(playerNumber+'explosion9');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion9')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion9')
             {
                 explosions[i].GetShape().SetAsBox((4/SCALE)/2, (2 / SCALE) / 2);
-                explosions[i].SetUserData('explosion10');
+                explosions[i].SetUserData(playerNumber+'explosion10');
                 break;
             }
-            else if(explosions[i].GetUserData() == 'explosion10')
+            else if(explosions[i].GetUserData().substring(1) == 'explosion10')
             {
                 world.DestroyBody(explosions[i].GetBody());
                 explosions.splice(i, 1);
@@ -706,93 +712,105 @@ Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
 {
     for(i = 0; i < explosionArray.length; i++)
     {
-        if(explosionArray[i].GetUserData() == 'explosion0')
+        var explosionData = explosionArray[i].GetUserData().substring(1);
+        if(explosionData == 'explosion0')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp0.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion1')
+        else if(explosionData == 'explosion1')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp1.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion2')
+        else if(explosionData == 'explosion2')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp2.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion3')
+        else if(explosionData == 'explosion3')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp3.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion4')
+        else if(explosionData == 'explosion4')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp4.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion5')
+        else if(explosionData == 'explosion5')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp5.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion6')
+        else if(explosionData == 'explosion6')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp6.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion7')
+        else if(explosionData == 'explosion7')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp7.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion8')
+        else if(explosionData == 'explosion8')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp8.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion9')
+        else if(explosionData == 'explosion9')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp9.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+           break;
         }
-        else if(explosionArray[i].GetUserData() == 'explosion10')
+        else if(explosionData == 'explosion10')
         {
 
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp10.png';
 
            this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           break;
         }
     }
 }

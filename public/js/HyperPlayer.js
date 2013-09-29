@@ -465,7 +465,7 @@ HyperPlayer.prototype.bombThrow = function(ev)
     fixDef.shape = new box2d.b2CircleShape(20 / SCALE);                
 
     var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    bombFixture.SetUserData('Bomb');
+    bombFixture.SetUserData('Bomb'+ this.playerNumber);
 
     //To calculate Bomb Trajectory: Click Region/Pixel to Box2d Scale - Player Position - Canvas Offset/Scale - Image Offset/Scale (+1 and -2 are slight alterations) 
     var impulseVector =  new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x - (canvas.offsetLeft/SCALE)-(25/SCALE)+1)*5, ((y / SCALE) - bodyDef.position.y - (canvas.offsetTop/SCALE)-(25/SCALE)-2) *5); 
