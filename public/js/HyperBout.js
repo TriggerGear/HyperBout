@@ -433,6 +433,7 @@ Engine.prototype.start = function()
             //If contact B is the bomb, then push contactB's body into the graveYard.
             if(contactA.GetUserData() == 'Floor')
             {
+                contactB.SetUserData('dead'+contactB.GetUserData().charAt(4))
                 contactB.GetBody().SetUserData('dead'+contactB.GetUserData().charAt(4));
                 console.log(contactB.GetUserData());
                 graveYard.push(contactB.GetBody());
@@ -440,6 +441,7 @@ Engine.prototype.start = function()
             //If contact A is the bomb, then push contactA's body into the graveyard.
             else if(contactB.GetUserData() == 'Floor')
             {
+                contactA.SetUserData('dead'+contactA.GetUserData().charAt(4));
                 contactA.GetBody().SetUserData('dead'+contactA.GetUserData().charAt(4));
                 console.log(contactA.GetUserData());
                 graveYard.push(contactA.GetBody());
@@ -565,6 +567,7 @@ Engine.prototype.start = function()
 
         //Tell each player to draw themselves on the canvas
         gBombArray = gBombArray.concat(localPlayer.bombArray);
+        localPlayer.bombArray = [];
         for (i = 0; i < remotePlayers.length; i++) 
         {
             //Ask for each player's array
