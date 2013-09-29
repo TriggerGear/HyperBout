@@ -445,8 +445,8 @@ Engine.prototype.start = function()
     {
         var contactA = contact.GetFixtureA();
         var contactB = contact.GetFixtureB();
-        console.log("Contact A " + contactA.GetUserData());
-        console.log("Contact B " + contactB.GetUserData());
+        // console.log("Contact A " + contactA.GetUserData());
+        // console.log("Contact B " + contactB.GetUserData());
         if(contactA.GetUserData().charAt(0) == 'B' || contactB.GetUserData().charAt(0) == 'B')
         {
             //If contact B is the bomb, then push contactB's body into the graveYard.
@@ -467,10 +467,12 @@ Engine.prototype.start = function()
             }
         }
 
+        //start statement for handling explosion and player collision
         contactA = contact.GetFixtureA();
         contactB = contact.GetFixtureB();
-        console.log("Contact A2 " + contactA.GetUserData());
-        console.log("Contact B2 " + contactB.GetUserData());
+        // console.log("Contact A2 " + contactA.GetUserData());
+        // console.log("Contact B2 " + contactB.GetUserData());
+        // checks if the contact is correct, between player and explosion
         if(contactA.GetUserData().substring(0, 6) == 'player' && 
             contactB.GetUserData().substring(1, 10) == 'explosion' ||
             contactB.GetUserData().substring(0, 6) == 'player' && 
@@ -478,6 +480,7 @@ Engine.prototype.start = function()
             )
         {
             var playerWhoShoots, playerWhoGotHit;
+            //assign the variable correctly depends on the contacts
             if(contactA.GetUserData().substring(0, 6) == 'player')
             {
                 playerWhoShoots = contactB.GetUserData().charAt(0);
@@ -494,12 +497,12 @@ Engine.prototype.start = function()
             var playerNumInArray = -1; //in remote array
             var allPlayerArray = remotePlayers.slice(0);
             allPlayerArray.push(localPlayer); //add the local player too so all player is in this array.
-            console.log("Hit1");
+            // console.log("Hit1");
 
             if (playerWhoShoots != playerWhoGotHit)
             {
                 localPlayer.hp -= 1;
-                console.log("Hit2" + localPlayer.hp);
+                // console.log("Hit2" + localPlayer.hp);
                 if (localPlayer.hp != 0);
                 {
                     for(var i = 0; i < allPlayerArray.length; i++)
