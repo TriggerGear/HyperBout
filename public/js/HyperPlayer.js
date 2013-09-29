@@ -60,7 +60,7 @@ var HyperPlayer = function(){
     fixDef.friction = 4;
 
     this.playerFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    
+    this.playerFixture.GetBody().SetSleepingAllowed(false);
 
     var self = this;
     Engine.RegisterInputHandler(new Engine.InputHandler('player', function(event) {

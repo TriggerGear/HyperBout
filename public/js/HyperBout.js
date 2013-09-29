@@ -467,11 +467,17 @@ Engine.prototype.start = function()
             }
         }
 
+        contactA = contact.GetFixtureA();
+        contactB = contact.GetFixtureB();
+        console.log("Contact A2 " + contactA.GetUserData());
+        console.log("Contact B2 " + contactB.GetUserData());
         if(contactA.GetUserData().substring(0, 6) == 'player' && contactB.GetUserData().substring(1, 10) == 'explosion')
         {
             //only gets points for kill
-            var playerWhoShoots = contactA.GetUserData().charAt(6);
-            var playerWhoGotHit = contactB.GetUserData().charAt(0);
+            var playerWhoShoots = contactB.GetUserData().charAt(0);
+            var playerWhoGotHit = contactA.GetUserData().charAt(6);
+            var playerHitNum = parseInt(playerWhoGotHit);
+            var playerNumInArray = -1; //in remote array
             console.log("Hit1");
 
             if (playerWhoShoots != playerWhoGotHit)
@@ -480,9 +486,46 @@ Engine.prototype.start = function()
                 console.log("Hit2" + localPlayer.hp);
                 if (localPlayer.hp != 0);
                 {
-                    console.log("Hit3");
+                    for(var i = 0; i < remotePlayers.length; i++)
+                    {
+                        if (remotePlayers[i].playerNumber == playerHitNum)
+                        {
+                            playerNumInArray = i;
+                        }
+                    }
                     var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
-                    localPlayer.playerFixture.GetBody().ApplyImpulse(vec, localPlayer.playerFixture.GetBody().GetPosition());
+                    remotePlayers[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, remotePlayers[playerNumInArray].playerFixture.GetBody().GetPosition());
+                }
+            }
+            else if(contactA.GetUserData().charAt(6) == contactB.GetUserData().charAt(0))
+            {
+
+            }
+        }
+        else if(contactB.GetUserData().substring(0, 6) == 'player' && contactA.GetUserData().substring(1, 10) == 'explosion')
+        {
+            //only gets points for kill
+            var playerWhoShoots = contactA.GetUserData().charAt(0);
+            var playerWhoGotHit = contactB.GetUserData().charAt(6);
+            var playerHitNum = parseInt(playerWhoGotHit);
+            var playerNumInArray = -1; //in remote array
+            console.log("Hit1");
+
+            if (playerWhoShoots != playerWhoGotHit)
+            {
+                localPlayer.hp -= 1;
+                console.log("Hit2" + localPlayer.hp);
+                if (localPlayer.hp != 0);
+                {
+                    for(var i = 0; i < remotePlayers.length; i++)
+                    {
+                        if (remotePlayers[i].playerNumber == playerHitNum)
+                        {
+                            playerNumInArray = i;
+                        }
+                    }
+                    var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
+                    remotePlayers[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, remotePlayers[playerNumInArray].playerFixture.GetBody().GetPosition());
                 }
                 socket.emit("on hit", {  
                                         hp: localPlayer.hp, 
@@ -495,7 +538,6 @@ Engine.prototype.start = function()
 
             }
         }
-        
     }
     listener.EndContact = function(contact) {
     // console.log(contact.GetFixtureA().GetBody().GetUserData());
@@ -660,10 +702,10 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
     var testFix = new box2d.b2FixtureDef();
     testFix.density = 1;
     testFix.friction = 0.5;
-    testFix.categoryBits = 0x0008;
+    // testFix.categoryBits = 0x0008;
     //testFix.filter.maskBits = 0x0001;
     var testDef = new box2d.b2BodyDef();
-    testDef.type = box2d.b2Body.b2_staticBody;
+    testDef.type = box2d.b2Body.b2_dynamicBody;
     testDef.position.x = bombBody.GetPosition().x;
     testDef.position.y = bombBody.GetPosition().y - (20 / SCALE);
     testFix.shape = new box2d.b2PolygonShape;
