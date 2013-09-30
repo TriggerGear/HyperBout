@@ -790,9 +790,14 @@ Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
     for(i = 0; i < explosionArray.length; i++)
     {
         var explosionData = explosionArray[i].GetUserData().substring(1);
+        
+        //Thought -50 would work in one impluse, but looks like -5 works best at keeping it stable.
+        var oppositeGravity = new box2d.b2Vec2(0,-5);
+
+        explosionArray[i].GetBody().ApplyImpulse(oppositeGravity, explosionArray[i].GetBody().GetPosition());
         if(explosionData == 'explosion0')
         {
-
+            
             var explosionImage = new Image();
             explosionImage.src = 'images/explosions/exp0.png';
 
