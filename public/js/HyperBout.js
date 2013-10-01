@@ -60,7 +60,10 @@ var setupSockets = function()
 
     socket.on("remote bomb throw", handleRemoteBombs);
 
-    socket.on("hit received", handleHit);
+    socket.on("remote player got hit", handleHit);
+
+    socket.on("game finished", handleEnd);
+
 };
 
 /**************************************************
@@ -175,7 +178,6 @@ function updatePositions(data) {
 };
 
 function handleRemoteBombs(data) {
-    
     var fixDef = new box2d.b2FixtureDef();
     fixDef.density = 1;
     fixDef.friction = 0.5;
@@ -195,22 +197,33 @@ function handleRemoteBombs(data) {
 };
 
 function handleHit(data) {
-    if(data.hp == 0)
+    var hitPlayerNumber = data.playerWhoGotHit;
+    var healthOfHitPlayer = data.health;
+    var shootingPlayerNumber = data.playerWhoShoots;
+    var score = data.score;
+
+    //Update Score (May be redundant since score is updated per hit, not elimination)
+    if (shootingPlayerNumber == localPlayer.playerNumber)
     {
-        // "on hit", {  
-        //                                 hp: localPlayer.hp, 
-        //                                 playerWhoShoots: playerWhoShoots, 
-        //                                 playerWhoGotHit: playerWhoGotHit
-        //                              });
-        if(localPlayer.playerNumber == data.playerWhoShoots)
-        {
-            localPlayer.points++;
-            socket.emit("point increase", {
-                                            points: localPlayer.points
-                                          });
-        }
+        localPlayer.points = score;
     }
+    else 
+    {
+        playerByPlayerNumber(shootingPlayerNumber).points = score;
+    }
+
+    //Update Health
+    playerByPlayerNumber(hitPlayerNumber).hp = healthOfHitPlayer;
+
+    //Update GUI for Score and Health
+    updateGUIScore();
 };
+
+function handleEnd(data)
+{
+    var winner = data.winner;
+    alert("Game Finished. The Winner Is Player " + winner);
+}
 
 /**************************************************
 ** ENGINE
@@ -441,12 +454,14 @@ Engine.prototype.start = function()
 {
     var graveYard = new Array();
     var listener = Box2D.Dynamics.b2ContactListener;
+
+    //Listener to handle collision between to Box2D Objects
     listener.BeginContact = function(contact)
     {
         var contactA = contact.GetFixtureA();
         var contactB = contact.GetFixtureB();
-        // console.log("Contact A " + contactA.GetUserData());
-        // console.log("Contact B " + contactB.GetUserData());
+
+        //Listen to when Bomb Hits the Floor
         if(contactA.GetUserData().charAt(0) == 'B' || contactB.GetUserData().charAt(0) == 'B')
         {
             //If contact B is the bomb, then push contactB's body into the graveYard.
@@ -470,9 +485,8 @@ Engine.prototype.start = function()
         //start statement for handling explosion and player collision
         contactA = contact.GetFixtureA();
         contactB = contact.GetFixtureB();
-        // console.log("Contact A2 " + contactA.GetUserData());
-        // console.log("Contact B2 " + contactB.GetUserData());
-        // checks if the contact is correct, between player and explosion
+
+        //Listen to when explosions interacts with player
         if(contactA.GetUserData().substring(0, 6) == 'player' && 
             contactB.GetUserData().substring(1, 10) == 'explosion' ||
             contactB.GetUserData().substring(0, 6) == 'player' && 
@@ -496,14 +510,13 @@ Engine.prototype.start = function()
             var playerHitNum = parseInt(playerWhoGotHit);
             var playerNumInArray = -1; //in remote array
             var allPlayerArray = remotePlayers.slice(0);
+            var pointsOfShooter = -1; //Temporary store shooters points
             allPlayerArray.push(localPlayer); //add the local player too so all player is in this array.
-            // console.log("Hit1");
 
-            if (playerWhoShoots != playerWhoGotHit)
+            if (playerWhoShoots != playerWhoGotHit && playerWhoGotHit == localPlayer.playerNumber)
             {
                 localPlayer.hp -= 1;
-                // console.log("Hit2" + localPlayer.hp);
-                if (localPlayer.hp != 0);
+                if (localPlayer.hp > 0)
                 {
                     for(var i = 0; i < allPlayerArray.length; i++)
                     {
@@ -515,13 +528,28 @@ Engine.prototype.start = function()
                     var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
                     allPlayerArray[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, allPlayerArray[playerNumInArray].playerFixture.GetBody().GetPosition());
                 }
-            }
-            else if(contactA.GetUserData().charAt(6) == contactB.GetUserData().charAt(0))
-            {
+                else if(localPlayer.hp <= 0)
+                {
+                    setTimeout(function()
+                    {
+                        localPlayer.moveToSpawn();
+                    }, 1000)
+                    localPlayer.hp = 5;
+                    playerByPlayerNumber(playerWhoShoots).points += 1;
 
+                    //If Score Limit Has been reached, alert other players
+                    if (playerByPlayerNumber(playerWhoShoots).points == 2)
+                    {
+                        socket.emit("game end", {winner: playerWhoShoots});
+                    }
+                }
+                pointsOfShooter = playerByPlayerNumber(playerWhoShoots).points;
+                socket.emit("player hit", {playerWhoGotHit: playerWhoGotHit, health: localPlayer.hp, playerWhoShoots: playerWhoShoots, score: pointsOfShooter});
             }
+            updateGUIScore();
         }
     }
+
     listener.EndContact = function(contact) {
     // console.log(contact.GetFixtureA().GetBody().GetUserData());
     }
@@ -576,7 +604,7 @@ Engine.prototype.start = function()
         localPlayer.moveToSpawn();
         for(i = 0; i < remotePlayers.length; i++) 
         {        
-            console.log("HIT");
+            console.log("Respawning all players");
             console.log(remotePlayers[i].id);
             console.log(remotePlayers[i].playerNumber);
             remotePlayers[i].moveToSpawn();
@@ -671,7 +699,6 @@ Engine.prototype.drawBombs = function()
         console.log(gBombArray[i].GetUserData());
         if(gBombArray[i].GetUserData().substring(0,4) == 'dead')
         {   
-            console.log("WORKSasdsadasdad");
             gBombArray.splice(i, 1);
         }
         else
@@ -792,9 +819,9 @@ Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
         var explosionData = explosionArray[i].GetUserData().substring(1);
         
         //Thought -50 would work in one impluse, but looks like -5 works best at keeping it stable.
-        var oppositeGravity = new box2d.b2Vec2(0,-5);
+        //var oppositeGravity = new box2d.b2Vec2(0,-5.0);
 
-        explosionArray[i].GetBody().ApplyImpulse(oppositeGravity, explosionArray[i].GetBody().GetPosition());
+        //explosionArray[i].GetBody().ApplyImpulse(oppositeGravity, explosionArray[i].GetBody().GetPosition());
         if(explosionData == 'explosion0')
         {
             
@@ -1227,10 +1254,51 @@ function CanvasWrapper(backCanvasId, entityCanvasId, animationCanvasId, width, h
 **************************************************/
 function playerById(id) {
     var i;
-    for (i = 0; i < remotePlayers.length; i++) {
+    for (i = 0; i < remotePlayers.length; i++) 
+    {
         if (remotePlayers[i].id == id)
             return remotePlayers[i];
-    };
-    
+    }
     return false;
+};
+
+function playerByPlayerNumber(playerNumber) {
+    var i;
+    for (i = 0; i < remotePlayers.length; i++) 
+    {
+        if (remotePlayers[i].playerNumber == playerNumber)
+            return remotePlayers[i];
+    }
+    return false;
+};
+
+function updateGUIScore(){
+    
+    var allPlayers = new Array();
+    allPlayers.push(localPlayer);
+    allPlayers = allPlayers.concat(remotePlayers);
+    
+    for (i = 0; i < allPlayers.length; i++) 
+    {
+        if (allPlayers[i].playerNumber == 1)
+        {
+            $('#1hp').html('<FONT COLOR="WHITE">'+allPlayers[i].hp+'</FONT>');
+            $('#1p').html('<FONT COLOR="WHITE">'+allPlayers[i].points+'</FONT>');
+        }
+        else if (allPlayers[i].playerNumber == 2)
+        {
+            $('#2hp').html('<FONT COLOR="WHITE">'+allPlayers[i].hp+'</FONT>');
+            $('#2p').html('<FONT COLOR="WHITE">'+allPlayers[i].points+'</FONT>');
+        }
+        else if (allPlayers[i].playerNumber == 3)
+        {
+            $('#3hp').html('<FONT COLOR="WHITE">'+allPlayers[i].hp+'</FONT>');
+            $('#3p').html('<FONT COLOR="WHITE">'+allPlayers[i].points+'</FONT>');
+        }
+        else if (allPlayers[i].playerNumber == 4)
+        {
+            $('#4hp').html('<FONT COLOR="WHITE">'+allPlayers[i].hp+'</FONT>');
+            $('#4p').html('<FONT COLOR="WHITE">'+allPlayers[i].points+'</FONT>');
+        }
+    }
 };

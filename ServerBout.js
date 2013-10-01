@@ -72,7 +72,10 @@ function onSocketConnection(client) {
     client.on("bomb throw", onBombThrow);
 
     //Listen for player who got hit
-    client.on("on hit", onHit);
+    client.on("player hit", onHit);
+
+    //Listen for game end
+    client.on("game end", onGameEnd);
 
 };
 
@@ -157,10 +160,15 @@ function onBombThrow(data) {
 }
 
 function onHit(data) {
-    util.log("GOT HIT");
-    this.emit("hit received", data);
+    util.log("Player has been hit");
+    this.broadcast.emit("remote player got hit", data);
 }
 
+function onGameEnd(data) {
+    util.log("Player has reached win score");
+    this.broadcast.emit("game finished", data); 
+    this.emit("game finished", data); 
+}
 /**************************************************
 ** GAME HELPER FUNCTIONS
 **************************************************/

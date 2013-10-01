@@ -15,7 +15,6 @@ var HyperPlayer = function(){
     this.miny = 0;
     this.maxx = 1122;
     this.maxy = 548;
-
     this.maxSpeed = 7;
 
     this.bombArray = new Array();
