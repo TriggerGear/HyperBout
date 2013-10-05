@@ -3,7 +3,7 @@
 **************************************************/
 var util = require("util"),                                 // Utility resources (logging, object inspection, etc)
     io = require("socket.io"),                              // Socket.IO
-    HyperPlayer = require("./ServerPlayer").HyperPlayer;     // HyperPlayer class
+    HyperPlayer = require("./ServerPlayer").HyperPlayer;    // HyperPlayer class
 
 
 /**************************************************
@@ -104,7 +104,7 @@ function onNewPlayer(data) {
     var newPlayer = new HyperPlayer();
     newPlayer.id = this.id;
     newPlayer.playerNumber = players.length + 1;
-    util.log("YAY " + players.length);
+    util.log("Player Joined. There are now: " + (players.length+1) + " player(s)");
     this.emit("update id", {id: newPlayer.id, playerNumber: newPlayer.playerNumber});
 
     // Broadcast new player to connected socket clients
@@ -130,11 +130,6 @@ function onMovePlayer(data) {
         util.log("Player not found: "+this.id);
         return;
     };
-    // util.log(data.x);
-    // util.log(data.y);
-    // Update player position
-    //movePlayer.setX(data.x);
-    //movePlayer.setY(data.y);
 
     // Broadcast updated position to connected socket clients
     data.id = this.id;
@@ -160,12 +155,12 @@ function onBombThrow(data) {
 }
 
 function onHit(data) {
-    util.log("Player has been hit");
+    util.log("Player " + data.playerWhoGotHit + " has been hit");
     this.broadcast.emit("remote player got hit", data);
 }
 
 function onGameEnd(data) {
-    util.log("Player has reached win score");
+    util.log("Player " + data.winner + " has reached win score");
     this.broadcast.emit("game finished", data); 
     this.emit("game finished", data); 
 }

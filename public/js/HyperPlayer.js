@@ -91,22 +91,10 @@ HyperPlayer.prototype.onKeyUp = function(event) {
 };
 
 HyperPlayer.prototype.draw = function(canvasctx)
-{
-    //this.xpos = playerFixture.GetBody().GetPosition().x;
-    //this.ypos = playerFixture.GetBody().GetPosition().y; 
-    //canvasctx.drawImage(this.playerImage, (this.xpos * SCALE) - 15, (this.ypos * SCALE) - 20);
-    
+{   
     canvasctx.drawImage(this.playerImage, (this.playerFixture.GetBody().GetPosition().x * SCALE) - 15, (this.playerFixture.GetBody().GetPosition().y * SCALE) - 20);
-        
-    //Draws each of the player's bombs. Need to restructure so bombs are held in a global array accessable to all players.
-    /*
-    for (i=0;i<this.bombArray.length;i++)
-    {
-        //canvasctx.drawImage(this.playerBomb, (this.bombArray[i].GetBody().GetPosition().x * SCALE) - 25, (this.bombArray[i].GetBody().GetPosition().y * SCALE) - 25);
-    }
-    */
-    
 };
+
 //Movement function for players
 HyperPlayer.prototype.move = function(args)
 {
@@ -201,21 +189,6 @@ HyperPlayer.prototype.getMoveVector = function() {
             }
 
             return {playerVector: vec, direction: "left"};
-            /* SELF NOTES
-            var x = this.playerFixture.GetBody().GetPosition().x;
-            var y = this.playerFixture.GetBody().GetPosition().y;
-            console.log("POS:::"+x+" "+y);
-            var pos = this.playerFixture.GetBody().GetPosition();
-            console.log(" OBJ" + this.playerFixture.GetBody().SetPosition );
-
-                      //  this.playerFixture.GetBody().position.Set(x, y+ 55);
-                                            console.log("y "+pos.y);
-
-                      pos.y = (y-4);
-                      console.log("y "+pos.y);
-                      console.log("x "+pos.x);
-                        this.playerFixture.GetBody().SetPosition(pos );
-            */
         }
         break;
 
@@ -473,7 +446,6 @@ HyperPlayer.prototype.bombThrow = function(ev)
     var impulseVector =  new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x - (canvas.offsetLeft/SCALE)-(25/SCALE)+1)*5, ((y / SCALE) - bodyDef.position.y - (canvas.offsetTop/SCALE)-(25/SCALE)-2) *5); 
     bombFixture.GetBody().ApplyImpulse(impulseVector, bombFixture.GetBody().GetPosition());
     this.bombArray.push(bombFixture);
-    //bombFixture.SetUserData("B"+playerNumber);
 
     socket.emit("bomb throw", {playerX: bodyDef.position.x, playerY: bodyDef.position.y, impulse: impulseVector, playerNumber: this.playerNumber});
 }

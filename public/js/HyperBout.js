@@ -52,16 +52,19 @@ var setupSockets = function()
     // Player removed message received
     socket.on("remove player", onRemovePlayer);
 
-    //Update the players ID
+    // Update the players ID
     socket.on("update id", updateID);
 
     // Recieve player position updates from Server
     socket.on("update player positions", updatePositions);
 
+    // Recieve other player's bomb throws
     socket.on("remote bomb throw", handleRemoteBombs);
 
+    // Recieve when other players get hit
     socket.on("remote player got hit", handleHit);
 
+    // Recieve when game end
     socket.on("game finished", handleEnd);
 
 };
@@ -117,6 +120,7 @@ function onNewPlayer(data) {
 
 // Move player
 function onMovePlayer(data) {
+    
     //Get the player that moved
     var movePlayer = playerById(data.id);
     
@@ -126,13 +130,8 @@ function onMovePlayer(data) {
         return;
     };
 
-    // Update player position
-    //movePlayer.setX(data.x);
-    //movePlayer.setY(data.y);
     console.log(data);
     movePlayer.remotePlayerMove(data);
-    
-    //console.log(movePlayer.id + " moved to x position " + movePlayer.getX() + "and y position "+ movePlayer.getY());
 
 };
 
@@ -656,9 +655,6 @@ Engine.prototype.start = function()
         {
                 explosionAnimationTime = gameStartTime;
         }
-        
-     
-        //console.log("Outside Interval: ID:" + localPlayer.id + " XPosition" + localPlayer.getX() + " YPosition" + localPlayer.getY());
 
         //Temporary emit to server, need to find more permanent version
         var playerVectorAndDirection = localPlayer.move();
@@ -676,7 +672,6 @@ Engine.prototype.start = function()
             remotePlayers[i].draw(self.hyperBout.entityctx);
         };
 
-
         for(i = 0; i < graveYard.length; i++)
         {
             //console.log(graveYard[i].GetPosition());
@@ -684,6 +679,18 @@ Engine.prototype.start = function()
             world.DestroyBody(graveYard[i]);
             graveYard.splice(i);
         };
+
+        var allPlayers = new Array();
+        allPlayers.push(localPlayer);
+        allPlayers = allPlayers.concat(remotePlayers);
+        
+        //Set position of localPlayer if falls off screen
+        //Can probably send hp loss signal to other players here as well
+        //May be more efficent if we fire it off an event instead of checking 30 times per second
+        if(localPlayer.playerFixture.GetBody().GetPosition().y > 20)
+        {
+            localPlayer.moveToSpawn();
+        }
         gameStartTime = new Date().getTime();
     }, 1000/FPS);
     
@@ -696,7 +703,7 @@ Engine.prototype.drawBombs = function()
     playerBomb.src = 'images/projectileBladeBomb.png';
     for (i=0;i<gBombArray.length;i++)
     {
-        console.log(gBombArray[i].GetUserData());
+        //console.log(gBombArray[i].GetUserData());
         if(gBombArray[i].GetUserData().substring(0,4) == 'dead')
         {   
             gBombArray.splice(i, 1);
@@ -707,6 +714,7 @@ Engine.prototype.drawBombs = function()
         }
     }
 }
+
 Engine.prototype.createExplosion = function(bombBody, explosions)
 {
     var testFix = new box2d.b2FixtureDef();
@@ -725,13 +733,8 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
     bombExplosion.SetUserData(bombBody.GetUserData().charAt(4)+'explosion0');
 
     explosions.push(bombExplosion);
-
-    //bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
-    //bodyDef.position.y = ((this.playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
-
-
-
 }
+
 Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, explosions, graveYard, animateType)
 {
     var playerNumber = -2;
@@ -806,21 +809,20 @@ Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, 
                 world.DestroyBody(explosions[i].GetBody());
                 explosions.splice(i, 1);
             }
-
        }
        return true;
     }
     return false;
 }
+
 Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
 {
     for(i = 0; i < explosionArray.length; i++)
     {
         var explosionData = explosionArray[i].GetUserData().substring(1);
         
-        //Thought -50 would work in one impluse, but looks like -5 works best at keeping it stable.
+        //Uncomment to reapply opposite upward gravity
         //var oppositeGravity = new box2d.b2Vec2(0,-5.0);
-
         //explosionArray[i].GetBody().ApplyImpulse(oppositeGravity, explosionArray[i].GetBody().GetPosition());
         if(explosionData == 'explosion0')
         {
@@ -923,6 +925,7 @@ Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
         }
     }
 }
+
 //Draw text to test updating
 Engine.prototype.draw = function()
 {
@@ -938,10 +941,12 @@ Engine.prototype.draw = function()
     world.DrawDebugData();
     world.ClearForces();
 }
+
 Engine.prototype.drawPlatforms = function(platformArray)
 {
     this.hyperBout.animationctx.drawImage(platformArray[0] , 0, 400);
 }
+
 Engine.prototype.loadPlatformImages = function()
 {
     var bottomLeftPlatform = new Image();
@@ -952,6 +957,7 @@ Engine.prototype.loadPlatformImages = function()
 
     return platforms;
 }
+
 Engine.prototype.animateClouds = function(cloudArrayInformation)
 {
 
@@ -967,6 +973,7 @@ Engine.prototype.animateClouds = function(cloudArrayInformation)
     this.hyperBout.animationctx.drawImage(cloudArrayInformation[12], cloudArrayInformation[13], 500);
     this.hyperBout.animationctx.drawImage(cloudArrayInformation[14], cloudArrayInformation[15], 500);
 }
+
 Engine.prototype.animateStars = function(starArray, starIndex, starAnimation, gameTime)
 {
     var starIndexTemp = starIndex;
@@ -993,6 +1000,7 @@ Engine.prototype.animateStars = function(starArray, starIndex, starAnimation, ga
     this.hyperBout.animationctx.drawImage(starArray[starIndexTemp], 1000, 160);
     return starIndex;
 }
+
 Engine.prototype.animateLights = function(lightsArray, lightsIndex, lightAnimationTime, gameTime)
 {
     if((gameTime - lightAnimationTime) > 60)
@@ -1034,9 +1042,9 @@ Engine.prototype.animateLights = function(lightsArray, lightsIndex, lightAnimati
     lightsIndex = animateLightsHelper(lightsIndex);
     this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 1043, 431);
 
-    return false;
-      
+    return false;      
 }
+
 animateLightsHelper = function(currentIndex)
 {
     currentIndex++;
@@ -1046,6 +1054,7 @@ animateLightsHelper = function(currentIndex)
     }
     return currentIndex;
 }
+
 Engine.prototype.loadStars = function()
 {
     var starZero = new Image();
@@ -1073,6 +1082,7 @@ Engine.prototype.loadStars = function()
 
     return stars;
 }
+
 Engine.prototype.loadLights = function()
 {
     var lights0 = new Image();
@@ -1118,6 +1128,7 @@ Engine.prototype.loadLights = function()
 
     return lights;
 }
+
 Engine.prototype.loadClouds = function()
 {
     var cloudOneImageOne = new Image();
@@ -1181,6 +1192,7 @@ Engine.prototype.loadClouds = function()
 
     return cloudInformation;
 }
+
 Engine.prototype.updateCloudInformation = function(cloudInformationArray)
 {
         cloudInformationArray[1] = cloudInformationArray[1] - 4;
@@ -1226,6 +1238,7 @@ Engine.prototype.updateCloudInformation = function(cloudInformationArray)
         }
         return cloudInformationArray;
 }
+
 //Move the text diagonal
 Engine.prototype.update = function()
 {
