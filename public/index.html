@@ -85,7 +85,7 @@
             <img src="images/explosions/exp10.png" id="exp10" alt="exp1 0 tiles" style="display:none"/>
         </div>
 
-        <div>
+        <div id = "pointTable">
             <table border="1">
                 <tr>
                   <td><FONT COLOR="WHITE">#</FONT></td>
@@ -109,6 +109,9 @@
                   <td id="4p"><FONT COLOR="WHITE">-</FONT></td>
                 </tr>
             </table>
+        </div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <br><br>
         <script>
             if(window.location.href.indexOf('unitTest') != -1)
             {
@@ -121,8 +124,9 @@
                 loadtest("tests/CanvasSpec.js");
                 loadtest("tests/ImageSpec.js");
                 loadtest("tests/AudioSpec.js");
+                loadtest("tests/PointTableSpec.js");
+                loadtest("tests/HyperBoutSpec.js");
             }
         </script>
-       
     </body>
 </html>

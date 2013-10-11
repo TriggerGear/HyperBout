@@ -107,7 +107,6 @@ HyperPlayer.prototype.moveToSpawn = function()
     this.playerFixture.SetUserData('player' + this.playerNumber);
     if (this.playerNumber == 1)
     {
-
         var pos = this.playerFixture.GetBody().GetPosition();
         pos.x = 6.83;
         pos.y = 2.33;
