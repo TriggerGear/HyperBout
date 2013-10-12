@@ -17,6 +17,7 @@ var HyperPlayer = function(){
     this.maxx = 1122;
     this.maxy = 548;
     this.maxSpeed = 7;
+    this.throwCooldown = 0;
 
     this.bombArray = new Array();
 
@@ -423,38 +424,52 @@ HyperPlayer.prototype.setLocation = function(playerList){
 
 HyperPlayer.prototype.bombThrow = function(ev)
 {
-    var canvas = document.getElementById('main');
-    //console.log("Canvas is offset on x by:" + canvas.offsetLeft);
-    //console.log("Canvas is offset on y by:" + canvas.offsetTop);
-    // console.log("Clicked at x point:" + ev.clientX/SCALE);
-    // console.log("Clicked at y point:" + ev.clientY/SCALE);
+    //Need temporary assignment for this for scope
+    var _this = this;
+    if (this.throwCooldown != 1)
+    {
+        this.throwCooldown = 1;
+        setTimeout(function()
+        {
+            _this.throwCooldown = 0;
+        }, 1000);
 
-    var x = ev.clientX;
-    var y = ev.clientY;
- 
-    var fixDef = new box2d.b2FixtureDef();
-    fixDef.density = 1;
-    fixDef.friction = 0.5;
-    fixDef.restitution = 0.5;
-    fixDef.filter.categoryBits = 0x0004;
-    fixDef.filter.maskBits = 0x0001;
-    var bodyDef = new box2d.b2BodyDef();
-    bodyDef.type = box2d.b2Body.b2_dynamicBody; 
-    bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
-    bodyDef.position.y = ((this.playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
+        var canvas = document.getElementById('main');
+        //console.log("Canvas is offset on x by:" + canvas.offsetLeft);
+        //console.log("Canvas is offset on y by:" + canvas.offsetTop);
+        // console.log("Clicked at x point:" + ev.clientX/SCALE);
+        // console.log("Clicked at y point:" + ev.clientY/SCALE);
+
+        var x = ev.clientX;
+        var y = ev.clientY;
+     
+        var fixDef = new box2d.b2FixtureDef();
+        fixDef.density = 1;
+        fixDef.friction = 0.5;
+        fixDef.restitution = 0.5;
+        fixDef.filter.categoryBits = 0x0004;
+        fixDef.filter.maskBits = 0x0001;
+        var bodyDef = new box2d.b2BodyDef();
+        bodyDef.type = box2d.b2Body.b2_dynamicBody; 
+        bodyDef.position.x = ((this.playerFixture.GetBody().GetPosition().x)); 
+        bodyDef.position.y = ((this.playerFixture.GetBody().GetPosition().y)) - (20 / SCALE);
 
 
-    fixDef.shape = new box2d.b2CircleShape(20 / SCALE);                
+        fixDef.shape = new box2d.b2CircleShape(20 / SCALE);                
 
-    var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    bombFixture.SetUserData('Bomb'+ this.playerNumber);
+        var bombFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+        bombFixture.SetUserData('Bomb'+ this.playerNumber);
 
-    //To calculate Bomb Trajectory: Click Region/Pixel to Box2d Scale - Player Position - Canvas Offset/Scale - Image Offset/Scale (+1 and -2 are slight alterations) 
-    var impulseVector =  new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x - (canvas.offsetLeft/SCALE)-(25/SCALE)+1)*5, ((y / SCALE) - bodyDef.position.y - (canvas.offsetTop/SCALE)-(25/SCALE)-2) *5); 
-    bombFixture.GetBody().ApplyImpulse(impulseVector, bombFixture.GetBody().GetPosition());
-    this.bombArray.push(bombFixture);
+        //To calculate Bomb Trajectory: Click Region/Pixel to Box2d Scale - Player Position - Canvas Offset/Scale - Image Offset/Scale (+1 and -2 are slight alterations) 
+        var impulseVector =  new box2d.b2Vec2(((x / SCALE) - bodyDef.position.x - (canvas.offsetLeft/SCALE)-(25/SCALE)+1)*5, ((y / SCALE) - bodyDef.position.y - (canvas.offsetTop/SCALE)-(25/SCALE)-2) *5); 
+        bombFixture.GetBody().ApplyImpulse(impulseVector, bombFixture.GetBody().GetPosition());
+        this.bombArray.push(bombFixture);
 
-    socket.emit("bomb throw", {playerX: bodyDef.position.x, playerY: bodyDef.position.y, impulse: impulseVector, playerNumber: this.playerNumber});
+
+        socket.emit("bomb throw", {playerX: bodyDef.position.x, playerY: bodyDef.position.y, impulse: impulseVector, playerNumber: this.playerNumber});
+        
+    }
+    
 }
 
 HyperPlayer.prototype.combineKey = function(keyCode, direction) {
