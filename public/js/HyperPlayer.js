@@ -2,6 +2,7 @@
 var HyperPlayer = function(){
     this.hp = 5;
     this.id = 1;
+    this.invincibility = 0;
     this.playerNumber = -1;
     this.direction = 0;
     this.points = 0;
@@ -39,6 +40,9 @@ var HyperPlayer = function(){
     //Player image
     this.playerImage = new Image();
     this.playerImage.src = 'images/playerStationary.png';
+
+    this.shieldImage = new Image();
+    this.shieldImage.src = 'images/shield.png';
 
     this.playerBomb = new Image();
     this.playerBomb.src = 'images/projectileBladeBomb.png';
@@ -93,6 +97,10 @@ HyperPlayer.prototype.onKeyUp = function(event) {
 HyperPlayer.prototype.draw = function(canvasctx)
 {   
     canvasctx.drawImage(this.playerImage, (this.playerFixture.GetBody().GetPosition().x * SCALE) - 15, (this.playerFixture.GetBody().GetPosition().y * SCALE) - 20);
+    if(this.invincibility == 1)
+    {
+        canvasctx.drawImage(this.shieldImage, (this.playerFixture.GetBody().GetPosition().x * SCALE) - 15, (this.playerFixture.GetBody().GetPosition().y * SCALE) - 20);
+    }
 };
 
 //Movement function for players
@@ -296,7 +304,7 @@ HyperPlayer.prototype.getMoveVector = function() {
 
 HyperPlayer.prototype.remotePlayerMove = function(args) {
     var direction = args.direction;
-    console.log(args);
+    // console.log(args);
 
     switch(direction) {
     case "left":
@@ -418,8 +426,8 @@ HyperPlayer.prototype.bombThrow = function(ev)
     var canvas = document.getElementById('main');
     //console.log("Canvas is offset on x by:" + canvas.offsetLeft);
     //console.log("Canvas is offset on y by:" + canvas.offsetTop);
-    console.log("Clicked at x point:" + ev.clientX/SCALE);
-    console.log("Clicked at y point:" + ev.clientY/SCALE);
+    // console.log("Clicked at x point:" + ev.clientX/SCALE);
+    // console.log("Clicked at y point:" + ev.clientY/SCALE);
 
     var x = ev.clientX;
     var y = ev.clientY;

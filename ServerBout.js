@@ -77,6 +77,11 @@ function onSocketConnection(client) {
     //Listen for game end
     client.on("game end", onGameEnd);
 
+    //Listen for invincibility down
+    client.on("invincibility down", onInvincibilityDown);
+
+    //Listen for invincibility on
+    client.on("invincibility on", onInvincibilityOn);
 };
 
 // Socket client has disconnected
@@ -152,6 +157,14 @@ function onRequestPosition() {
 function onBombThrow(data) {
     //util.log("BOMB THROW");
     this.broadcast.emit("remote bomb throw", data);
+}
+
+function onInvincibilityDown(data) {
+    this.broadcast.emit("send invincibility down", data);
+}
+
+function onInvincibilityOn(data) {
+    this.broadcast.emit("send invincibility on", data);
 }
 
 function onHit(data) {

@@ -55,17 +55,23 @@ var setupSockets = function()
     // Update the players ID
     socket.on("update id", updateID);
 
-    // Recieve player position updates from Server
+    // Receive player position updates from Server
     socket.on("update player positions", updatePositions);
 
-    // Recieve other player's bomb throws
+    // Receive other player's bomb throws
     socket.on("remote bomb throw", handleRemoteBombs);
 
-    // Recieve when other players get hit
+    // Receive when other players get hit
     socket.on("remote player got hit", handleHit);
 
-    // Recieve when game end
+    // Receive when game end
     socket.on("game finished", handleEnd);
+
+    // Receive when player invincibility is down.
+    socket.on("send invincibility down", handleInvincibilityDown);
+
+    // Receive when player invincibility is on.
+    socket.on("send invincibility on", handleInvincibilityOn);
 
 };
 
@@ -130,7 +136,7 @@ function onMovePlayer(data) {
         return;
     };
 
-    console.log(data);
+    // console.log(data);
     movePlayer.remotePlayerMove(data);
 
 };
@@ -176,6 +182,22 @@ function updatePositions(data) {
     }
 };
 
+function handleInvincibilityDown(data)
+{
+    var invinciblePlayer = playerByPlayerNumber(data.playerNum);
+    invinciblePlayer.invincibility = 0;
+
+    //PUT YOUR SHIELD HERRRREE!! >O
+}
+
+function handleInvincibilityOn(data)
+{
+    var invinciblePlayer = playerByPlayerNumber(data.playerNum);
+    invinciblePlayer.invincibility = 1;
+
+    //PUT YOUR SHIELD HERRRREE!! >O
+}
+
 function handleRemoteBombs(data) {
     var fixDef = new box2d.b2FixtureDef();
     fixDef.density = 1;
@@ -190,7 +212,7 @@ function handleRemoteBombs(data) {
     var impulse = data.impulse;
     fixDef.shape = new box2d.b2CircleShape(20 / SCALE);  
     var remoteBomb = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    console.log(remoteBomb.SetUserData("Bomb"+data.playerNumber));
+    remoteBomb.SetUserData("Bomb"+data.playerNumber);
     remoteBomb.GetBody().ApplyImpulse(impulse, remoteBomb.GetBody().GetPosition());
     gBombArray.push(remoteBomb);
 };
@@ -468,7 +490,7 @@ Engine.prototype.start = function()
             {
                 contactB.SetUserData('dead'+contactB.GetUserData().charAt(4)); //for the gBombArray and the blade bomb
                 contactB.GetBody().SetUserData('dead'+contactB.GetUserData().charAt(4)); //for passing into graveyard
-                console.log(contactB.GetUserData());
+                // console.log(contactB.GetUserData());
                 graveYard.push(contactB.GetBody());
             }
             //If contact A is the bomb, then push contactA's body into the graveyard.
@@ -486,7 +508,7 @@ Engine.prototype.start = function()
         contactB = contact.GetFixtureB();
 
         //Listen to when explosions interacts with player
-        if(contactA.GetUserData().substring(0, 6) == 'player' && 
+        if( contactA.GetUserData().substring(0, 6) == 'player' && 
             contactB.GetUserData().substring(1, 10) == 'explosion' ||
             contactB.GetUserData().substring(0, 6) == 'player' && 
             contactA.GetUserData().substring(1, 10) == 'explosion'
@@ -514,20 +536,39 @@ Engine.prototype.start = function()
 
             if (playerWhoShoots != playerWhoGotHit && playerWhoGotHit == localPlayer.playerNumber)
             {
-                localPlayer.hp -= 1;
-                if (localPlayer.hp > 0)
+                if(localPlayer.invincibility == 1)
                 {
-                    for(var i = 0; i < allPlayerArray.length; i++)
-                    {
-                        if (allPlayerArray[i].playerNumber == playerHitNum)
-                        {
-                            playerNumInArray = i;
-                        }
-                    }
-                    var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
-                    allPlayerArray[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, allPlayerArray[playerNumInArray].playerFixture.GetBody().GetPosition());
+                    //do nothing
                 }
-                else if(localPlayer.hp <= 0)
+                else if(localPlayer.invincibility == 0)
+                {
+                    localPlayer.invincibility = 1;
+
+                    //send signal that invins is ON!
+                    socket.emit("invincibility on", {playerNum: localPlayer.playerNumber});
+
+                    //set timeout so that invinsibility is turned down.
+                    setTimeout(function()
+                    {
+                        localPlayer.invincibility = 0;
+                        socket.emit("invincibility down", {playerNum: localPlayer.playerNumber});
+                    }, 3000);
+
+                    localPlayer.hp -= 1;
+                    if (localPlayer.hp > 0)
+                    {
+                        for(var i = 0; i < allPlayerArray.length; i++)
+                        {
+                            if (allPlayerArray[i].playerNumber == playerHitNum)
+                            {
+                                playerNumInArray = i;
+                            }
+                        }
+                        var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
+                        allPlayerArray[playerNumInArray].playerFixture.GetBody().ApplyImpulse(vec, allPlayerArray[playerNumInArray].playerFixture.GetBody().GetPosition());
+                    }
+                }
+                if(localPlayer.hp <= 0)
                 {
                     setTimeout(function()
                     {

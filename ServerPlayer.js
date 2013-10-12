@@ -4,6 +4,7 @@ var HyperPlayer = function(){
     id = 1,
     playerNumber = -1,
     direction = 0,
+    invincibility = 0,
     
     //Movement and location variables
     xpos = 68,
