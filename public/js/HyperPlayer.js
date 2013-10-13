@@ -604,6 +604,8 @@ HyperPlayer.prototype.bombThrow = function(ev)
 {
     //Need temporary assignment for this for scope
     var _this = this;
+    //player animation
+
     if (this.throwCooldown != 1)
     {
         this.throwCooldown = 1;

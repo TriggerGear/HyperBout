@@ -863,8 +863,8 @@ Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
         var explosionData = explosionArray[i].GetUserData().substring(1);
         
         //Uncomment to reapply opposite upward gravity
-        //var oppositeGravity = new box2d.b2Vec2(0,-5.0);
-        //explosionArray[i].GetBody().ApplyImpulse(oppositeGravity, explosionArray[i].GetBody().GetPosition());
+        var oppositeGravity = new box2d.b2Vec2(0,-3.5);
+        explosionArray[i].GetBody().ApplyImpulse(oppositeGravity, explosionArray[i].GetBody().GetPosition());
         if(explosionData == 'explosion0')
         {
             
