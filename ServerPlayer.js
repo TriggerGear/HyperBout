@@ -3,8 +3,9 @@ var HyperPlayer = function(){
     var healthPoints = 5,
     id = 1,
     playerNumber = -1,
-    direction = 0,
     invincibility = 0,
+    direction = 0, 
+    leftRight = 0, //0 for right
     
     //Movement and location variables
     xpos = 68,

@@ -6,6 +6,8 @@ var HyperPlayer = function(){
     this.playerNumber = -1;
     this.direction = 0;
     this.points = 0;
+    this.leftRight = 0; //0 for right
+
     //Movement and location variables
     this.xpos = 100;
     this.ypos = 68;
@@ -116,6 +118,7 @@ HyperPlayer.prototype.moveToSpawn = function()
     this.playerFixture.SetUserData('player' + this.playerNumber);
     if (this.playerNumber == 1)
     {
+        this.leftRight = 0;
         var pos = this.playerFixture.GetBody().GetPosition();
         pos.x = 6.83;
         pos.y = 2.33;
@@ -124,6 +127,7 @@ HyperPlayer.prototype.moveToSpawn = function()
     }
     else if (this.playerNumber == 2)
     {
+        this.leftRight = 1;
         var pos = this.playerFixture.GetBody().GetPosition();
         pos.x = 30.83;
         pos.y = 2.33;
@@ -132,6 +136,7 @@ HyperPlayer.prototype.moveToSpawn = function()
     }
     else if (this.playerNumber == 3)
     {
+        this.leftRight = 0;
         var pos = this.playerFixture.GetBody().GetPosition();
         pos.x = 6.83;
         pos.y = 12.33;
@@ -140,6 +145,7 @@ HyperPlayer.prototype.moveToSpawn = function()
     }
     else if (this.playerNumber == 4)
     {
+        this.leftRight = 1;
         var pos = this.playerFixture.GetBody().GetPosition();
         pos.x = 30.83;
         pos.y = 12.33;
@@ -168,35 +174,38 @@ HyperPlayer.prototype.getYPosition = function()
     return pos.y;
 };
 
-HyperPlayer.prototype.getMoveVector = function() {
+HyperPlayer.prototype.getMoveVector = function() 
+{
     var direction = this.direction;
-    switch(direction) {
+    switch(direction) 
+    {
     
     case HyperPlayer.MoveLeft:
         if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
         {
+            this.leftRight = 1;
             var vec = new box2d.b2Vec2(-0.2 * SCALE, 0);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
 
             //Set Direction
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1standleft.png";
+                this.playerImage.src = "images/player/p1runleft.png";
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2standleft.png";
+                this.playerImage.src = "images/player/p2runleft.png";
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3standleft.png";
+                this.playerImage.src = "images/player/p3runleft.png";
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4standleft.png";
+                this.playerImage.src = "images/player/p4runleft.png";
             }
 
-            return {playerVector: vec, direction: "left"};
+            return {playerVector: vec, direction: "left", leftRight: this.leftRight};
         }
         break;
 
@@ -205,91 +214,132 @@ HyperPlayer.prototype.getMoveVector = function() {
         {
             var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
-            return {playerVector: vec, direction: "up"};
+            if(this.leftRight == 1)
+            {
+                if (this.playerNumber == 1)
+                {
+                    this.playerImage.src = "images/player/p1jumpleft.png";
+                }
+                else if (this.playerNumber == 2)
+                {
+                    this.playerImage.src = "images/player/p2jumpleft.png";
+                }
+                else if (this.playerNumber == 3)
+                {
+                    this.playerImage.src = "images/player/p3jumpleft.png";
+                }
+                else if (this.playerNumber == 4)
+                {
+                    this.playerImage.src = "images/player/p4jumpleft.png";
+                }
+            }
+            else if(this.leftRight == 0)
+            {
+                if (this.playerNumber == 1)
+                {
+                    this.playerImage.src = "images/player/p1jumpright.png";
+                }
+                else if (this.playerNumber == 2)
+                {
+                    this.playerImage.src = "images/player/p2jumpright.png";
+                }
+                else if (this.playerNumber == 3)
+                {
+                    this.playerImage.src = "images/player/p3jumpright.png";
+                }
+                else if (this.playerNumber == 4)
+                {
+                    this.playerImage.src = "images/player/p4jumpright.png";
+                }
+            }
+            return {playerVector: vec, direction: "up", leftRight: this.leftRight};
         }
         break;
 
     case HyperPlayer.MoveRight:
         if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
         {
+            this.leftRight = 0;
             var vec = new box2d.b2Vec2(0.2 * SCALE, 0);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
 
             //Set Direction
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1standright.png";
+                this.playerImage.src = "images/player/p1runright.png";
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2standright.png";
+                this.playerImage.src = "images/player/p2runright.png";
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3standright.png";
+                this.playerImage.src = "images/player/p3runright.png";
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4standright.png";
+                this.playerImage.src = "images/player/p4runright.png";
             }
 
-            return {playerVector: vec, direction: "right"};
+            return {playerVector: vec, direction: "right", leftRight: this.leftRight};
         }
         break;
 
     case HyperPlayer.MoveLeft | HyperPlayer.MoveUp :
         if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
         {
+            this.leftRight = 1;
             var vec = new box2d.b2Vec2(-0.2 * SCALE, -0.8 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
             
             //Set Direction
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1standleft.png";
+                this.playerImage.src = "images/player/p1jumpleft.png";
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2standleft.png";
+                this.playerImage.src = "images/player/p2jumpleft.png";
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3standleft.png";
+                this.playerImage.src = "images/player/p3jumpleft.png";
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4standleft.png";
+                this.playerImage.src = "images/player/p4jumpleft.png";
             }
 
-            return {playerVector: vec, direction: "leftup"};
+            return {playerVector: vec, direction: "leftup", leftRight: this.leftRight};
         }
         break;
 
     case HyperPlayer.MoveRight | HyperPlayer.MoveUp:
         if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
         {
+            this.leftRight = 0;
             var vec = new box2d.b2Vec2(0.2 * SCALE, -0.8 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
             
             //Set Direction
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1standright.png";
+                this.playerImage.src = "images/player/p1jumpright.png";
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2standright.png";
+                this.playerImage.src = "images/player/p2jumpright.png";
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3standright.png";
+                this.playerImage.src = "images/player/p3jumpright.png";
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4standright.png";
+                this.playerImage.src = "images/player/p4jumpright.png";
             }
 
-            return {playerVector: vec, direction: "rightup"};
+            return {playerVector: vec, direction: "rightup", leftRight: this.leftRight};
         }
         break;
 
@@ -299,6 +349,47 @@ HyperPlayer.prototype.getMoveVector = function() {
         console.log("POS:::"+x+" "+y);
         console.log("Player Server ID: "+ this.id);
         console.log("Player Number: "+ this.playerNumber);
+        break; 
+
+    default:
+        if(this.leftRight == 1)
+        {
+            if (this.playerNumber == 1)
+            {
+                this.playerImage.src = "images/player/p1standleft.png";
+            }
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = "images/player/p2standleft.png";
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = "images/player/p3standleft.png";
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = "images/player/p4standleft.png";
+            }
+        }
+        else if(this.leftRight == 0)
+        {
+            if (this.playerNumber == 1)
+            {
+                this.playerImage.src = "images/player/p1standright.png";
+            }
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = "images/player/p2standright.png";
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = "images/player/p3standright.png";
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = "images/player/p4standright.png";
+            }
+        }
     }
     return false;
 };
@@ -309,21 +400,22 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
 
     switch(direction) {
     case "left":
+        args.leftRight = 1;
         if (this.playerNumber == 1)
         {
-            this.playerImage.src = "images/player/p1standleft.png";
+            this.playerImage.src = "images/player/p1runleft.png";
         }
         else if (this.playerNumber == 2)
         {
-            this.playerImage.src = "images/player/p2standleft.png";
+            this.playerImage.src = "images/player/p2runleft.png";
         }
         else if (this.playerNumber == 3)
         {
-            this.playerImage.src = "images/player/p3standleft.png";
+            this.playerImage.src = "images/player/p3runleft.png";
         }
         else if (this.playerNumber == 4)
         {
-            this.playerImage.src = "images/player/p4standleft.png";
+            this.playerImage.src = "images/player/p4runleft.png";
         }
 
         if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
@@ -337,25 +429,64 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         {
             this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
         }
+        if(args.leftRight == 1)
+        {
+            if (this.playerNumber == 1)
+            {
+                this.playerImage.src = "images/player/p1jumpleft.png";
+            }
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = "images/player/p2jumpleft.png";
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = "images/player/p3jumpleft.png";
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = "images/player/p4jumpleft.png";
+            }
+        }
+        else if(args.leftRight == 0)
+        {
+            if (this.playerNumber == 1)
+            {
+                this.playerImage.src = "images/player/p1jumpright.png";
+            }
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = "images/player/p2jumpright.png";
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = "images/player/p3jumpright.png";
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = "images/player/p4jumpright.png";
+            }
+        }
         break;
 
     case "right":
+        args.leftRight = 0;
         //Set Direction
         if (this.playerNumber == 1)
         {
-            this.playerImage.src = "images/player/p1standright.png";
+            this.playerImage.src = "images/player/p1runright.png";
         }
         else if (this.playerNumber == 2)
         {
-            this.playerImage.src = "images/player/p2standright.png";
+            this.playerImage.src = "images/player/p2runright.png";
         }
         else if (this.playerNumber == 3)
         {
-            this.playerImage.src = "images/player/p3standright.png";
+            this.playerImage.src = "images/player/p3runright.png";
         }
         else if (this.playerNumber == 4)
         {
-            this.playerImage.src = "images/player/p4standright.png";
+            this.playerImage.src = "images/player/p4runright.png";
         }
 
         if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
@@ -365,21 +496,22 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         break;
 
     case "leftup":
+        args.leftRight = 1;
         if (this.playerNumber == 1)
         {
-            this.playerImage.src = "images/player/p1standleft.png";
+            this.playerImage.src = "images/player/p1jumpleft.png";
         }
         else if (this.playerNumber == 2)
         {
-            this.playerImage.src = "images/player/p2standleft.png";
+            this.playerImage.src = "images/player/p2jumpleft.png";
         }
         else if (this.playerNumber == 3)
         {
-            this.playerImage.src = "images/player/p3standleft.png";
+            this.playerImage.src = "images/player/p3jumpleft.png";
         }
         else if (this.playerNumber == 4)
         {
-            this.playerImage.src = "images/player/p4standleft.png";
+            this.playerImage.src = "images/player/p4jumpleft.png";
         }
 
         if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
@@ -390,22 +522,23 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         break;
 
     case "rightup":
+        args.leftRight = 0;
         //Set Direction
         if (this.playerNumber == 1)
         {
-            this.playerImage.src = "images/player/p1standright.png";
+            this.playerImage.src = "images/player/p1jumpright.png";
         }
         else if (this.playerNumber == 2)
         {
-            this.playerImage.src = "images/player/p2standright.png";
+            this.playerImage.src = "images/player/p2jumpright.png";
         }
         else if (this.playerNumber == 3)
         {
-            this.playerImage.src = "images/player/p3standright.png";
+            this.playerImage.src = "images/player/p3jumpright.png";
         }
         else if (this.playerNumber == 4)
         {
-            this.playerImage.src = "images/player/p4standright.png";
+            this.playerImage.src = "images/player/p4jumpright.png";
         }
 
         if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
@@ -417,6 +550,48 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
 
     case "s":
         this.playerFixture.GetBody().position.Set(22,22);
+    
+    break;
+
+    default:
+        if(args.leftRight == 1)
+        {
+            if (this.playerNumber == 1)
+            {
+                this.playerImage.src = "images/player/p1standleft.png";
+            }
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = "images/player/p2standleft.png";
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = "images/player/p3standleft.png";
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = "images/player/p4standleft.png";
+            }
+        }
+        else if(args.leftRight == 0)
+        {
+            if (this.playerNumber == 1)
+            {
+                this.playerImage.src = "images/player/p1standright.png";
+            }
+            else if (this.playerNumber == 2)
+            {
+                this.playerImage.src = "images/player/p2standright.png";
+            }
+            else if (this.playerNumber == 3)
+            {
+                this.playerImage.src = "images/player/p3standright.png";
+            }
+            else if (this.playerNumber == 4)
+            {
+                this.playerImage.src = "images/player/p4standright.png";
+            }
+        }
     }
 };
 //Sets the location for each player based on the player number.
