@@ -1,12 +1,11 @@
 October 18:
-Items + Power Ups (Pt 1.)
-Items + Power Ups (Pt 2.)
-
+Items + Power Ups --> health and shield.
 Fix Jump issues --> Cannot jump after respawn? P3, P4 cannot jump
 Polish game.
 
 October 25:
-Testing
+Testing --> DUE OCT 31st
+
 Meet in person to settle localhost hosting thingee
 Lobby integration
 Win game report at end game.
