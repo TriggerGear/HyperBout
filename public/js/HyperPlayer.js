@@ -390,6 +390,7 @@ HyperPlayer.prototype.getMoveVector = function()
                 this.playerImage.src = "images/player/p4standright.png";
             }
         }
+        return {playerVector: vec, direction: null, leftRight: this.leftRight};
     }
     return false;
 };

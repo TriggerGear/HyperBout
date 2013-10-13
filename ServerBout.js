@@ -138,7 +138,7 @@ function onMovePlayer(data) {
 
     // Broadcast updated position to connected socket clients
     data.id = this.id;
-    this.emit("move player", data);
+    this.broadcast.emit("move player", data);
 };
 
 function onGetPosition(data) {
