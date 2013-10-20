@@ -76,6 +76,8 @@ var setupSockets = function()
     // Receive when power up is spawned.
     socket.on("power", handlePowerUpSpawn);
 
+    socket.on("hp update", handleHPUpdate);
+
 };
 
 /**************************************************
@@ -250,11 +252,26 @@ function handleHit(data) {
     updateGUIScore();
 };
 
+function handleHPUpdate(data)
+{
+    var playerNumber = data.playerNumber;
+    var health = data.health;
+    if (playerNumber == localPlayer.playerNumber)
+    {
+        //Do Nothing
+    }
+    else
+    {
+        playerByPlayerNumber(playerNumber).hp = health;
+    }
+    updateGUIScore();
+};
+
 function handleEnd(data)
 {
     var winner = data.winner;
     alert("Game Finished. The Winner Is Player " + winner);
-}
+};
 
 /**************************************************
 ** ENGINE
@@ -608,26 +625,49 @@ Engine.prototype.start = function()
 
 
             contactA.SetUserData('dead'+contactA.GetUserData().charAt(4));
-                contactA.GetBody().SetUserData('dead'+contactA.GetUserData().charAt(4));
+            contactA.GetBody().SetUserData('dead'+contactA.GetUserData().charAt(4));
                 
-                pGraveYard.push(contactA.GetBody());
+            pGraveYard.push(contactA.GetBody());
 
-            // world.DestroyBody(contactA.GetBody());
-            // world.DestroyBody(contactB.GetBody());
+            if(contactA.GetUserData().charAt(7) == 0 && contactB.GetUserData().charAt(6)==localPlayer.playerNumber) //Get Health
+            {
+                localPlayer.hp++;
+                socket.emit("hp get", {playerNumber: localPlayer.playerNumber, health: localPlayer.hp});
+                updateGUIScore();
+            }
+            else if(contactA.GetUserData().charAt(7) == 1 && contactB.GetUserData().charAt(6)==localPlayer.playerNumber) //Get Shield
+            {
+                localPlayer.hp++;
+                socket.emit("hp get", {playerNumber: localPlayer.playerNumber, health: localPlayer.hp});
+                updateGUIScore();
+            }
         }
+
         else if(contactB.GetUserData().substring(0,7) == "powerup" && contactA.GetUserData().substring(0,6) == 'player')
         {
             console.log("contactB : " + contactB.GetUserData().substring(0,7));
             // playerNumber = contactA.GetUserData().charAt(6);
             // powerUpID = contactB.GetUserData().charAt(7);
 
-             contactB.SetUserData('dead'+contactB.GetUserData().charAt(4));
-                contactB.GetBody().SetUserData('dead'+contactB.GetUserData().charAt(4));
+            contactB.SetUserData('dead'+contactB.GetUserData().charAt(4));
+            contactB.GetBody().SetUserData('dead'+contactB.GetUserData().charAt(4));
                 
-                pGraveYard.push(contactB.GetBody());
+            pGraveYard.push(contactB.GetBody());
 
-            // world.DestroyBody(contactB.GetBody());
-            // world.DestroyBody(contactA.GetBody());
+            if(contactB.GetUserData().charAt(7) == 0 && contactA.GetUserData().charAt(6)==localPlayer.playerNumber) //Get Health
+            {
+                localPlayer.hp++;
+                socket.emit("hp get", {playerNumber: localPlayer.playerNumber, health: localPlayer.hp});
+                updateGUIScore();
+            }
+            else if(contactB.GetUserData().charAt(7) == 1 && contactA.GetUserData().charAt(6)==localPlayer.playerNumber) //Get Shield
+            {
+                localPlayer.hp++;
+                socket.emit("hp get", {playerNumber: localPlayer.playerNumber, health: localPlayer.hp});
+                updateGUIScore();
+            }
+
+            
         }
     }
 
@@ -765,7 +805,7 @@ Engine.prototype.start = function()
         for(i = 0; i < pGraveYard.length; i++)
         {
             world.DestroyBody(pGraveYard[i]);
-            pGraveYard.splice(i);
+            pGraveYard.splice(i, 1);
         }
 
         var allPlayers = new Array();

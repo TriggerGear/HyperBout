@@ -88,6 +88,14 @@ function onSocketConnection(client) {
     //Listen for invincibility on
     client.on("invincibility on", onInvincibilityOn);
 
+    //Listen for HP Get
+    client.on("hp get", onHPGet);
+
+};
+
+function onHPGet(data)
+{
+    this.broadcast.emit("hp update", data);
 };
 
 function dropPowerUp()
