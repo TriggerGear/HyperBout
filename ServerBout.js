@@ -101,7 +101,7 @@ function dropPowerUp()
         _this.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
                         xLocation: spawnLocationX});
         // util.log("hehehehehehe");
-    }, 1000);
+    }, 3000);
 };
 
 // Socket client has disconnected

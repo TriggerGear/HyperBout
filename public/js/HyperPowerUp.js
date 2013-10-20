@@ -12,7 +12,6 @@ var HyperPowerUp = function(xLocation, spawnID, powerUpID){
 	var fixDef = new box2d.b2FixtureDef();
     fixDef.density = 1;
     fixDef.friction = 0.5;
-    fixDef.filter.maskBits = 0x0004;
     //Now we need to define the body, static (not affected by gravity), dynamic (affected by grav)
     var bodyDef = new box2d.b2BodyDef();
     bodyDef.type = box2d.b2Body.b2_dynamicBody; //We're setting the ground to static.
@@ -25,7 +24,7 @@ var HyperPowerUp = function(xLocation, spawnID, powerUpID){
 
 
     var powerUpFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    powerUpFixture.SetUserData('PowerUp');
+    powerUpFixture.SetUserData('powerup' + this.type + "-" + this.id);
 
 
 }

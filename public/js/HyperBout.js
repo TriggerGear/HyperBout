@@ -598,6 +598,36 @@ Engine.prototype.start = function()
             }
             updateGUIScore();
         }
+
+        if(contactA.GetUserData().substring(0,7) == "powerup" && contactB.GetUserData().substring(0,6) == 'player')
+        {
+            console.log("contactA: " + contactA.GetUserData().substring(0,7));
+            // playerNumber = contactB.GetUserData().charAt(6);
+            // powerUpID = contactA.GetUserData().charAt(7);
+
+
+            contactA.SetUserData('dead'+contactA.GetUserData().charAt(4));
+                contactA.GetBody().SetUserData('dead'+contactA.GetUserData().charAt(4));
+                
+                graveYard.push(contactA.GetBody());
+
+            // world.DestroyBody(contactA.GetBody());
+            // world.DestroyBody(contactB.GetBody());
+        }
+        else if(contactB.GetUserData().substring(0,7) == "powerup" && contactA.GetUserData().substring(0,6) == 'player')
+        {
+            console.log("contactB : " + contactB.GetUserData().substring(0,7));
+            // playerNumber = contactA.GetUserData().charAt(6);
+            // powerUpID = contactB.GetUserData().charAt(7);
+
+             contactB.SetUserData('dead'+contactB.GetUserData().charAt(4));
+                contactB.GetBody().SetUserData('dead'+contactB.GetUserData().charAt(4));
+                
+                graveYard.push(contactB.GetBody());
+
+            // world.DestroyBody(contactB.GetBody());
+            // world.DestroyBody(contactA.GetBody());
+        }
     }
 
     listener.EndContact = function(contact) {
