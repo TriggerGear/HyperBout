@@ -1,5 +1,5 @@
 // Power Up Class
-var PowerUp = function(xLocation, spawnID, powerUpID){
+var HyperPowerUp = function(xLocation, spawnID, powerUpID){
 	//Type of power up, 0 = health, 1 = shield
 	this.type = powerUpID;
     this.id = spawnID;

@@ -5,7 +5,7 @@ var util = require("util"),                                 // Utility resources
     io = require("socket.io"),                              // Socket.IO
     HyperPlayer = require("./ServerPlayer").HyperPlayer;    // HyperPlayer class
 
-
+var _this;
 /**************************************************
 ** GAME VARIABLES
 **************************************************/
@@ -39,7 +39,6 @@ function init() {
     
     // Start listening for events
     setEventHandlers();
-    dropPowerUp();
 };
 
 function generateRandomNum(lowerRange, upperRange) 
@@ -99,9 +98,9 @@ function dropPowerUp()
         var powerUpID = generateRandomNum(0,1); //there are only two power ups, 0 for health, 1 for shield
         var spawnLocationX = generateRandomNum(40, 1100);
         //spawn power ups here
-        socket.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
+        _this.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
                         xLocation: spawnLocationX});
-        util.log("hehehehehehe");
+        // util.log("hehehehehehe");
     }, 1000);
 };
 
@@ -126,6 +125,9 @@ function onClientDisconnect() {
 
 // New player has joined
 function onNewPlayer(data) {
+    _this = this;
+    dropPowerUp();
+
     // Create a new player
     var newPlayer = new HyperPlayer();
     newPlayer.id = this.id;
@@ -159,6 +161,7 @@ function onMovePlayer(data) {
 
     // Broadcast updated position to connected socket clients
     data.id = this.id;
+    // this.emit("power", {spawnID: 0, powerUpID: 0, xLocation: 500});
     this.broadcast.emit("move player", data);
 };
 
