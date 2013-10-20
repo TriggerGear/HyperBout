@@ -1,7 +1,8 @@
 // Power Up Class
-var PowerUp = function(xLocation){
+var PowerUp = function(xLocation, spawnID, powerUpID){
 	//Type of power up, 0 = health, 1 = shield
-	this.type = 0;
+	this.type = powerUpID;
+    this.id = spawnID;
 
 	//Set the power up image
 	this.powerUpImage = new Image();
@@ -16,7 +17,7 @@ var PowerUp = function(xLocation){
     var bodyDef = new box2d.b2BodyDef();
     bodyDef.type = box2d.b2Body.b2_dynamicBody; //We're setting the ground to static.
     bodyDef.position.x = xLocation / SCALE; //Registration point is in the center for box2d entities.
-    bodyDef.position.y = -20 / SCALE;
+    bodyDef.position.y = 0 / SCALE;
     bodyDef.fixedRotation = true;
     fixDef.shape = new box2d.b2PolygonShape; //setting the shape of the ground.
     fixDef.shape.SetAsBox((10 / SCALE) / 2, (10 / SCALE)/2);
@@ -24,8 +25,7 @@ var PowerUp = function(xLocation){
 
 
     var powerUpFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    powerUpFixture.SetUserData('PowerUp'+ this.type);
+    powerUpFixture.SetUserData('PowerUp');
+
 
 }
-
-PowerUp.generateSpawnLocation = function(lowerRange, upperRange) { return Math.floor(Math.random()*(upperRange-lowerRange+1)+lowerRange); }

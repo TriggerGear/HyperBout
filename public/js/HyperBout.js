@@ -73,6 +73,9 @@ var setupSockets = function()
     // Receive when player invincibility is on.
     socket.on("send invincibility on", handleInvincibilityOn);
 
+    // Receive when power up is spawned.
+    socket.on("power", handlePowerUpSpawn);
+
 };
 
 /**************************************************
@@ -196,6 +199,13 @@ function handleInvincibilityOn(data)
     invinciblePlayer.invincibility = 1;
 
     //PUT YOUR SHIELD HERRRREE!! >O
+}
+
+function handlePowerUpSpawn(data)
+{
+    console.log("muhahahahha");
+    var hyperPowerUp = new HyperPowerUp(data.xLocation, data.spawnID, data.powerUpID);
+
 }
 
 function handleRemoteBombs(data) {
