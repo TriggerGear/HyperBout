@@ -12,7 +12,8 @@ var util = require("util"),                                 // Utility resources
 var socket,     // Socket controller
     players,    // Array of connected players
     xPositions,
-    yPositions;
+    yPositions,
+    spawnID;
 
 
 /**************************************************
@@ -35,11 +36,26 @@ function init() {
         // Restrict log output
         socket.set("log level", 2);
     });
-
+    
+    setInterval(function()
+    {
+        spawnID++; 
+        var powerUpID = generateRandomNum(0,1); //there are only two power ups, 0 for health, 1 for shield
+        var spawnLocationX = generateRandomNum(40, 1100);
+        //spawn power ups here
+        this.broadcast.emit("power up sent", {spawnID: spawnID, powerUpID: powerUpID, 
+                        spawnX: spawnLocationX});
+        
+    }, 45000);
+    
     // Start listening for events
     setEventHandlers();
 };
 
+function generateRandomNum(lowerRange, upperRange) 
+{ 
+    return Math.floor(Math.random()*(upperRange-lowerRange+1)+lowerRange); 
+}
 
 /**************************************************
 ** GAME EVENT HANDLERS
@@ -176,6 +192,7 @@ function onGameEnd(data) {
     util.log("Player " + data.winner + " has reached win score");
     this.broadcast.emit("game finished", data); 
     this.emit("game finished", data); 
+    
 }
 /**************************************************
 ** GAME HELPER FUNCTIONS
