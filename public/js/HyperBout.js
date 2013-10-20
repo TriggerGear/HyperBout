@@ -484,6 +484,7 @@ var FPS = 30;
 Engine.prototype.start = function()
 {
     var graveYard = new Array();
+    var pGraveYard = new Array();
     var listener = Box2D.Dynamics.b2ContactListener;
 
     //Listener to handle collision between to Box2D Objects
@@ -609,7 +610,7 @@ Engine.prototype.start = function()
             contactA.SetUserData('dead'+contactA.GetUserData().charAt(4));
                 contactA.GetBody().SetUserData('dead'+contactA.GetUserData().charAt(4));
                 
-                graveYard.push(contactA.GetBody());
+                pGraveYard.push(contactA.GetBody());
 
             // world.DestroyBody(contactA.GetBody());
             // world.DestroyBody(contactB.GetBody());
@@ -623,7 +624,7 @@ Engine.prototype.start = function()
              contactB.SetUserData('dead'+contactB.GetUserData().charAt(4));
                 contactB.GetBody().SetUserData('dead'+contactB.GetUserData().charAt(4));
                 
-                graveYard.push(contactB.GetBody());
+                pGraveYard.push(contactB.GetBody());
 
             // world.DestroyBody(contactB.GetBody());
             // world.DestroyBody(contactA.GetBody());
@@ -760,6 +761,12 @@ Engine.prototype.start = function()
             world.DestroyBody(graveYard[i]);
             graveYard.splice(i);
         };
+
+        for(i = 0; i < pGraveYard.length; i++)
+        {
+            world.DestroyBody(pGraveYard[i]);
+            pGraveYard.splice(i);
+        }
 
         var allPlayers = new Array();
         allPlayers.push(localPlayer);
