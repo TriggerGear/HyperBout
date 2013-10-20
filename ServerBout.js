@@ -100,6 +100,8 @@ function dropPowerUp()
         //spawn power ups here
         _this.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
                         xLocation: spawnLocationX});
+        _this.broadcast.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
+                        xLocation: spawnLocationX});
         // util.log("hehehehehehe");
     }, 3000);
 };

@@ -1,3 +1,5 @@
+
+var powerUpFixture;
 // Power Up Class
 var HyperPowerUp = function(xLocation, spawnID, powerUpID){
 	//Type of power up, 0 = health, 1 = shield
@@ -23,8 +25,11 @@ var HyperPowerUp = function(xLocation, spawnID, powerUpID){
     fixDef.friction = 4;
 
 
-    var powerUpFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+    powerUpFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
     powerUpFixture.SetUserData('powerup' + this.type + "-" + this.id);
-
-
 }
+
+// HyperPowerUp.destroy = function()
+// {
+//     world.DestroyBody(powerUpFixture.GetBody());
+// }
