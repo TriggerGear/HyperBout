@@ -10,6 +10,7 @@ var socket;
 var SCALE = 30;
 var world;
 var gBombArray = new Array();
+var powerUps = new Array();
 
 /**************************************************
 ** BOX2D NAMESPACE CREATION
@@ -207,6 +208,7 @@ function handlePowerUpSpawn(data)
 {
     console.log("muhahahahha");
     var hyperPowerUp = new HyperPowerUp(data.xLocation, data.spawnID, data.powerUpID);
+    powerUps.push(hyperPowerUp);
 
 }
 
@@ -430,7 +432,7 @@ Engine.InputHandler = function(tag, handler) {
 
 Engine.UpdateState = function(){
     //Stores all of the current powerups on the field
-    var powerUps = new Array();
+    
     //Stores the time left inside the game.
     var timeLeft;
     //STores the number of players currently inside the game.
@@ -811,7 +813,7 @@ Engine.prototype.start = function()
         var allPlayers = new Array();
         allPlayers.push(localPlayer);
         allPlayers = allPlayers.concat(remotePlayers);
-        
+        self.drawPowerUpSprites(self.hyperBout.entityctx);
         //Set position of localPlayer if falls off screen
         //Can probably send hp loss signal to other players here as well
         //May be more efficent if we fire it off an event instead of checking 30 times per second
@@ -842,7 +844,20 @@ Engine.prototype.drawBombs = function()
         }
     }
 }
+Engine.prototype.drawPowerUpSprites = function(canvas)
+{
+    var powerUpImage = new Image();
+    powerUpImage.src = 'images/projectileBladeBomb.png';
 
+    for (i=0;i<powerUps.length;i++)
+    {
+        if(powerUps[i].powerUpFixture.GetUserData().substring(0,4) == 'dead')
+        {
+            powerUps.splice(i,1);
+        }
+        powerUps[i].draw(canvas);
+    }
+}
 Engine.prototype.createExplosion = function(bombBody, explosions)
 {
     var testFix = new box2d.b2FixtureDef();

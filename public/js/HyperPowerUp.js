@@ -3,11 +3,12 @@ var HyperPowerUp = function(xLocation, spawnID, powerUpID){
 	//Type of power up, 0 = health, 1 = shield
 	this.type = powerUpID;
     this.id = spawnID;
-
 	//Set the power up image
 	this.powerUpImage = new Image();
 	this.powerUpImage.src = '';
-
+    this.state = 1;
+    this.powerUpImage = new Image();
+    this.powerUpImage.src = 'images/health.png';
 	//Create PowerUp Box2d body
 	var fixDef = new box2d.b2FixtureDef();
     fixDef.density = 1;
@@ -23,8 +24,11 @@ var HyperPowerUp = function(xLocation, spawnID, powerUpID){
     fixDef.friction = 4;
 
 
-    var powerUpFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
-    powerUpFixture.SetUserData('powerup' + this.type + "-" + this.id);
+    this.powerUpFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+    this.powerUpFixture.SetUserData('powerup' + this.type + "-" + this.id);
 
-
+}
+HyperPowerUp.prototype.draw = function(canvas)
+{
+    canvas.drawImage(this.powerUpImage, (this.powerUpFixture.GetBody().GetPosition().x * SCALE) -5, (this.powerUpFixture.GetBody().GetPosition().y * SCALE) -5);
 }
