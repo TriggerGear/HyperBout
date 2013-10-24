@@ -4,7 +4,6 @@
 var localPlayer;
 var remotePlayers;
 var socket;
-var username;
 
 //Box2d measures things in meters, to compensate we are going to be converting it to pixels. 
 //Scale to convert is 30. 
@@ -78,142 +77,9 @@ var setupSockets = function()
     // Receive when power up is spawned.
     socket.on("power", handlePowerUpSpawn);
 
-    //Recieve when someone recieved hp powerup
     socket.on("hp update", handleHPUpdate);
 
-    /**********FOR LOBBY*************/
-    //Update username when recieved update
-    socket.on("username update", updateLobbyNames);
-
-    //Update chat box when other users have posted
-    socket.on("update chat", updateChat);
-
-    //Update ready status when users are ready
-    socket.on("ready update", updateReady);
-
 };
-
-/*************************************************
-** LOBBY SOCKETS AND FUNCTIONALITY
-*************************************************/
-$(function(){
-
-              //VISUAL CHANGES ------------------------------------------------------------------
-              var $form_inputs =   $('form input');
-              var $rainbow_and_border = $('.rain, .border');
-              /* Used to provide loping animations in fallback mode */
-              $form_inputs.bind('focus', function(){
-                $rainbow_and_border.addClass('end').removeClass('unfocus start');
-              });
-              $form_inputs.bind('blur', function(){
-                $rainbow_and_border.addClass('unfocus start').removeClass('end');
-              });
-              $form_inputs.first().delay(800).queue(function() {
-                $(this).focus();
-              });
-
-              //ELEMENTS ------------------------------------------------------------------
-              $("#lobbyForm").hide();
-              $("#game").hide();
-
-              //USERNAME INPUT ------------------------------------------------------------------
-              username = "Hyper Player";
-              
-              //For when user hits "enter" key for username
-              $("#usernameInput").bind('keypress', function(e) {
-                    if(e.keyCode==13)                                                   
-                    {       
-                        e.preventDefault(); 
-                        username = $("#usernameInput").val();
-                        $("#usernameForm").hide("fade", 800, function()
-                        {
-                            $("#lobbyForm").show("fade", 800);
-                            
-                        });
-                        socket.emit("on username input", {username:username});
-                        socket.emit("request chat");
-                        //$("#player1").text(username);   
-                    }
-                });
-              
-              //For when user clicks on "Join Lobby" button 
-               $("#usernameSubmitButton").click(function() {
-                    username = $("#usernameInput").val();
-                    $("#usernameForm").hide("fade", 800, function()
-                    {
-                        $("#lobbyForm").show("fade", 800);
-                        
-                    });
-                    socket.emit("on username input", {username:username});
-                    socket.emit("request chat");
-                    //$("#player1").text(username);
-                });
-
-               //LOBBY --------------------------------------------------------------------------
-               /*To do when user hits "enter" while in chat*/
-                $("#chatInput").bind('keypress', function(e) {
-                    if(e.keyCode==13)                                                   //If "enter" key is pressed
-                    {       
-                        e.preventDefault();                                             //Needed so page doesn't refresh
-                        var chatMessage = $("#chatInput").val();
-                        var chatSession = $("#chatHistory").val();
-                        var fullMessage = " \n" + username + ": " + chatMessage;
-                        chatSession += fullMessage;
-                        socket.emit("recieve chat", {chatSession: chatSession});
-                        $("#chatInput").val("");
-                        //$("textarea#chatHistory").val(chatSession);
-                    }
-                });
-
-                /*To do when user clicks "Change Map" button */
-                $("#changeMapButton").click(function() {
-                    alert("Sorry for HyperBout v0.9, Change Map feature is unavailable");
-                });
-
-                /*To do when user clicks "Start Game" button*/
-                $("#startButton").click(function() {
-                    socket.emit("recieve ready", {username: username});
-                    //alert("To be implemented with engine...");
-                });
-
-            });
-            
-function updateLobbyNames(data){
-    if(data.usernames[0] != undefined)
-        $("#player1").text(data.usernames[0]);
-    if(data.usernames[1] != undefined)
-        $("#player2").text(data.usernames[1]);
-    if(data.usernames[2] != undefined)
-        $("#player3").text(data.usernames[2]);
-    if(data.usernames[3] != undefined)
-        $("#player4").text(data.usernames[3]);
-}
-
-function updateChat(data){
-    $("textarea#chatHistory").val(data.chatSession);
-    var chatScrollArea = $('#chatHistory');
-    chatScrollArea.scrollTop(chatScrollArea[0].scrollHeight - chatScrollArea.height());
-}
-
-function updateReady(data){
-    if(data.readyArray[0] == true)
-        $("#player1").css("color", 'green');
-    if(data.readyArray[1] == true)
-        $("#player2").css("color", 'green');
-    if(data.readyArray[2] == true)
-        $("#player3").css("color", 'green');
-    if(data.readyArray[3] == true)
-        $("#player4").css("color", 'green');
-    if(data.readyArray[0] == true && data.readyArray[1] == true && data.readyArray[2] == true && data.readyArray[3] == true)
-    {
-        $("#lobby").hide("fade", 800, function()
-        {
-            $("#game").show("fade", 800);
-        });
-    }
-
-}
-
 
 /**************************************************
 ** SOCKET FUNCTIONS

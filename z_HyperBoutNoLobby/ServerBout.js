@@ -13,10 +13,7 @@ var socket,     // Socket controller
     players,    // Array of connected players
     xPositions,
     yPositions,
-    spawnID,
-    usernameArray,  // Array of usernames in lobby
-    chatHistory,    // Stores chat history for late users
-    readyArray;     // Array to store ready state in lobby
+    spawnID;
 
 
 /**************************************************
@@ -27,8 +24,6 @@ function init() {
     players = [];
     xPositions = [];
     yPositions = [];
-    usernameArray = [];    
-    readyArray = [];
 
     // Set up Socket.IO to listen on port 8000
     socket = io.listen(8000);
@@ -96,56 +91,29 @@ function onSocketConnection(client) {
     //Listen for HP Get
     client.on("hp get", onHPGet);
 
-    //--------------Lobby Stuff----------------
-    //Listen for when a player inputs his/her name
-    client.on("on username input", onUsername);
-
-    //Listen when player submits something to chat
-    client.on("recieve chat", onMessage);
-
-    //Update new player on existing chat history
-    client.on("request chat", onChatRequest);
-
-    //Update players on who is ready
-    client.on("recieve ready", onReady);
-
 };
 
-/**************************************************
-** LOBBY EVENTS
-**************************************************/
-function onUsername(data) {
-    util.log("New Player: " + data.username);
-    usernameArray.push(data.username);
-    this.emit("username update", {usernames: usernameArray});
-    this.broadcast.emit("username update", {usernames: usernameArray});
-};
-
-function onMessage(data) {
-    util.log("Recieved Chat Message: " + data.chatSession);
-    chatHistory = data.chatSession;
-    this.emit("update chat", {chatSession: data.chatSession});
-    this.broadcast.emit("update chat", {chatSession: data.chatSession});
-};
-
-function onChatRequest()
+function onHPGet(data)
 {
-    util.log("Updating player's chat history");
-    this.emit("update chat", {chatSession: chatHistory});
+    this.broadcast.emit("hp update", data);
 };
 
-function onReady(data)
+function dropPowerUp()
 {
-    util.log(data.username + " : Has readied up");
-    var index = usernameArray.indexOf(data.username);
-    readyArray[index] = true;
-    this.emit("ready update", {readyArray: readyArray});
-    this.broadcast.emit("ready update", {readyArray: readyArray});
+    setInterval(function()
+    {
+        spawnID++; 
+        var powerUpID = generateRandomNum(0,1); //there are only two power ups, 0 for health, 1 for shield
+        var spawnLocationX = generateRandomNum(40, 1100);
+        //spawn power ups here
+        _this.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
+                        xLocation: spawnLocationX});
+        _this.broadcast.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
+                        xLocation: spawnLocationX});
+        // util.log("hehehehehehe");
+    }, 3000);
 };
 
-/**************************************************
-** GAME EVENTS
-**************************************************/
 // Socket client has disconnected
 function onClientDisconnect() {
     util.log("Player has disconnected: "+this.id);
@@ -241,29 +209,9 @@ function onHit(data) {
 function onGameEnd(data) {
     util.log("Player " + data.winner + " has reached win score");
     this.broadcast.emit("game finished", data); 
-    this.emit("game finished", data);  
+    this.emit("game finished", data); 
+    
 }
-
-function onHPGet(data)
-{
-    this.broadcast.emit("hp update", data);
-};
-
-function dropPowerUp()
-{
-    setInterval(function()
-    {
-        spawnID++; 
-        var powerUpID = generateRandomNum(0,1); //there are only two power ups, 0 for health, 1 for shield
-        var spawnLocationX = generateRandomNum(40, 1100);
-        //spawn power ups here
-        _this.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
-                        xLocation: spawnLocationX});
-        _this.broadcast.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
-                        xLocation: spawnLocationX});
-        // util.log("hehehehehehe");
-    }, 3000);
-};
 /**************************************************
 ** GAME HELPER FUNCTIONS
 **************************************************/
