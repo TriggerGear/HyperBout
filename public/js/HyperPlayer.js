@@ -595,10 +595,11 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         }
     }
 };
+
 //Sets the location for each player based on the player number.
 HyperPlayer.prototype.setLocation = function(playerList){
     
-}
+};
 
 HyperPlayer.prototype.bombThrow = function(ev)
 {
@@ -650,7 +651,7 @@ HyperPlayer.prototype.bombThrow = function(ev)
         
     }
     
-}
+};
 
 HyperPlayer.prototype.combineKey = function(keyCode, direction) {
     switch(keyCode) {
@@ -660,7 +661,7 @@ HyperPlayer.prototype.combineKey = function(keyCode, direction) {
         case HyperKeys.Codes['d']: direction |= 8; break;
     }
     return direction;
-}
+};
 
 HyperPlayer.prototype.removeKey = function(keyCode, direction) {
     switch(keyCode) {
@@ -670,7 +671,7 @@ HyperPlayer.prototype.removeKey = function(keyCode, direction) {
         case HyperKeys.Codes['d']: direction ^= 8; break;
     }
     return direction;
-}
+};
 
 HyperPlayer.MoveLeft  = 1;
 HyperPlayer.MoveDown  = 2;

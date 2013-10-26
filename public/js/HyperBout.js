@@ -190,12 +190,12 @@ function updateLobbyNames(data){
 }
 
 function updateChat(data){
+    //Update previous chats
     $("textarea#chatHistory").val(data.chatSession);
     var chatScrollArea = $('#chatHistory');
     chatScrollArea.scrollTop(chatScrollArea[0].scrollHeight - chatScrollArea.height());
-}
 
-function updateReady(data){
+    //Need to also update if anyone is already ready before the player joins lobby
     if(data.readyArray[0] == true)
         $("#player1").css("color", 'green');
     if(data.readyArray[1] == true)
@@ -204,6 +204,37 @@ function updateReady(data){
         $("#player3").css("color", 'green');
     if(data.readyArray[3] == true)
         $("#player4").css("color", 'green');
+}
+
+function updateReady(data){
+    var ready = true;
+    if(data.readyArray[0] == true)
+        $("#player1").css("color", 'green');
+    if(data.readyArray[1] == true)
+        $("#player2").css("color", 'green');
+    if(data.readyArray[2] == true)
+        $("#player3").css("color", 'green');
+    if(data.readyArray[3] == true)
+        $("#player4").css("color", 'green');
+
+    for (x in data.readyArray)
+    {
+        if(!data.readyArray[x])
+        {
+            ready = false;
+        }
+    }
+
+    if(ready && data.readyArray.length>1)
+    {
+        socket.emit("game started");
+        $("#lobby").hide("fade", 800, function()
+        {
+            $("#game").show("fade", 800);
+        });
+    }
+
+    /*
     if(data.readyArray[0] == true && data.readyArray[1] == true && data.readyArray[2] == true && data.readyArray[3] == true)
     {
         $("#lobby").hide("fade", 800, function()
@@ -211,6 +242,7 @@ function updateReady(data){
             $("#game").show("fade", 800);
         });
     }
+    */
 
 }
 
@@ -230,12 +262,12 @@ function onSocketConnected() {
 
     // Send local player data to the game server
     socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY()});
-};
+}
 
 // Socket disconnected
 function onSocketDisconnect() {
     console.log("Disconnected from socket server");
-};
+}
 
 // New player
 function onNewPlayer(data) {
@@ -262,7 +294,7 @@ function onNewPlayer(data) {
         }
     }, 1000)
 
-};
+}
 
 // Move player
 function onMovePlayer(data) {
@@ -274,12 +306,12 @@ function onMovePlayer(data) {
     if (!movePlayer) {
         console.log("Player not found: "+data.id);
         return;
-    };
+    }
 
     // console.log(data);
     movePlayer.remotePlayerMove(data);
 
-};
+}
 
 // Remove player
 function onRemovePlayer(data) {
@@ -290,11 +322,11 @@ function onRemovePlayer(data) {
     if (!removePlayer) {
         console.log("Player not found: "+data.id);
         return;
-    };
+    }
 
     // Remove player from array
     remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
-};
+}
 
 
 function sendPosition()
@@ -305,7 +337,7 @@ function sendPosition()
     socket.emit("get position", {playerNumber: playerNumber, x: xPos, y: yPos});
     socket.emit("request position");
 
-};
+}
 
 function updatePositions(data) {
     var xPositions = data.xPositions;
@@ -320,7 +352,7 @@ function updatePositions(data) {
         yPos = yPositions[remotePlayers[i].playerNumber-1];
         remotePlayers[i].movePlayerToPosition(xPos, yPos);
     }
-};
+}
 
 function handleInvincibilityDown(data)
 {
@@ -340,10 +372,8 @@ function handleInvincibilityOn(data)
 
 function handlePowerUpSpawn(data)
 {
-    console.log("muhahahahha");
     var hyperPowerUp = new HyperPowerUp(data.xLocation, data.spawnID, data.powerUpID);
     powerUps.push(hyperPowerUp);
-
 }
 
 function handleRemoteBombs(data) {
@@ -363,7 +393,7 @@ function handleRemoteBombs(data) {
     remoteBomb.SetUserData("Bomb"+data.playerNumber);
     remoteBomb.GetBody().ApplyImpulse(impulse, remoteBomb.GetBody().GetPosition());
     gBombArray.push(remoteBomb);
-};
+}
 
 function handleHit(data) {
     var hitPlayerNumber = data.playerWhoGotHit;
@@ -386,7 +416,7 @@ function handleHit(data) {
 
     //Update GUI for Score and Health
     updateGUIScore();
-};
+}
 
 function handleHPUpdate(data)
 {
@@ -401,13 +431,13 @@ function handleHPUpdate(data)
         playerByPlayerNumber(playerNumber).hp = health;
     }
     updateGUIScore();
-};
+}
 
 function handleEnd(data)
 {
     var winner = data.winner;
     alert("Game Finished. The Winner Is Player " + winner);
-};
+}
 
 /**************************************************
 ** ENGINE
@@ -553,8 +583,7 @@ Engine.prototype.setupPhysics = function()
     //Says what we want to draw
     debugDraw.SetFlags(box2d.b2DebugDraw.e_shapeBit | box2d.b2DebugDraw.e_jointBit);
     world.SetDebugDraw(debugDraw);
-    
-}
+};
 
 //Array of input handlers
 Engine.InputHandlers = [ ];
@@ -573,8 +602,7 @@ Engine.UpdateState = function(){
     var players;
     //Top player stores the current player with the most points
     var topPlayer;
-
-}
+};
 
 Engine.RegisterInputHandler = function(inputHandler) {
     if (!(inputHandler instanceof Engine.InputHandler)) {
@@ -737,7 +765,7 @@ Engine.prototype.start = function()
                     setTimeout(function()
                     {
                         localPlayer.moveToSpawn();
-                    }, 1000)
+                    }, 1000);
                     localPlayer.hp = 5;
                     playerByPlayerNumber(playerWhoShoots).points += 1;
 
@@ -805,17 +833,19 @@ Engine.prototype.start = function()
 
             
         }
-    }
+    };
 
     listener.EndContact = function(contact) {
     // console.log(contact.GetFixtureA().GetBody().GetUserData());
-    }
-    listener.PostSolve = function(contact, impulse) 
-    {
-    }
+    };
+
+    listener.PostSolve = function(contact, impulse){
+    };
+
     listener.PreSolve = function(contact, oldManifold) {
     // PreSolve
-    }
+    };
+
     world.SetContactListener(listener);
 
     var gameStartTime = new Date().getTime();
@@ -866,7 +896,7 @@ Engine.prototype.start = function()
             console.log(remotePlayers[i].playerNumber);
             remotePlayers[i].moveToSpawn();
         }
-    }, 1000)
+    }, 1000);
 
     var self = this;
 
@@ -928,7 +958,7 @@ Engine.prototype.start = function()
             //Ask for each player's array
             gBombArray = gBombArray.concat(remotePlayers[i].bombArray)
             remotePlayers[i].draw(self.hyperBout.entityctx);
-        };
+        }
 
         for(i = 0; i < graveYard.length; i++)
         {
@@ -936,7 +966,7 @@ Engine.prototype.start = function()
             self.createExplosion(graveYard[i], explosions);
             world.DestroyBody(graveYard[i]);
             graveYard.splice(i);
-        };
+        }
 
         for(i = 0; i < pGraveYard.length; i++)
         {
@@ -977,7 +1007,8 @@ Engine.prototype.drawBombs = function()
              this.hyperBout.entityctx.drawImage(playerBomb, (gBombArray[i].GetBody().GetPosition().x * SCALE) - 25, (gBombArray[i].GetBody().GetPosition().y * SCALE) - 25);
         }
     }
-}
+};
+
 Engine.prototype.drawPowerUpSprites = function(canvas)
 {
     var powerUpImage = new Image();
@@ -991,7 +1022,8 @@ Engine.prototype.drawPowerUpSprites = function(canvas)
         }
         powerUps[i].draw(canvas);
     }
-}
+};
+
 Engine.prototype.createExplosion = function(bombBody, explosions)
 {
     var testFix = new box2d.b2FixtureDef();
@@ -1010,7 +1042,7 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
     bombExplosion.SetUserData(bombBody.GetUserData().charAt(4)+'explosion0');
 
     explosions.push(bombExplosion);
-}
+};
 
 Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, explosions, graveYard, animateType)
 {
@@ -1090,7 +1122,7 @@ Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, 
        return true;
     }
     return false;
-}
+};
 
 Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
 {
@@ -1201,7 +1233,7 @@ Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
            break;
         }
     }
-}
+};
 
 //Draw text to test updating
 Engine.prototype.draw = function()
@@ -1217,12 +1249,12 @@ Engine.prototype.draw = function()
         );
     world.DrawDebugData();
     world.ClearForces();
-}
+};
 
 Engine.prototype.drawPlatforms = function(platformArray)
 {
     this.hyperBout.animationctx.drawImage(platformArray[0] , 0, 400);
-}
+};
 
 Engine.prototype.loadPlatformImages = function()
 {
@@ -1233,7 +1265,7 @@ Engine.prototype.loadPlatformImages = function()
     platforms.push(bottomLeftPlatform);
 
     return platforms;
-}
+};
 
 Engine.prototype.animateClouds = function(cloudArrayInformation)
 {
@@ -1249,7 +1281,7 @@ Engine.prototype.animateClouds = function(cloudArrayInformation)
 
     this.hyperBout.animationctx.drawImage(cloudArrayInformation[12], cloudArrayInformation[13], 500);
     this.hyperBout.animationctx.drawImage(cloudArrayInformation[14], cloudArrayInformation[15], 500);
-}
+};
 
 Engine.prototype.animateStars = function(starArray, starIndex, starAnimation, gameTime)
 {
@@ -1272,11 +1304,10 @@ Engine.prototype.animateStars = function(starArray, starIndex, starAnimation, ga
     {
         starIndexTemp = 1;
     }
-    
 
     this.hyperBout.animationctx.drawImage(starArray[starIndexTemp], 1000, 160);
     return starIndex;
-}
+};
 
 Engine.prototype.animateLights = function(lightsArray, lightsIndex, lightAnimationTime, gameTime)
 {
@@ -1320,7 +1351,7 @@ Engine.prototype.animateLights = function(lightsArray, lightsIndex, lightAnimati
     this.hyperBout.animationctx.drawImage(lightsArray[lightsIndex], 1043, 431);
 
     return false;      
-}
+};
 
 animateLightsHelper = function(currentIndex)
 {
@@ -1330,7 +1361,7 @@ animateLightsHelper = function(currentIndex)
         currentIndex = 0;
     }
     return currentIndex;
-}
+};
 
 Engine.prototype.loadStars = function()
 {
@@ -1358,7 +1389,7 @@ Engine.prototype.loadStars = function()
     stars[6] = starSix;
 
     return stars;
-}
+};
 
 Engine.prototype.loadLights = function()
 {
@@ -1404,7 +1435,7 @@ Engine.prototype.loadLights = function()
     lights.push(lights11);
 
     return lights;
-}
+};
 
 Engine.prototype.loadClouds = function()
 {
@@ -1468,7 +1499,7 @@ Engine.prototype.loadClouds = function()
     cloudInformation.push(waterX2);
 
     return cloudInformation;
-}
+};
 
 Engine.prototype.updateCloudInformation = function(cloudInformationArray)
 {
@@ -1514,14 +1545,14 @@ Engine.prototype.updateCloudInformation = function(cloudInformationArray)
             cloudInformationArray[15] = 1120;
         }
         return cloudInformationArray;
-}
+};
 
 //Move the text diagonal
 Engine.prototype.update = function()
 {
     
 
-}
+};
 
 //Canvas wrapper
 function CanvasWrapper(backCanvasId, entityCanvasId, animationCanvasId, width, height) {
@@ -1550,7 +1581,7 @@ function playerById(id) {
             return remotePlayers[i];
     }
     return false;
-};
+}
 
 function playerByPlayerNumber(playerNumber) {
     var i;
@@ -1560,7 +1591,7 @@ function playerByPlayerNumber(playerNumber) {
             return remotePlayers[i];
     }
     return false;
-};
+}
 
 function updateGUIScore(){
     
@@ -1591,4 +1622,4 @@ function updateGUIScore(){
             $('#4p').html('<FONT COLOR="WHITE">'+allPlayers[i].points+'</FONT>');
         }
     }
-};
+}

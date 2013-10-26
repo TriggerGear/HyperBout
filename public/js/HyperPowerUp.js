@@ -26,9 +26,9 @@ var HyperPowerUp = function(xLocation, spawnID, powerUpID){
 
     this.powerUpFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
     this.powerUpFixture.SetUserData('powerup' + this.type + "-" + this.id);
+};
 
-}
 HyperPowerUp.prototype.draw = function(canvas)
 {
     canvas.drawImage(this.powerUpImage, (this.powerUpFixture.GetBody().GetPosition().x * SCALE) -5, (this.powerUpFixture.GetBody().GetPosition().y * SCALE) -5);
-}
+};

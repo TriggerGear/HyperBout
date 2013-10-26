@@ -44,7 +44,7 @@ function init() {
     
     // Start listening for events
     setEventHandlers();
-};
+}
 
 function generateRandomNum(lowerRange, upperRange) 
 { 
@@ -109,7 +109,10 @@ function onSocketConnection(client) {
     //Update players on who is ready
     client.on("recieve ready", onReady);
 
-};
+    //Do stuff when all players have readied up
+    client.on("game started", onStart);
+
+}
 
 /**************************************************
 ** LOBBY EVENTS
@@ -119,20 +122,20 @@ function onUsername(data) {
     usernameArray.push(data.username);
     this.emit("username update", {usernames: usernameArray});
     this.broadcast.emit("username update", {usernames: usernameArray});
-};
+}
 
 function onMessage(data) {
     util.log("Recieved Chat Message: " + data.chatSession);
     chatHistory = data.chatSession;
     this.emit("update chat", {chatSession: data.chatSession});
     this.broadcast.emit("update chat", {chatSession: data.chatSession});
-};
+}
 
 function onChatRequest()
 {
     util.log("Updating player's chat history");
-    this.emit("update chat", {chatSession: chatHistory});
-};
+    this.emit("update chat", {chatSession: chatHistory, readyArray: readyArray});
+}
 
 function onReady(data)
 {
@@ -141,8 +144,12 @@ function onReady(data)
     readyArray[index] = true;
     this.emit("ready update", {readyArray: readyArray});
     this.broadcast.emit("ready update", {readyArray: readyArray});
-};
+}
 
+function onStart()
+{
+    dropPowerUp();
+}
 /**************************************************
 ** GAME EVENTS
 **************************************************/
@@ -156,19 +163,19 @@ function onClientDisconnect() {
     if (!removePlayer) {
         util.log("Player not found: "+this.id);
         return;
-    };
+    }
 
     // Remove player from players array
     players.splice(players.indexOf(removePlayer), 1);
 
     // Broadcast removed player to connected socket clients
     this.broadcast.emit("remove player", {id: this.id});
-};
+}
 
 // New player has joined
 function onNewPlayer(data) {
     _this = this;
-    dropPowerUp();
+    //dropPowerUp();
 
     // Create a new player
     var newPlayer = new HyperPlayer();
@@ -185,10 +192,10 @@ function onNewPlayer(data) {
     for (i = 0; i < players.length; i++) {
         existingPlayer = players[i];
         this.emit("new player", {id: existingPlayer.id, playerNumber: existingPlayer.playerNumber, x: existingPlayer.getX(), y: existingPlayer.getY()});
-    };   
+    }
     // Add new player to the players array
     players.push(newPlayer);
-};
+}
 
 // Player has moved
 function onMovePlayer(data) {
@@ -199,13 +206,13 @@ function onMovePlayer(data) {
     if (!movePlayer) {
         util.log("Player not found: "+this.id);
         return;
-    };
+    }
 
     // Broadcast updated position to connected socket clients
     data.id = this.id;
     // this.emit("power", {spawnID: 0, powerUpID: 0, xLocation: 500});
     this.broadcast.emit("move player", data);
-};
+}
 
 function onGetPosition(data) {
     var playerNumber = data.playerNumber;
@@ -247,7 +254,7 @@ function onGameEnd(data) {
 function onHPGet(data)
 {
     this.broadcast.emit("hp update", data);
-};
+}
 
 function dropPowerUp()
 {
@@ -261,9 +268,8 @@ function dropPowerUp()
                         xLocation: spawnLocationX});
         _this.broadcast.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
                         xLocation: spawnLocationX});
-        // util.log("hehehehehehe");
-    }, 3000);
-};
+    }, 30000);
+}
 /**************************************************
 ** GAME HELPER FUNCTIONS
 **************************************************/
@@ -273,10 +279,10 @@ function playerById(id) {
     for (i = 0; i < players.length; i++) {
         if (players[i].id == id)
             return players[i];
-    };
+    }
     
     return false;
-};
+}
 
 
 /**************************************************
