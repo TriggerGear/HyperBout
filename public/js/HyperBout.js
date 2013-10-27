@@ -12,6 +12,9 @@ var SCALE = 30;
 var world;
 var gBombArray = new Array();
 var powerUps = new Array();
+var rainArray = new Array();
+var rainDroplet = new Image();
+rainDroplet.src = 'images/droplet.png';
 
 /**************************************************
 ** BOX2D NAMESPACE CREATION
@@ -582,7 +585,7 @@ Engine.prototype.setupPhysics = function()
     debugDraw.SetLineThickness(1.0);
     //Says what we want to draw
     debugDraw.SetFlags(box2d.b2DebugDraw.e_shapeBit | box2d.b2DebugDraw.e_jointBit);
-    world.SetDebugDraw(debugDraw);
+    //world.SetDebugDraw(debugDraw);
 };
 
 //Array of input handlers
@@ -959,7 +962,8 @@ Engine.prototype.start = function()
             gBombArray = gBombArray.concat(remotePlayers[i].bombArray)
             remotePlayers[i].draw(self.hyperBout.entityctx);
         }
-
+        self.rain();
+        self.drawRain();
         for(i = 0; i < graveYard.length; i++)
         {
             //console.log(graveYard[i].GetPosition());
@@ -990,7 +994,45 @@ Engine.prototype.start = function()
     
     setInterval(sendPosition, 10);
 };
+Engine.prototype.rain = function()
+{
+    var spawnLocation = Math.floor(Math.random()*(1100-40+1)+40); 
 
+    var fixDef = new box2d.b2FixtureDef();
+    fixDef.filter.categoryBits = 0x0008;
+    fixDef.filter.maskBits = 0x0004;
+    //Now we need to define the body, static (not affected by gravity), dynamic (affected by grav)
+    var bodyDef = new box2d.b2BodyDef();
+    bodyDef.type = box2d.b2Body.b2_dynamicBody; //We're setting the ground to static.
+    bodyDef.position.x = spawnLocation / SCALE; //Registration point is in the center for box2d entities.
+    bodyDef.position.y = 0 / SCALE;
+    bodyDef.fixedRotation = true;
+    fixDef.shape = new box2d.b2PolygonShape; //setting the shape of the ground.
+    fixDef.shape.SetAsBox((5 / SCALE) / 2, (5 / SCALE)/2);
+    fixDef.friction = 4;
+
+    this.rainFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
+    this.rainFixture.SetUserData('rainDroplet');
+
+    rainArray.push(this.rainFixture);
+   
+}
+Engine.prototype.drawRain = function()
+{
+    
+    for (i=0;i<rainArray.length;i++)
+    {
+        if(rainArray[i].GetBody().GetPosition().y > 800)
+        {
+            world.DestroyBody(rainArray[i].GetBody());
+            rainArray.splice(i,1);
+        }
+        else
+        {
+             this.hyperBout.entityctx.drawImage(rainDroplet, (rainArray[i].GetBody().GetPosition().x * SCALE) - 2.5, (rainArray[i].GetBody().GetPosition().y * SCALE) - 2.5);
+        }
+    }
+}
 Engine.prototype.drawBombs = function()
 {
     var playerBomb = new Image();
