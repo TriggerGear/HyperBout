@@ -1040,7 +1040,12 @@ Engine.prototype.drawBombs = function()
     for (i=0;i<gBombArray.length;i++)
     {
         //console.log(gBombArray[i].GetUserData());
-        if(gBombArray[i].GetUserData().substring(0,4) == 'dead')
+        if(gBombArray[i].GetBody().GetPosition().y > 800 || gBombArray[i].GetBody().GetPosition().x > 1150 || gBombArray[i].GetBody().GetPosition().x < - 10)
+        {
+            world.DestroyBody(gBombArray[i].GetBody());
+            gBombArray.splice(i,1);
+        }
+        else if(gBombArray[i].GetUserData().substring(0,4) == 'dead')
         {   
             gBombArray.splice(i, 1);
         }
