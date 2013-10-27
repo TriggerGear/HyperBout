@@ -529,7 +529,7 @@ Engine.prototype.setupPhysics = function()
     var testDef = new box2d.b2BodyDef();
     testDef.type = box2d.b2Body.b2_staticBody;
     testDef.position.x = 400 / 2 / SCALE;
-    testDef.position.y = 200 / 2 / SCALE;
+    testDef.position.y = 240 / 2 / SCALE;
     testFix.shape = new box2d.b2PolygonShape;
     testFix.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
     var topLeftFloor = world.CreateBody(testDef).CreateFixture(testFix);
@@ -542,7 +542,7 @@ Engine.prototype.setupPhysics = function()
     var testDef2 = new box2d.b2BodyDef();
     testDef2.type = box2d.b2Body.b2_staticBody;
     testDef2.position.x = 1800 / 2 / SCALE;
-    testDef2.position.y = 200 / 2 / SCALE;
+    testDef2.position.y = 240 / 2 / SCALE;
     testFix2.shape = new box2d.b2PolygonShape;
     testFix2.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
     var topRightFloor = world.CreateBody(testDef2).CreateFixture(testFix2);
@@ -809,7 +809,6 @@ Engine.prototype.start = function()
                 updateGUIScore();
             }
         }
-
         else if(contactB.GetUserData().substring(0,7) == "powerup" && contactA.GetUserData().substring(0,6) == 'player')
         {
             console.log("contactB : " + contactB.GetUserData().substring(0,7));
@@ -836,10 +835,35 @@ Engine.prototype.start = function()
 
             
         }
+        else if(contactB.GetUserData() == 'Floor' && contactA.GetUserData().substring(0,6) == 'player')
+        {
+            if(contactB.GetBody().GetPosition().y > contactA.GetBody().GetPosition().y)
+            {
+                localPlayer.canJump = 1;
+            }
+            
+        }
+        else if(contactA.GetUserData().substring(0,6) == 'player' && contactB.GetUserData() == 'Floor')
+        {
+            if(contactA.GetBody().GetPosition().y < contactB.GetBody().GetPosition().y)
+            {
+                localPlayer.canJump = 1;
+            }
+        }
     };
 
     listener.EndContact = function(contact) {
-    // console.log(contact.GetFixtureA().GetBody().GetUserData());
+        var contactA = contact.GetFixtureA();
+        var contactB = contact.GetFixtureB();
+
+        if(contactB.GetUserData() == 'Floor' && contactA.GetUserData().substring(0,6) == 'player')
+        {
+            localPlayer.canJump = 0;
+        }
+        else if(contactA.GetUserData().substring(0,6) == 'player' && contactB.GetUserData() == 'Floor')
+        {
+            localPlayer.canJump = 0;
+        }
     };
 
     listener.PostSolve = function(contact, impulse){

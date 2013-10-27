@@ -7,7 +7,7 @@ var HyperPlayer = function(){
     this.direction = 0;
     this.points = 0;
     this.leftRight = 0; //0 for right
-
+    this.canJump = 1;
     //Movement and location variables
     this.xpos = 100;
     this.ypos = 68;
@@ -210,9 +210,9 @@ HyperPlayer.prototype.getMoveVector = function()
         break;
 
     case HyperPlayer.MoveUp:
-        if(this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+        if(this.canJump == 1)
         {
-            var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
+            var vec = new box2d.b2Vec2(0, -0.6 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
             if(this.leftRight == 1)
             {
@@ -286,7 +286,7 @@ HyperPlayer.prototype.getMoveVector = function()
         break;
 
     case HyperPlayer.MoveLeft | HyperPlayer.MoveUp :
-        if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+        if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.canJump == 1)
         {
             this.leftRight = 1;
             var vec = new box2d.b2Vec2(-0.2 * SCALE, -0.8 * SCALE);
@@ -315,7 +315,7 @@ HyperPlayer.prototype.getMoveVector = function()
         break;
 
     case HyperPlayer.MoveRight | HyperPlayer.MoveUp:
-        if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+        if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.canJump == 1)
         {
             this.leftRight = 0;
             var vec = new box2d.b2Vec2(0.2 * SCALE, -0.8 * SCALE);
