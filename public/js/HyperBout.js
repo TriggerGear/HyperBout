@@ -1091,7 +1091,9 @@ Engine.prototype.drawPowerUpSprites = function(canvas)
         {
             powerUps.splice(i,1);
         }
+        else{
         powerUps[i].draw(canvas);
+        }
     }
 };
 
