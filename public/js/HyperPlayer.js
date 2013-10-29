@@ -212,8 +212,10 @@ HyperPlayer.prototype.getMoveVector = function()
     case HyperPlayer.MoveUp:
         if(this.canJump == 1)
         {
-            var vec = new box2d.b2Vec2(0, -0.6 * SCALE);
+            this.canJump = 0;
+            var vec = new box2d.b2Vec2(0, -0.8 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
+            console.log(vec);
             if(this.leftRight == 1)
             {
                 if (this.playerNumber == 1)
@@ -286,12 +288,14 @@ HyperPlayer.prototype.getMoveVector = function()
         break;
 
     case HyperPlayer.MoveLeft | HyperPlayer.MoveUp :
+       
         if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.canJump == 1)
         {
+            this.canJump = 0;
             this.leftRight = 1;
             var vec = new box2d.b2Vec2(-0.2 * SCALE, -0.8 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
-            
+            console.log(vec);
             //Set Direction
             if (this.playerNumber == 1)
             {
@@ -317,10 +321,11 @@ HyperPlayer.prototype.getMoveVector = function()
     case HyperPlayer.MoveRight | HyperPlayer.MoveUp:
         if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.canJump == 1)
         {
+            this.canJump = 0;
             this.leftRight = 0;
             var vec = new box2d.b2Vec2(0.2 * SCALE, -0.8 * SCALE);
             this.playerFixture.GetBody().ApplyImpulse(vec, this.playerFixture.GetBody().GetPosition());
-            
+            console.log(vec);
             //Set Direction
             if (this.playerNumber == 1)
             {
@@ -515,7 +520,7 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
             this.playerImage.src = "images/player/p4jumpleft.png";
         }
 
-        if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+        if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.canJump == 1)
         {
             this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
             return vector;
@@ -542,7 +547,7 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
             this.playerImage.src = "images/player/p4jumpright.png";
         }
 
-        if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.playerFixture.GetBody().GetLinearVelocity().y == 0)
+        if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.canJump == 1)
         {
             this.playerFixture.GetBody().ApplyImpulse(args.playerVector, this.playerFixture.GetBody().GetPosition());
             return vector;
