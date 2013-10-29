@@ -1038,6 +1038,8 @@ Engine.prototype.rain = function()
     this.rainFixture = world.CreateBody(bodyDef).CreateFixture(fixDef);
     this.rainFixture.SetUserData('rainDroplet');
 
+    var vec = new box2d.b2Vec2(-0.4 * SCALE, 0);
+    this.rainFixture.GetBody().ApplyImpulse(vec, this.rainFixture.GetBody().GetPosition());
     rainArray.push(this.rainFixture);
    
 }
