@@ -40,7 +40,8 @@ var box2d = {
 var setupSockets = function()
 {
     // Initialise socket connection
-    socket = io.connect("http://192.168.0.102", {port: 8000, transports: ["websocket"]});
+    // socket = io.connect("http://192.168.0.102", {port: 8000, transports: ["websocket"]});
+    socket = io.connect("http://localhost", {port: 8000, transports: ["websocket"]});
 
     // Socket connection successful
     socket.on("connect", onSocketConnected);
