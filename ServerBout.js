@@ -1,8 +1,24 @@
 /**************************************************
 ** NODE.JS REQUIREMENTS
 **************************************************/
+var express = require('express'),
+    app = express(),
+    server = require('http').createServer(app),
+    io = require('socket.io').listen(server);
+
+    app.use(express.static(__dirname + '/public'));
+    //app.use("/css", express.static(__dirname + '/public/style'));
+    //app.use("/js", express.static(__dirname + '/public/js'));
+    //app.use("/img", express.static(__dirname + '/public/images'));
+
+    app.get('/', function (req, res){
+        res.sendfile(__dirname + '/public/index.html');
+    });
+
+    server.listen(8000);
+
 var util = require("util"),                                 // Utility resources (logging, object inspection, etc)
-    io = require("socket.io"),                              // Socket.IO
+    //io = require("socket.io"),                              // Socket.IO
     HyperPlayer = require("./ServerPlayer").HyperPlayer;    // HyperPlayer class
 
 var _this;
@@ -31,7 +47,8 @@ function init() {
     readyArray = [];
 
     // Set up Socket.IO to listen on port 8000
-    socket = io.listen(8000);
+    socket = io;
+    //socket = io.listen(8000);
 
     // Configure Socket.IO
     socket.configure(function() {
