@@ -41,7 +41,7 @@ You need mouse and keyboard to play:
 - space to jump
 
 ## Objective
-The objective of the game is to damage other players and gain points. You only receive a player when you completely deplete other player's health. You win when you receive two points. 
+The objective of the game is to damage other players and gain points. You only receive a point when you completely deplete other player's health. You win when you receive two points. 
 
 ## Running on one machine or on LAN
 The default of the code is to run on one machine where you start the game using node.js and go to localhost:8000. However, if you're interested in running the project using LAN on a router, you can change HyperBout.js line 43 so that it connects to the correct IP address.
