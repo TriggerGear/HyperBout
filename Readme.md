@@ -37,7 +37,7 @@ You need to already have installed nodejs on your machine. http://nodejs.org/dow
 You need mouse and keyboard to play:
 - 'a' key to move left. 
 - 'd' key to move right
-- right click to shoot projectiles
+- left click to shoot projectiles
 - space to jump
 
 ## Objective
