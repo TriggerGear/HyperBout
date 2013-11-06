@@ -135,10 +135,43 @@ function onSocketConnection(client) {
 ** LOBBY EVENTS
 **************************************************/
 function onUsername(data) {
-    util.log("New Player: " + data.username);
-    usernameArray.push(data.username);
-    this.emit("username update", {usernames: usernameArray});
-    this.broadcast.emit("username update", {usernames: usernameArray});
+    //Checks to see for duplicates names. Adds the duplication # at end
+    var count = 0;
+    for (var i = 0; i < usernameArray.length; i++) 
+    {
+        if (usernameArray[i] === data.username) 
+        {
+            count++;
+        }
+
+        if (usernameArray[i] === data.username +" (1)") 
+        {
+            count++;
+        }
+
+        if (usernameArray[i] === data.username +" (2)") 
+        {
+            count++;
+        }
+    }
+
+    //If original name
+    if (count == 0)
+    {
+        util.log("New Player: " + data.username);
+        usernameArray.push(data.username);
+        this.emit("username update", {usernames: usernameArray});
+        this.broadcast.emit("username update", {usernames: usernameArray});
+    }
+
+    //If name already taken "count" many times
+    else
+    {
+        util.log("New Player: " + data.username +" (" + count+")");
+        usernameArray.push(data.username +" (" + count+")");
+        this.emit("username update", {usernames: usernameArray});
+        this.broadcast.emit("username update", {usernames: usernameArray});
+    }
 }
 
 function onMessage(data) {
@@ -175,6 +208,7 @@ function onClientDisconnect() {
     util.log("Player has disconnected: "+this.id);
 
     var removePlayer = playerById(this.id);
+    var indexOfRemovedPlayer = players.indexOf(removePlayer);
 
     // Player not found
     if (!removePlayer) {
@@ -183,7 +217,19 @@ function onClientDisconnect() {
     }
 
     // Remove player from players array
-    players.splice(players.indexOf(removePlayer), 1);
+    players.splice(indexOfRemovedPlayer, 1);
+
+    // Remove player from readyArray
+    readyArray.splice(indexOfRemovedPlayer, 1);
+    this.broadcast.emit("ready update", {readyArray: readyArray});
+
+    // Remove player from usernameArray
+    util.log("Before: " +usernameArray);
+    util.log(removePlayer.playerNumber-1);
+    usernameArray.splice(indexOfRemovedPlayer, 1);
+    util.log("After: " +usernameArray);
+    this.broadcast.emit("username update", {usernames:usernameArray});
+
 
     // Broadcast removed player to connected socket clients
     this.broadcast.emit("remove player", {id: this.id});
@@ -192,12 +238,16 @@ function onClientDisconnect() {
 // New player has joined
 function onNewPlayer(data) {
     _this = this;
-    //dropPowerUp();
 
     // Create a new player
     var newPlayer = new HyperPlayer();
     newPlayer.id = this.id;
+
+
+    // Need to assign #s properly here
     newPlayer.playerNumber = players.length + 1;
+
+
     util.log("Player Joined. There are now: " + (players.length+1) + " player(s)");
     this.emit("update id", {id: newPlayer.id, playerNumber: newPlayer.playerNumber});
 
@@ -264,8 +314,20 @@ function onHit(data) {
 
 function onGameEnd(data) {
     util.log("Player " + data.winner + " has reached win score");
+    
+    //Reset Everything Here and transmit
+    usernameArray = [];
+    readyArray = [];
+    for (i = 0; i < players.length; i++) 
+    {
+        players[i].hp = 5;
+        players[i].points = 0;
+    }
+
     this.broadcast.emit("game finished", data); 
-    this.emit("game finished", data);  
+    this.emit("game finished", data);
+
+
 }
 
 function onHPGet(data)

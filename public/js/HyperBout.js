@@ -127,6 +127,9 @@ $(function(){
               $("#usernameInput").bind('keypress', function(e) {
                     if(e.keyCode==13)                                                   
                     {       
+                        //Disable input so user can not join more than once
+                        $("#usernameInput").prop('disabled', true);
+
                         e.preventDefault(); 
                         username = $("#usernameInput").val();
                         $("#usernameForm").hide("fade", 800, function()
@@ -136,12 +139,21 @@ $(function(){
                         });
                         socket.emit("on username input", {username:username});
                         socket.emit("request chat");
-                        //$("#player1").text(username);   
+                        
+                        //Reenable for next time
+                        setTimeout(function()
+                        {
+                            $("#usernameInput").prop('disabled', false);
+                        }, 1000);
+                        
                     }
                 });
               
               //For when user clicks on "Join Lobby" button 
                $("#usernameSubmitButton").click(function() {
+                    //Disable input so user can not join more than once
+                    $("#usernameSubmitButton").prop('disabled', true);
+
                     username = $("#usernameInput").val();
                     $("#usernameForm").hide("fade", 800, function()
                     {
@@ -151,6 +163,12 @@ $(function(){
                     socket.emit("on username input", {username:username});
                     socket.emit("request chat");
                     //$("#player1").text(username);
+                    
+                    //Reenable for next time
+                    setTimeout(function()
+                    {
+                        $("#usernameSubmitButton").prop('disabled', false);
+                    }, 1000);
                 });
 
                //LOBBY --------------------------------------------------------------------------
@@ -185,12 +203,36 @@ $(function(){
 function updateLobbyNames(data){
     if(data.usernames[0] != undefined)
         $("#player1").text(data.usernames[0]);
+    else
+    {
+        $("#player1").text("1. Waiting for Player...");
+        //$("#player1").css("color", "GRAY");
+    }
+
     if(data.usernames[1] != undefined)
         $("#player2").text(data.usernames[1]);
+    else
+    {
+        $("#player2").text("2. Waiting for Player...");
+        //$("#player2").css("color", "GRAY");
+    }
+
     if(data.usernames[2] != undefined)
         $("#player3").text(data.usernames[2]);
+    else
+    {
+        $("#player3").text("3. Waiting for Player...");
+        //$("#player3").css("color", "GRAY");
+    }
+
     if(data.usernames[3] != undefined)
         $("#player4").text(data.usernames[3]);
+    else
+    {
+        $("#player4").text("4. Waiting for Player...");
+        //$("#player4").css("color", "GRAY");
+    }
+
 }
 
 function updateChat(data){
@@ -202,24 +244,46 @@ function updateChat(data){
     //Need to also update if anyone is already ready before the player joins lobby
     if(data.readyArray[0] == true)
         $("#player1").css("color", 'green');
+    else
+        $("#player1").css("color", 'gray');
+    
     if(data.readyArray[1] == true)
         $("#player2").css("color", 'green');
+    else
+        $("#player2").css("color", 'gray');
+
     if(data.readyArray[2] == true)
         $("#player3").css("color", 'green');
+    else
+        $("#player3").css("color", 'gray');
+
     if(data.readyArray[3] == true)
         $("#player4").css("color", 'green');
+    else
+        $("#player4").css("color", 'gray');
 }
 
 function updateReady(data){
     var ready = true;
     if(data.readyArray[0] == true)
         $("#player1").css("color", 'green');
+    else
+        $("#player1").css("color", 'gray');
+    
     if(data.readyArray[1] == true)
         $("#player2").css("color", 'green');
+    else
+        $("#player2").css("color", 'gray');
+
     if(data.readyArray[2] == true)
         $("#player3").css("color", 'green');
+    else
+        $("#player3").css("color", 'gray');
+
     if(data.readyArray[3] == true)
         $("#player4").css("color", 'green');
+    else
+        $("#player4").css("color", 'gray');
 
     for (x in data.readyArray)
     {
@@ -440,7 +504,33 @@ function handleHPUpdate(data)
 function handleEnd(data)
 {
     var winner = data.winner;
+    
+    //Reset Positions
+    localPlayer.moveToSpawn();
+    for(i = 0; i < remotePlayers.length; i++) 
+    {        
+        console.log("HIT");
+        console.log(remotePlayers[i].id);
+        console.log(remotePlayers[i].playerNumber);
+        remotePlayers[i].moveToSpawn();
+    }
+
     alert("Game Finished. The Winner Is Player " + winner);
+    $("#game").hide("fade", 800, function()
+    {
+        $("#lobby").show("fade", 800);
+        $("#usernameForm").show("fade", 800);
+        $("#lobbyForm").hide("fade", 1);
+    });
+
+    //Reset Health and points
+    localPlayer.hp = 5;
+    localPlayer.points = 0;
+    for (i = 0; i < remotePlayers.length; i++) 
+    {
+        remotePlayers[i].hp = 5;
+        remotePlayers[i].points = 0;
+    }
 }
 
 /**************************************************
@@ -774,7 +864,7 @@ Engine.prototype.start = function()
                     playerByPlayerNumber(playerWhoShoots).points += 1;
 
                     //If Score Limit Has been reached, alert other players
-                    if (playerByPlayerNumber(playerWhoShoots).points == 2)
+                    if (playerByPlayerNumber(playerWhoShoots).points == 1)
                     {
                         socket.emit("game end", {winner: playerWhoShoots});
                     }
