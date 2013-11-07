@@ -99,7 +99,7 @@ body{
 
 .lobbyborder,
 .lobbyrain{
-	height: 470px;
+	height: 500px;
 	width: 820px;
 }
 /* Layout with mask */
@@ -180,7 +180,6 @@ form label{
 	color: #777;
 }
 form input{
-	display: block;
 	margin: 5px 10px 10px 15px;
 	width: 85%;
 	background: #111;
@@ -217,6 +216,22 @@ input[type="button"]{
 	text-shadow: 0 1px 1px #000;
 }
 
+#usernameSubmitButton, #startButton
+{
+	display:block;
+}
+
+#usernameInput
+{
+	margin-bottom: 20px;
+}
+
+#chatInput
+{
+	margin-left: 95px;
+	margin-bottom: 20px;
+	width:75%;
+}
 
 input[type="submitMap"]{
 	color: #999;
