@@ -15,6 +15,59 @@ var powerUps = new Array();
 var rainArray = new Array();
 var rainDroplet = new Image();
 rainDroplet.src = 'images/droplet.png';
+var backgroundImg = new Image();
+backgroundImg.src = 'images/Background.png';
+//Ground Image
+var floorImage = new Image();
+floorImage.src = 'images/floor.png';
+/***Create Platforms***/
+var platformImage = new Image();
+platformImage.src = 'images/log.png';
+
+//wall
+var wallImage = new Image();
+wallImage.src = 'images/wall/wall.png';
+
+var playerBomb = new Image();
+playerBomb.src = 'images/projectileBladeBomb.png';
+var powerUpImage = new Image();
+powerUpImage.src = 'images/health.png';
+
+var explosionImage0 = new Image();
+explosionImage0.src = 'images/explosions/exp0.png';
+
+var explosionImage1 = new Image();
+explosionImage1.src = 'images/explosions/exp1.png';
+
+var explosionImage2 = new Image();
+explosionImage2.src = 'images/explosions/exp2.png';
+
+var explosionImage3 = new Image();
+explosionImage3.src = 'images/explosions/exp3.png';
+
+var explosionImage4 = new Image();
+explosionImage4.src = 'images/explosions/exp4.png';
+
+var explosionImage5 = new Image();
+explosionImage5.src = 'images/explosions/exp5.png';
+
+var explosionImage6 = new Image();
+explosionImage6.src = 'images/explosions/exp6.png';
+
+var explosionImage7 = new Image();
+explosionImage7.src = 'images/explosions/exp7.png';
+
+var explosionImage8 = new Image();
+explosionImage8.src = 'images/explosions/exp8.png';
+
+var explosionImage9 = new Image();
+explosionImage9.src = 'images/explosions/exp9.png';
+
+var explosionImage10 = new Image();
+explosionImage10.src = 'images/explosions/exp10.png';
+
+
+
 
 /**************************************************
 ** BOX2D NAMESPACE CREATION
@@ -321,7 +374,7 @@ function updateReady(data){
 // Socket connected
 
 function updateID(data){
-    localPlayer.id = data.id;
+    localPlayer.id = data.id ;
     localPlayer.playerNumber = data.playerNumber;
 }
 
@@ -339,11 +392,11 @@ function onSocketDisconnect() {
 
 // New player
 function onNewPlayer(data) {
-    console.log("New player connected: "+data.id);
+    console.log("New player connected: "+data.id );
     
     // Initialise the new player
     var newPlayer = new HyperPlayer();
-    newPlayer.id = data.id;
+    newPlayer.id = data.id ;
     newPlayer.playerNumber = data.playerNumber;
     
     // Add new player to the remote players array
@@ -368,11 +421,11 @@ function onNewPlayer(data) {
 function onMovePlayer(data) {
     
     //Get the player that moved
-    var movePlayer = playerById(data.id);
+    var movePlayer = playerById(data.id );
     
     // Player not found
     if (!movePlayer) {
-        console.log("Player not found: "+data.id);
+        console.log("Player not found: "+data.id );
         return;
     }
 
@@ -384,11 +437,11 @@ function onMovePlayer(data) {
 // Remove player
 function onRemovePlayer(data) {
     //Get player that disconnected
-    var removePlayer = playerById(data.id);
+    var removePlayer = playerById(data.id );
 
     // Player not found
     if (!removePlayer) {
-        console.log("Player not found: "+data.id);
+        console.log("Player not found: "+data.id );
         return;
     }
 
@@ -540,7 +593,7 @@ var hyperBout = function()
 {
     this.width = 1122;
     this.height = 548;
-    return new CanvasWrapper('backgroundCanvas', 'entityCanvas', 'animationCanvas', width, height);
+    return new CanvasWrapper('wallCanvas', 'backgroundCanvas', 'entityCanvas', 'animationCanvas', width, height);
 };
 
 var Engine = function()
@@ -549,8 +602,7 @@ var Engine = function()
     this.hyperBout = hyperBout();
 
     //Create an image and set the source to the background, add it to HyperBout canvas context
-    var backgroundImg = new Image();
-    backgroundImg.src = 'images/Background.png';
+
     this.hyperBout.ctx.drawImage(backgroundImg, 0, 0);
 
 
@@ -604,14 +656,6 @@ Engine.prototype.setupPhysics = function()
     //when entities come to a halt.
     world = new box2d.b2World(new box2d.b2Vec2(0,50), true);
 
-    //Ground Image
-    var floorImage = new Image();
-    floorImage.src = 'images/floor.png';
-
-
-    /***Create Platforms***/
-    var platformImage = new Image();
-    platformImage.src = 'images/log.png';
 
     //Top Left - P1 Start
     var testFix = new box2d.b2FixtureDef();
@@ -619,7 +663,7 @@ Engine.prototype.setupPhysics = function()
     testFix.friction = 0.5;
     var testDef = new box2d.b2BodyDef();
     testDef.type = box2d.b2Body.b2_staticBody;
-    testDef.position.x = 400 / 2 / SCALE;
+    testDef.position.x = 350 / 2 / SCALE;
     testDef.position.y = 240 / 2 / SCALE;
     testFix.shape = new box2d.b2PolygonShape;
     testFix.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
@@ -632,7 +676,7 @@ Engine.prototype.setupPhysics = function()
     testFix2.friction = 0.5;
     var testDef2 = new box2d.b2BodyDef();
     testDef2.type = box2d.b2Body.b2_staticBody;
-    testDef2.position.x = 1800 / 2 / SCALE;
+    testDef2.position.x = 1700 / 2 / SCALE;
     testDef2.position.y = 240 / 2 / SCALE;
     testFix2.shape = new box2d.b2PolygonShape;
     testFix2.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
@@ -667,6 +711,34 @@ Engine.prototype.setupPhysics = function()
     var bottomRightFloor = world.CreateBody(testDef4).CreateFixture(testFix4);
     this.hyperBout.ctx.drawImage(platformImage, testDef4.position.x * 25 - 6 , testDef4.position.y *28 + 10);
     bottomRightFloor.SetUserData("Floor");
+
+    //Left Wall
+    var testFix5 = new box2d.b2FixtureDef();
+    testFix5.density = 1;
+    testFix5.friction = 0.5;
+    var testDef5 = new box2d.b2BodyDef();
+    testDef5.type = box2d.b2Body.b2_staticBody;
+    testDef5.position.x = 0 / 2 / SCALE;
+    testDef5.position.y = 500 / 2 / SCALE;
+    testFix5.shape = new box2d.b2PolygonShape;
+    testFix5.shape.SetAsBox((10/SCALE)/2, (548 / SCALE) / 2);
+    var bottomRightFloor = world.CreateBody(testDef5).CreateFixture(testFix5);
+    this.hyperBout.wallctx.drawImage(wallImage, testDef5.position.x - 20, testDef5.position.y - 150);
+    bottomRightFloor.SetUserData("Floor");
+
+    //Right Wall
+    var testFix6 = new box2d.b2FixtureDef();
+    testFix6.density = 1;
+    testFix6.friction = 0.5;
+    var testDef6 = new box2d.b2BodyDef();
+    testDef6.type = box2d.b2Body.b2_staticBody;
+    testDef6.position.x = 2240 / 2 / SCALE;
+    testDef6.position.y = 500 / 2 / SCALE;
+    testFix6.shape = new box2d.b2PolygonShape;
+    testFix6.shape.SetAsBox((10/SCALE)/2, (548 / SCALE) / 2);
+    var bottomRightFloor = world.CreateBody(testDef6).CreateFixture(testFix6);
+    this.hyperBout.wallctx.drawImage(wallImage, testDef6.position.x + 1080, testDef6.position.y - 150);
+    bottomRightFloor.SetUserData("Floor");
     
     //Box2d has some nice default drawing, so let's draw the ground.
     var debugDraw = new box2d.b2DebugDraw();
@@ -676,7 +748,7 @@ Engine.prototype.setupPhysics = function()
     debugDraw.SetLineThickness(1.0);
     //Says what we want to draw
     debugDraw.SetFlags(box2d.b2DebugDraw.e_shapeBit | box2d.b2DebugDraw.e_jointBit);
-    //world.SetDebugDraw(debugDraw);
+    // world.SetDebugDraw(debugDraw);
 };
 
 //Array of input handlers
@@ -1152,8 +1224,7 @@ Engine.prototype.drawRain = function()
 }
 Engine.prototype.drawBombs = function()
 {
-    var playerBomb = new Image();
-    playerBomb.src = 'images/projectileBladeBomb.png';
+
     for (i=0;i<gBombArray.length;i++)
     {
         //console.log(gBombArray[i].GetUserData());
@@ -1175,8 +1246,6 @@ Engine.prototype.drawBombs = function()
 
 Engine.prototype.drawPowerUpSprites = function(canvas)
 {
-    var powerUpImage = new Image();
-    powerUpImage.src = 'images/projectileBladeBomb.png';
 
     for (i=0;i<powerUps.length;i++)
     {
@@ -1301,101 +1370,63 @@ Engine.prototype.animateExplosionSprite = function(explosionArray, entCanvas)
         explosionArray[i].GetBody().ApplyImpulse(oppositeGravity, explosionArray[i].GetBody().GetPosition());
         if(explosionData == 'explosion0')
         {
-            
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp0.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           this.hyperBout.entityctx.drawImage(explosionImage0, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
            break;
         }
         else if(explosionData == 'explosion1')
         {
 
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp1.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+           this.hyperBout.entityctx.drawImage(explosionImage1, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
            break;
         }
         else if(explosionData == 'explosion2')
         {
-
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp2.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+           this.hyperBout.entityctx.drawImage(explosionImage2, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
            break;
         }
         else if(explosionData == 'explosion3')
         {
 
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp3.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+           this.hyperBout.entityctx.drawImage(explosionImage3, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
            break;
         }
         else if(explosionData == 'explosion4')
         {
-
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp4.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           this.hyperBout.entityctx.drawImage(explosionImage4, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
            break;
         }
         else if(explosionData == 'explosion5')
         {
-
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp5.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           this.hyperBout.entityctx.drawImage(explosionImage5, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
            break;
         }
         else if(explosionData == 'explosion6')
         {
 
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp6.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           this.hyperBout.entityctx.drawImage(explosionImage6, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
            break;
         }
         else if(explosionData == 'explosion7')
         {
-
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp7.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           this.hyperBout.entityctx.drawImage(explosionImage7, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
            break;
         }
         else if(explosionData == 'explosion8')
         {
 
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp8.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           this.hyperBout.entityctx.drawImage(explosionImage8, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
            break;
         }
         else if(explosionData == 'explosion9')
         {
 
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp9.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
+           this.hyperBout.entityctx.drawImage(explosionImage9, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90) );
            break;
         }
         else if(explosionData == 'explosion10')
         {
 
-            var explosionImage = new Image();
-            explosionImage.src = 'images/explosions/exp10.png';
-
-           this.hyperBout.entityctx.drawImage(explosionImage, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
+           this.hyperBout.entityctx.drawImage(explosionImage10, (explosionArray[i].GetBody().GetPosition().x * SCALE) - 25, (explosionArray[i].GetBody().GetPosition().y * SCALE - 90));
            break;
         }
     }
@@ -1721,7 +1752,7 @@ Engine.prototype.update = function()
 };
 
 //Canvas wrapper
-function CanvasWrapper(backCanvasId, entityCanvasId, animationCanvasId, width, height) {
+function CanvasWrapper(wallCanvasId, backCanvasId, entityCanvasId, animationCanvasId, width, height) {
     //Canvas for storing the background image
     this.canvas = document.getElementById(backCanvasId);
     this.ctx = this.canvas.getContext('2d');
@@ -1731,6 +1762,9 @@ function CanvasWrapper(backCanvasId, entityCanvasId, animationCanvasId, width, h
     //Canvas for animating clouds and what not
     this.animationCanvas = document.getElementById(animationCanvasId);
     this.animationctx = this.animationCanvas.getContext('2d');
+
+    this.wallCanvas = document.getElementById(wallCanvasId);
+    this.wallctx = this.wallCanvas.getContext('2d');
 
     this.width = width;
     this.height = height;
