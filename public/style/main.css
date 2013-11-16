@@ -17,9 +17,6 @@
 #entityCanvas{
 	z-index: 3;
 }
-#wallCanvas{
-    z-index: 4;
-}
 
 #title {
 	width: 800px ;

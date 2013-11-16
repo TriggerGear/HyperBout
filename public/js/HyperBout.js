@@ -593,7 +593,7 @@ var hyperBout = function()
 {
     this.width = 1122;
     this.height = 548;
-    return new CanvasWrapper('wallCanvas', 'backgroundCanvas', 'entityCanvas', 'animationCanvas', width, height);
+    return new CanvasWrapper('backgroundCanvas', 'entityCanvas', 'animationCanvas', width, height);
 };
 
 var Engine = function()
@@ -723,7 +723,7 @@ Engine.prototype.setupPhysics = function()
     testFix5.shape = new box2d.b2PolygonShape;
     testFix5.shape.SetAsBox((10/SCALE)/2, (548 / SCALE) / 2);
     var bottomRightFloor = world.CreateBody(testDef5).CreateFixture(testFix5);
-    this.hyperBout.wallctx.drawImage(wallImage, testDef5.position.x - 20, testDef5.position.y - 150);
+    this.hyperBout.ctx.drawImage(wallImage, testDef5.position.x - 20, testDef5.position.y - 150);
     bottomRightFloor.SetUserData("Floor");
 
     //Right Wall
@@ -737,7 +737,7 @@ Engine.prototype.setupPhysics = function()
     testFix6.shape = new box2d.b2PolygonShape;
     testFix6.shape.SetAsBox((10/SCALE)/2, (548 / SCALE) / 2);
     var bottomRightFloor = world.CreateBody(testDef6).CreateFixture(testFix6);
-    this.hyperBout.wallctx.drawImage(wallImage, testDef6.position.x + 1080, testDef6.position.y - 150);
+    this.hyperBout.ctx.drawImage(wallImage, testDef6.position.x + 1080, testDef6.position.y - 150);
     bottomRightFloor.SetUserData("Floor");
     
     //Box2d has some nice default drawing, so let's draw the ground.
@@ -1752,7 +1752,7 @@ Engine.prototype.update = function()
 };
 
 //Canvas wrapper
-function CanvasWrapper(wallCanvasId, backCanvasId, entityCanvasId, animationCanvasId, width, height) {
+function CanvasWrapper(backCanvasId, entityCanvasId, animationCanvasId, width, height) {
     //Canvas for storing the background image
     this.canvas = document.getElementById(backCanvasId);
     this.ctx = this.canvas.getContext('2d');
@@ -1762,9 +1762,6 @@ function CanvasWrapper(wallCanvasId, backCanvasId, entityCanvasId, animationCanv
     //Canvas for animating clouds and what not
     this.animationCanvas = document.getElementById(animationCanvasId);
     this.animationctx = this.animationCanvas.getContext('2d');
-
-    this.wallCanvas = document.getElementById(wallCanvasId);
-    this.wallctx = this.wallCanvas.getContext('2d');
 
     this.width = width;
     this.height = height;
