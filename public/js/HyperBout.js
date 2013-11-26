@@ -724,7 +724,7 @@ Engine.prototype.setupPhysics = function()
     testFix5.shape.SetAsBox((10/SCALE)/2, (548 / SCALE) / 2);
     var bottomRightFloor = world.CreateBody(testDef5).CreateFixture(testFix5);
     this.hyperBout.ctx.drawImage(wallImage, testDef5.position.x - 20, testDef5.position.y - 150);
-    bottomRightFloor.SetUserData("Floor");
+    bottomRightFloor.SetUserData("Wall");
 
     //Right Wall
     var testFix6 = new box2d.b2FixtureDef();
@@ -738,7 +738,7 @@ Engine.prototype.setupPhysics = function()
     testFix6.shape.SetAsBox((10/SCALE)/2, (548 / SCALE) / 2);
     var bottomRightFloor = world.CreateBody(testDef6).CreateFixture(testFix6);
     this.hyperBout.ctx.drawImage(wallImage, testDef6.position.x + 1080, testDef6.position.y - 150);
-    bottomRightFloor.SetUserData("Floor");
+    bottomRightFloor.SetUserData("Wall");
     
     //Box2d has some nice default drawing, so let's draw the ground.
     var debugDraw = new box2d.b2DebugDraw();
