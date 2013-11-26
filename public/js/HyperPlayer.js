@@ -50,6 +50,78 @@ var HyperPlayer = function(){
     this.playerBomb = new Image();
     this.playerBomb.src = 'images/projectileBladeBomb.png';
 
+    //Player 1 Image Set
+    this.p1SRimage = new Image();
+    this.p1SRimage.src = "images/player/p1standright.png";
+    this.p1SLimage = new Image();
+    this.p1SLimage.src = "images/player/p1standleft.png";
+    this.p1RRimage = new Image();
+    this.p1RRimage.src = "images/player/p1runright.png";
+    this.p1RLimage = new Image();
+    this.p1RLimage.src = "images/player/p1runleft.png";
+    this.p1TRimage = new Image();
+    this.p1TRimage.src = "images/player/p1throwright.png";
+    this.p1TLimage = new Image();
+    this.p1TLimage.src = "images/player/p1throwleft.png";
+    this.p1JRimage = new Image();
+    this.p1JRimage.src = "images/player/p1jumpright.png";
+    this.p1JLimage = new Image();
+    this.p1JLimage.src = "images/player/p1jumpleft.png";
+
+    //Player 2 Image Set
+    this.p2SRimage = new Image();
+    this.p2SRimage.src = "images/player/p2standright.png";
+    this.p2SLimage = new Image();
+    this.p2SLimage.src = "images/player/p2standleft.png";
+    this.p2RRimage = new Image();
+    this.p2RRimage.src = "images/player/p2runright.png";
+    this.p2RLimage = new Image();
+    this.p2RLimage.src = "images/player/p2runleft.png";
+    this.p2TRimage = new Image();
+    this.p2TRimage.src = "images/player/p2throwright.png";
+    this.p2TLimage = new Image();
+    this.p2TLimage.src = "images/player/p2throwleft.png";
+    this.p2JRimage = new Image();
+    this.p2JRimage.src = "images/player/p2jumpright.png";
+    this.p2JLimage = new Image();
+    this.p2JLimage.src = "images/player/p2jumpleft.png";
+
+    //Player 3 Image Set
+    this.p3SRimage = new Image();
+    this.p3SRimage.src = "images/player/p3standright.png";
+    this.p3SLimage = new Image();
+    this.p3SLimage.src = "images/player/p3standleft.png";
+    this.p3RRimage = new Image();
+    this.p3RRimage.src = "images/player/p3runright.png";
+    this.p3RLimage = new Image();
+    this.p3RLimage.src = "images/player/p3runleft.png";
+    this.p3TRimage = new Image();
+    this.p3TRimage.src = "images/player/p3throwright.png";
+    this.p3TLimage = new Image();
+    this.p3TLimage.src = "images/player/p3throwleft.png";
+    this.p3JRimage = new Image();
+    this.p3JRimage.src = "images/player/p3jumpright.png";
+    this.p3JLimage = new Image();
+    this.p3JLimage.src = "images/player/p3jumpleft.png";
+
+    //Player 4 Image Set
+    this.p4SRimage = new Image();
+    this.p4SRimage.src = "images/player/p4standright.png";
+    this.p4SLimage = new Image();
+    this.p4SLimage.src = "images/player/p4standleft.png";
+    this.p4RRimage = new Image();
+    this.p4RRimage.src = "images/player/p4runright.png";
+    this.p4RLimage = new Image();
+    this.p4RLimage.src = "images/player/p4runleft.png";
+    this.p4TRimage = new Image();
+    this.p4TRimage.src = "images/player/p4throwright.png";
+    this.p4TLimage = new Image();
+    this.p4TLimage.src = "images/player/p4throwleft.png";
+    this.p4JRimage = new Image();
+    this.p4JRimage.src = "images/player/p4jumpright.png";
+    this.p4JLimage = new Image();
+    this.p4JLimage.src = "images/player/p4jumpleft.png";
+
     var fixDef = new box2d.b2FixtureDef();
     fixDef.density = 1;
     fixDef.friction = 0.5;
@@ -122,7 +194,7 @@ HyperPlayer.prototype.moveToSpawn = function()
         var pos = this.playerFixture.GetBody().GetPosition();
         pos.x = 6.83;
         pos.y = 2.33;
-        this.playerImage.src = "images/player/p1standright.png";
+        this.playerImage = this.p1SRimage;
         this.playerFixture.GetBody().SetPosition(pos);
     }
     else if (this.playerNumber == 2)
@@ -131,7 +203,7 @@ HyperPlayer.prototype.moveToSpawn = function()
         var pos = this.playerFixture.GetBody().GetPosition();
         pos.x = 30.83;
         pos.y = 2.33;
-        this.playerImage.src = "images/player/p2standleft.png";
+        this.playerImage = this.p2SLimage;
         this.playerFixture.GetBody().SetPosition(pos);
     }
     else if (this.playerNumber == 3)
@@ -140,7 +212,7 @@ HyperPlayer.prototype.moveToSpawn = function()
         var pos = this.playerFixture.GetBody().GetPosition();
         pos.x = 6.83;
         pos.y = 12.33;
-        this.playerImage.src = "images/player/p3standright.png";
+        this.playerImage = this.p3SRimage;
         this.playerFixture.GetBody().SetPosition(pos);
     }
     else if (this.playerNumber == 4)
@@ -149,7 +221,7 @@ HyperPlayer.prototype.moveToSpawn = function()
         var pos = this.playerFixture.GetBody().GetPosition();
         pos.x = 30.83;
         pos.y = 12.33;
-        this.playerImage.src = "images/player/p4standleft.png";
+        this.playerImage = this.p4SLimage;
         this.playerFixture.GetBody().SetPosition(pos);
     }
 };
@@ -190,19 +262,19 @@ HyperPlayer.prototype.getMoveVector = function()
             //Set Direction
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1runleft.png";
+                this.playerImage = this.p1RLimage;
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2runleft.png";
+                this.playerImage = this.p2RLimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3runleft.png";
+                this.playerImage = this.p3RLimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4runleft.png";
+                this.playerImage = this.p4RLimage;
             }
 
             return {playerVector: vec, direction: "left", leftRight: this.leftRight};
@@ -220,38 +292,38 @@ HyperPlayer.prototype.getMoveVector = function()
             {
                 if (this.playerNumber == 1)
                 {
-                    this.playerImage.src = "images/player/p1jumpleft.png";
+                    this.playerImage = this.p1JLimage;
                 }
                 else if (this.playerNumber == 2)
                 {
-                    this.playerImage.src = "images/player/p2jumpleft.png";
+                    this.playerImage = this.p2JLimage;
                 }
                 else if (this.playerNumber == 3)
                 {
-                    this.playerImage.src = "images/player/p3jumpleft.png";
+                    this.playerImage = this.p3JLimage;
                 }
                 else if (this.playerNumber == 4)
                 {
-                    this.playerImage.src = "images/player/p4jumpleft.png";
+                    this.playerImage = this.p4JLimage;
                 }
             }
             else if(this.leftRight == 0)
             {
                 if (this.playerNumber == 1)
                 {
-                    this.playerImage.src = "images/player/p1jumpright.png";
+                    this.playerImage = this.p1JRimage;
                 }
                 else if (this.playerNumber == 2)
                 {
-                    this.playerImage.src = "images/player/p2jumpright.png";
+                    this.playerImage = this.p2JRimage;
                 }
                 else if (this.playerNumber == 3)
                 {
-                    this.playerImage.src = "images/player/p3jumpright.png";
+                    this.playerImage = this.p3JRimage;
                 }
                 else if (this.playerNumber == 4)
                 {
-                    this.playerImage.src = "images/player/p4jumpright.png";
+                    this.playerImage = this.p4JRimage;
                 }
             }
             return {playerVector: vec, direction: "up", leftRight: this.leftRight};
@@ -268,19 +340,19 @@ HyperPlayer.prototype.getMoveVector = function()
             //Set Direction
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1runright.png";
+                this.playerImage = this.p1RRimage;
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2runright.png";
+                this.playerImage = this.p2RRimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3runright.png";
+                this.playerImage = this.p3RRimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4runright.png";
+                this.playerImage = this.p4RRimage;
             }
 
             return {playerVector: vec, direction: "right", leftRight: this.leftRight};
@@ -299,19 +371,19 @@ HyperPlayer.prototype.getMoveVector = function()
             //Set Direction
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1jumpleft.png";
+                this.playerImage = this.p1JLimage;
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2jumpleft.png";
+                this.playerImage = this.p2JLimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3jumpleft.png";
+                this.playerImage = this.p3JLimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4jumpleft.png";
+                this.playerImage = this.p4JLimage;
             }
 
             return {playerVector: vec, direction: "leftup", leftRight: this.leftRight};
@@ -329,19 +401,19 @@ HyperPlayer.prototype.getMoveVector = function()
             //Set Direction
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1jumpright.png";
+                this.playerImage = this.p1JRimage;
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2jumpright.png";
+                this.playerImage = this.p2JRimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3jumpright.png";
+                this.playerImage = this.p3JRimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4jumpright.png";
+                this.playerImage = this.p4JRimage;
             }
 
             return {playerVector: vec, direction: "rightup", leftRight: this.leftRight};
@@ -361,38 +433,38 @@ HyperPlayer.prototype.getMoveVector = function()
         {
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1standleft.png";
+                this.playerImage = this.p1SLimage;
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2standleft.png";
+                this.playerImage = this.p2SLimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3standleft.png";
+                this.playerImage = this.p3SLimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4standleft.png";
+                this.playerImage = this.p4SLimage;
             }
         }
         else if(this.leftRight == 0)
         {
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1standright.png";
+                this.playerImage = this.p1SRimage;
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2standright.png";
+                this.playerImage = this.p2SRimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3standright.png";
+                this.playerImage = this.p3SRimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4standright.png";
+                this.playerImage = this.p4SRimage;
             }
         }
         return {playerVector: vec, direction: null, leftRight: this.leftRight};
@@ -409,19 +481,19 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         args.leftRight = 1;
         if (this.playerNumber == 1)
         {
-            this.playerImage.src = "images/player/p1runleft.png";
+            this.playerImage = this.p1RLimage;
         }
         else if (this.playerNumber == 2)
         {
-            this.playerImage.src = "images/player/p2runleft.png";
+            this.playerImage = this.p2RLimage;
         }
         else if (this.playerNumber == 3)
         {
-            this.playerImage.src = "images/player/p3runleft.png";
+            this.playerImage = this.p3RLimage;
         }
         else if (this.playerNumber == 4)
         {
-            this.playerImage.src = "images/player/p4runleft.png";
+            this.playerImage = this.p4RLimage;
         }
 
         if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed)
@@ -439,38 +511,38 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         {
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1jumpleft.png";
+                this.playerImage = this.p1JLimage;
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2jumpleft.png";
+                this.playerImage = this.p2JLimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3jumpleft.png";
+                this.playerImage = this.p3JLimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4jumpleft.png";
+                this.playerImage = this.p4JLimage;
             }
         }
         else if(args.leftRight == 0)
         {
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1jumpright.png";
+                this.playerImage = this.p1JRimage;   
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2jumpright.png";
+                this.playerImage = this.p2JRimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3jumpright.png";
+                this.playerImage = this.p3JRimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4jumpright.png";
+                this.playerImage = this.p4JRimage;
             }
         }
         break;
@@ -480,19 +552,19 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         //Set Direction
         if (this.playerNumber == 1)
         {
-            this.playerImage.src = "images/player/p1runright.png";
+            this.playerImage = this.p1RRimage;
         }
         else if (this.playerNumber == 2)
         {
-            this.playerImage.src = "images/player/p2runright.png";
+            this.playerImage = this.p2RRimage;
         }
         else if (this.playerNumber == 3)
         {
-            this.playerImage.src = "images/player/p3runright.png";
+            this.playerImage = this.p3RRimage;
         }
         else if (this.playerNumber == 4)
         {
-            this.playerImage.src = "images/player/p4runright.png";
+            this.playerImage = this.p4RRimage;
         }
 
         if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed)
@@ -505,19 +577,19 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         args.leftRight = 1;
         if (this.playerNumber == 1)
         {
-            this.playerImage.src = "images/player/p1jumpleft.png";
+            this.playerImage = this.p1JLimage;
         }
         else if (this.playerNumber == 2)
         {
-            this.playerImage.src = "images/player/p2jumpleft.png";
+            this.playerImage = this.p2JLimage;
         }
         else if (this.playerNumber == 3)
         {
-            this.playerImage.src = "images/player/p3jumpleft.png";
+            this.playerImage = this.p3JLimage;
         }
         else if (this.playerNumber == 4)
         {
-            this.playerImage.src = "images/player/p4jumpleft.png";
+            this.playerImage = this.p4JLimage;
         }
 
         if(this.playerFixture.GetBody().GetLinearVelocity().x > -this.maxSpeed && this.canJump == 1)
@@ -532,19 +604,19 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         //Set Direction
         if (this.playerNumber == 1)
         {
-            this.playerImage.src = "images/player/p1jumpright.png";
+            this.playerImage = this.p1JRimage;
         }
         else if (this.playerNumber == 2)
         {
-            this.playerImage.src = "images/player/p2jumpright.png";
+            this.playerImage = this.p2JRimage;
         }
         else if (this.playerNumber == 3)
         {
-            this.playerImage.src = "images/player/p3jumpright.png";
+            this.playerImage = this.p3JRimage;
         }
         else if (this.playerNumber == 4)
         {
-            this.playerImage.src = "images/player/p4jumpright.png";
+            this.playerImage = this.p4JRimage;
         }
 
         if(this.playerFixture.GetBody().GetLinearVelocity().x < this.maxSpeed && this.canJump == 1)
@@ -564,38 +636,38 @@ HyperPlayer.prototype.remotePlayerMove = function(args) {
         {
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1standleft.png";
+                this.playerImage = this.p1SLimage;
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2standleft.png";
+                this.playerImage = this.p2SLimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3standleft.png";
+                this.playerImage = this.p3SLimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4standleft.png";
+                this.playerImage = this.p4SLimage;
             }
         }
         else if(args.leftRight == 0)
         {
             if (this.playerNumber == 1)
             {
-                this.playerImage.src = "images/player/p1standright.png";
+                this.playerImage = this.p1SRimage;
             }
             else if (this.playerNumber == 2)
             {
-                this.playerImage.src = "images/player/p2standright.png";
+                this.playerImage = this.p2SRimage;
             }
             else if (this.playerNumber == 3)
             {
-                this.playerImage.src = "images/player/p3standright.png";
+                this.playerImage = this.p3SRimage;
             }
             else if (this.playerNumber == 4)
             {
-                this.playerImage.src = "images/player/p4standright.png";
+                this.playerImage = this.p4SRimage;
             }
         }
     }
