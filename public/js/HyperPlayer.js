@@ -1,6 +1,7 @@
 //Player class
 var HyperPlayer = function(){
     this.hp = 5;
+    this.bombThrowCount = 0;
     this.id = 1;
     this.invincibility = 0;
     this.playerNumber = -1;
@@ -680,13 +681,14 @@ HyperPlayer.prototype.setLocation = function(playerList){
 
 HyperPlayer.prototype.bombThrow = function(ev)
 {
-    this.bombThrowCount++;
+    
     //Need temporary assignment for this for scope
     var _this = this;
     //player animation
 
     if (this.throwCooldown != 1)
     {
+        this.bombThrowCount++;
         this.throwCooldown = 1;
         setTimeout(function()
         {
@@ -725,7 +727,7 @@ HyperPlayer.prototype.bombThrow = function(ev)
         this.bombArray.push(bombFixture);
 
 
-        socket.emit("bomb throw", {playerX: bodyDef.position.x, playerY: bodyDef.position.y, impulse: impulseVector, playerNumber: this.playerNumber});
+        socket.emit("bomb throw", {playerX: bodyDef.position.x, playerY: bodyDef.position.y, impulse: impulseVector, playerNumber: this.playerNumber, bombThrowCount:this.bombThrowCount});
         
     }
     

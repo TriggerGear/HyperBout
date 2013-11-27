@@ -570,6 +570,8 @@ function handleEnd(data)
 
     var pName = document.getElementById("player"+winner).innerHTML;
     var text = pName + " wins!";
+    remotePlayers.push(localPlayer);
+    var text2 = "With " + playerByPlayerNumber(winner).bombThrowCount + " bomb(s) shot";
     var c=document.getElementById("winCanvas");
     var ctx=c.getContext("2d");
     ctx.fillStyle = '#000000'; // set canvas background color
@@ -577,6 +579,7 @@ function handleEnd(data)
     ctx.fillStyle = '#FFFFFF';
     ctx.font="italic bold 50px Calibri";
     ctx.fillText(text,300,250);
+    ctx.fillText(text2,300,300);
     
     $("#winCanvas").css("zIndex", 4);
     // $("#game").hide("fade", 800, function()
