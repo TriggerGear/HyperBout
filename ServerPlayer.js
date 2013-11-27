@@ -1,6 +1,6 @@
 //Player class
 var HyperPlayer = function(){
-    var healthPoints = 5,
+    var healthPoints = 1,
     id = 1,
     playerNumber = -1,
     invincibility = 0,

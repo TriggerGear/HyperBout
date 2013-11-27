@@ -1,6 +1,6 @@
 //Player class
 var HyperPlayer = function(){
-    this.hp = 5;
+    this.hp = 1;
     this.id = 1;
     this.invincibility = 0;
     this.playerNumber = -1;

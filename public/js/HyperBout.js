@@ -568,22 +568,33 @@ function handleEnd(data)
         remotePlayers[i].moveToSpawn();
     }
 
-    alert("Game Finished. The Winner Is Player " + winner);
-    $("#game").hide("fade", 800, function()
-    {
-        $("#lobby").show("fade", 800);
-        $("#usernameForm").show("fade", 800);
-        $("#lobbyForm").hide("fade", 1);
-    });
+    var text = "Player" + winner + " wins!";
+    var c=document.getElementById("winCanvas");
+    var ctx=c.getContext("2d");
+    ctx.fillStyle = '#000000'; // set canvas background color
+    ctx.fillRect (0, 0, 1500, 2000);  // now fill the canvas
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font="30px Arial";
+    ctx.fillText(text,500,250);
+    
+    $("#winCanvas").css("zIndex", 4);
+    // $("#game").hide("fade", 800, function()
+    // {
+    //     $("#lobby").show("fade", 800);
+    //     $("#usernameForm").show("fade", 800);
+    //     $("#lobbyForm").hide("fade", 1);
+    // });
 
-    //Reset Health and points
-    localPlayer.hp = 5;
-    localPlayer.points = 0;
-    for (i = 0; i < remotePlayers.length; i++) 
-    {
-        remotePlayers[i].hp = 5;
-        remotePlayers[i].points = 0;
-    }
+    // //Reset Health and points
+    // localPlayer.hp = 5;
+    // localPlayer.points = 0;
+    // for (i = 0; i < remotePlayers.length; i++) 
+    // {
+    //     remotePlayers[i].hp = 5;
+    //     remotePlayers[i].points = 0;
+    // }
+    setTimeout(function(){location.reload();},5000);
+    
 }
 
 /**************************************************
@@ -1820,3 +1831,61 @@ function updateGUIScore(){
         }
     }
 }
+
+function sleekZebraEffect() {
+// inspired by - http://www.webdesignerwall.com/demo/css-gradient-text/
+var text = "Sleek Zebra...";
+var font = "100px Futura, Helvetica, sans-serif";
+
+// save state
+ctx.save();
+ctx.font = font;
+
+// getMetrics calculates:
+// width + height of text-block
+// top + middle + bottom baseline
+var metrics = getMetrics(text, font);
+var offsetRefectionY = -20;
+var offsetY = 70;
+var offsetX = 60;
+
+// throwing a linear-gradient in to shine up the text
+var gradient = ctx.createLinearGradient(0, offsetY, 0, metrics.height + offsetY);
+gradient.addColorStop(0.1, '#000');
+gradient.addColorStop(0.35, '#fff');
+gradient.addColorStop(0.65, '#fff');
+gradient.addColorStop(1.0, '#000');
+ctx.fillStyle = gradient
+ctx.fillText(text, offsetX, offsetY + metrics.top);
+
+// draw reflected text
+ctx.save();
+ctx.globalCompositeOperation = "source-over";
+ctx.translate(0, metrics.height + offsetRefectionY)
+ctx.scale(1, -1);
+ctx.font = font;
+ctx.fillStyle = "#fff";
+ctx.fillText(text, offsetX, -metrics.height - offsetY + metrics.top);
+ctx.scale(1, -1);
+
+// cut the gradient out of the reflected text 
+ctx.globalCompositeOperation = "destination-out";
+var gradient = ctx.createLinearGradient(0, offsetY, 0, metrics.height + offsetY);
+gradient.addColorStop(0.0, 'rgba(0,0,0,0.65)');
+gradient.addColorStop(1.0, '#000');
+ctx.fillStyle = gradient;
+ctx.fillRect(offsetX, offsetY, metrics.width, metrics.height);
+
+// restore back to original transform state
+ctx.restore();
+
+// using source-atop to allow the transparent .png to show through to the gradient
+ctx.globalCompositeOperation = "source-atop";
+
+// creating pattern from <image> sourced.
+ctx.fillStyle = ctx.createPattern(image, 'repeat');
+
+// fill the height of two em-boxes, to encompass both normal and reflected state
+ctx.fillRect(offsetX, offsetY, metrics.width, metrics.height * 2);
+ctx.restore();
+};
