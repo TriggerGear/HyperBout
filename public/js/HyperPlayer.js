@@ -1,6 +1,6 @@
 //Player class
 var HyperPlayer = function(){
-    this.hp = 1;
+    this.hp = 5;
     this.id = 1;
     this.invincibility = 0;
     this.playerNumber = -1;
@@ -680,6 +680,7 @@ HyperPlayer.prototype.setLocation = function(playerList){
 
 HyperPlayer.prototype.bombThrow = function(ev)
 {
+    this.bombThrowCount++;
     //Need temporary assignment for this for scope
     var _this = this;
     //player animation

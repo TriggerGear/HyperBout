@@ -12,6 +12,7 @@
         <script type = "text/javascript" src="js/HyperBout.js"></script>
         <script type = "text/javascript" src="js/HyperPlayer.js"></script>
         <script type = "text/javascript" src="js/HyperPowerUp.js"></script>
+        <script type = "text/javascript" src="js/validate.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script type = "text/javascript" src="tests/Loaders.js"></script>
         
@@ -57,11 +58,12 @@
             <!-- Div For Username Form-->
             <div id="usernameForm" class="rain">
                 <div class="border start">
-                    <form>
+                    <div id="warning" style="text:red"></div>
+                    <form name="userInput">
                         <label for="username">Username</label>
-                        <input id="usernameInput" type="text" placeholder="Hyper Player"/>
+                        <input id="usernameInput" name="usernameInput" type="text" placeholder="Hyper Player" value="Hyper Player"/>
                         <br>
-                        <input id="usernameSubmitButton" type="button" value="Join Lobby"/>
+                        <input id="usernameSubmitButton" type="submit" value="Join Lobby" onclick="return(validate())"/>
                     </form>
                 </div>
             </div>
