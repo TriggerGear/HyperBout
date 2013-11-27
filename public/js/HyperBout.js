@@ -571,7 +571,7 @@ function handleEnd(data)
     var pName = document.getElementById("player"+winner).innerHTML;
     var text = pName + " wins!";
     remotePlayers.push(localPlayer);
-    var text2 = "With " + playerByPlayerNumber(winner).bombThrowCount + " bomb(s) shot";
+    var text2 = "With " + playerByPlayerNumber(winner).bombThrowCount + " bomb(s) thrown";
     var c=document.getElementById("winCanvas");
     var ctx=c.getContext("2d");
     ctx.fillStyle = '#000000'; // set canvas background color
