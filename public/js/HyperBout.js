@@ -138,6 +138,9 @@ var setupSockets = function()
     //Recieve when someone recieved hp powerup
     socket.on("hp update", handleHPUpdate);
 
+    //Recieve when someone throws a bomb
+    socket.on("throw update", handleThrowUpdate);
+
     /**********FOR LOBBY*************/
     //Update username when recieved update
     socket.on("username update", updateLobbyNames);
@@ -554,6 +557,20 @@ function handleHPUpdate(data)
     updateGUIScore();
 }
 
+function handleThrowUpdate(data)
+{
+    var playerNumber = data.playerNumber;
+    var throwCount = data.bombThrowCount;
+    if (playerNumber == localPlayer.playerNumber)
+    {
+        //Do Nothing
+    }
+    else
+    {
+        playerByPlayerNumber(playerNumber).bombThrowCount = throwCount;
+    }
+}
+
 function handleEnd(data)
 {
     var winner = data.winner;
@@ -954,6 +971,7 @@ Engine.prototype.start = function()
                     if (playerByPlayerNumber(playerWhoShoots).points == 1)
                     {
                         socket.emit("game end", {winner: playerWhoShoots});
+                        // socket.emit("throw", {playerNum: playerWhoShoots, throwCount: playerByPlayerNumber(playerWhoShoots).bombThrowCount});
                     }
                 }
                 pointsOfShooter = playerByPlayerNumber(playerWhoShoots).points;

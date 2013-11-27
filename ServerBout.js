@@ -104,6 +104,9 @@ function onSocketConnection(client) {
     //Listen for game end
     client.on("game end", onGameEnd);
 
+    //Listen for bomb throw
+    client.on("throw", onThrow);
+
     //Listen for invincibility down
     client.on("invincibility down", onInvincibilityDown);
 
@@ -326,8 +329,12 @@ function onGameEnd(data) {
 
     this.broadcast.emit("game finished", data); 
     this.emit("game finished", data);
+}
 
-
+function onThrow(data)
+{
+    this.broadcast.emit("throw update", data); 
+    this.emit("throw update", data);
 }
 
 function onHPGet(data)

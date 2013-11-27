@@ -1,6 +1,6 @@
 //Player class
 var HyperPlayer = function(){
-    this.hp = 5;
+    this.hp = 1;
     this.bombThrowCount = 0;
     this.id = 1;
     this.invincibility = 0;
@@ -727,7 +727,8 @@ HyperPlayer.prototype.bombThrow = function(ev)
         this.bombArray.push(bombFixture);
 
 
-        socket.emit("bomb throw", {playerX: bodyDef.position.x, playerY: bodyDef.position.y, impulse: impulseVector, playerNumber: this.playerNumber, bombThrowCount:this.bombThrowCount});
+        socket.emit("bomb throw", {playerX: bodyDef.position.x, playerY: bodyDef.position.y, impulse: impulseVector, playerNumber: this.playerNumber});
+        socket.emit("throw", {bombThrowCount:this.bombThrowCount, playerNumber: this.playerNumber})
         
     }
     
