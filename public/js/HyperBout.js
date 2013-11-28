@@ -617,13 +617,13 @@ function handleEnd(data)
     // });
 
     // //Reset Health and points
-    // localPlayer.hp = 5;
-    // localPlayer.points = 0;
-    // for (i = 0; i < remotePlayers.length; i++) 
-    // {
-    //     remotePlayers[i].hp = 5;
-    //     remotePlayers[i].points = 0;
-    // }
+    localPlayer.hp = 5;
+    localPlayer.points = 0;
+    for (i = 0; i < remotePlayers.length; i++) 
+    {
+        remotePlayers[i].hp = 5;
+        remotePlayers[i].points = 0;
+    }
     setTimeout(function(){location.reload();},3000);
     
 }

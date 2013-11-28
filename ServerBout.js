@@ -145,17 +145,34 @@ function onUsername(data) {
     {
         if (usernameArray[i] === data.username) 
         {
-            count++;
+            count = 1;
         }
 
         if (usernameArray[i] === data.username +" (1)") 
         {
             count = str.substring(str.length - 2, str.length - 1);
+            if(typeof count !== 'number')
+            {
+                count = 2;
+            }
         }
 
         if (usernameArray[i] === data.username +" (2)") 
         {
             count = str.substring(str.length - 2, str.length - 1);
+            if(typeof count !== 'number')
+            {
+                count = 3;
+            }
+        }
+
+        if (usernameArray[i] === data.username +" (3)") 
+        {
+            count = str.substring(str.length - 2, str.length - 1);
+            if(typeof count !== 'number')
+            {
+                count = 4;
+            }
         }
     }
 
@@ -242,14 +259,42 @@ function onClientDisconnect() {
 // New player has joined
 function onNewPlayer(data) {
     _this = this;
+    var one = false, two = false, three = false, four = false;
 
     // Create a new player
     var newPlayer = new HyperPlayer();
     newPlayer.id = this.id;
 
-
     // Need to assign #s properly here
-    newPlayer.playerNumber = players.length + 1;
+    for(var i = 0; i < players.length; i++)
+    {
+        util.log("YOU SUCK " + players[0].playerNumber);
+        if(players[i].playerNumber == 1)
+            one = true;
+        if(players[i].playerNumber == 2)
+            two = true;
+        if(players[i].playerNumber == 3)
+            three = true;
+        if(players[i].playerNumber == 4)
+            four = true;
+    }
+
+    if(!one)
+    {
+        newPlayer.playerNumber = 1;
+    }
+    else if(!two)
+    {
+        newPlayer.playerNumber = 2;
+    }
+    else if(!three)
+    {
+        newPlayer.playerNumber = 3;
+    }
+    else
+    {
+        newPlayer.playerNumber = 4;
+    }
 
 
     util.log("Player Joined. There are now: " + (players.length+1) + " player(s)");
@@ -320,14 +365,13 @@ function onGameEnd(data) {
     util.log("Player " + data.winner + " has reached win score");
     
     //Reset Everything Here and transmit
-    //since it is now reloaded, this is no longer needed
-    // usernameArray = [];
-    // readyArray = [];
-    // for (i = 0; i < players.length; i++) 
-    // {
-    //     players[i].hp = 5;
-    //     players[i].points = 0;
-    // }
+    usernameArray = [];
+    readyArray = [];
+    for (i = 0; i < players.length; i++) 
+    {
+        players[i].hp = 5;
+        players[i].points = 0;
+    }
 
     this.broadcast.emit("game finished", data); 
     this.emit("game finished", data);
