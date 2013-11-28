@@ -448,6 +448,16 @@ function onRemovePlayer(data) {
         return;
     }
 
+    //update the player number so no dupe
+    // if(localPlayer.playerNumber > remotePlayers.indexOf(removePlayer))
+    //     localPlayer.playerNumber--;
+    // for(var k = 0; k < remotePlayers.length; k++)
+    // {
+    //     if(remotePlayers[i].playerNumber > remotePlayers.indexOf(removePlayer))
+    //     {
+    //         remotePlayers[i].playerNumber--;
+    //     }
+    // }
     // Remove player from array
     remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
 }
