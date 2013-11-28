@@ -195,7 +195,6 @@ $(function(){
                         });
                         socket.emit("on username input", {username:username});
                         socket.emit("request chat");
-                        
                         //Reenable for next time
                         setTimeout(function()
                         {
@@ -233,6 +232,7 @@ $(function(){
                     if(e.keyCode==13)                                                   //If "enter" key is pressed
                     {       
                         e.preventDefault();                                             //Needed so page doesn't refresh
+                        username = $("#player" + localPlayer.playerNumber).html();
                         var chatMessage = $("#chatInput").val();
                         var chatSession = $("#chatHistory").val();
                         var fullMessage = " \n" + username + ": " + chatMessage;
@@ -250,6 +250,7 @@ $(function(){
 
                 /*To do when user clicks "Start Game" button*/
                 $("#startButton").click(function() {
+                    username = $("#player" + localPlayer.playerNumber).html();
                     socket.emit("recieve ready", {username: username});
                     //alert("To be implemented with engine...");
                 });
@@ -288,7 +289,6 @@ function updateLobbyNames(data){
         $("#player4").text("4. Waiting for Player...");
         //$("#player4").css("color", "GRAY");
     }
-
 }
 
 function updateChat(data){
@@ -695,23 +695,54 @@ Engine.prototype.setupPhysics = function()
     testFix.friction = 0.5;
     var testDef = new box2d.b2BodyDef();
     testDef.type = box2d.b2Body.b2_staticBody;
-    testDef.position.x = 350 / 2 / SCALE;
+    testDef.position.x = 430 / 2 / SCALE;
     testDef.position.y = 240 / 2 / SCALE;
     testFix.shape = new box2d.b2PolygonShape;
-    testFix.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
+    testFix.shape.SetAsBox((270/SCALE)/2, (20 / SCALE) / 2);
     var topLeftFloor = world.CreateBody(testDef).CreateFixture(testFix);
-    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6, testDef.position.y * 25);
+    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6 + 30, testDef.position.y * 25);
     topLeftFloor.SetUserData('Floor');
+
+    //Top Middle Left - P1 Start
+    var testFix7 = new box2d.b2FixtureDef();
+    testFix7.density = 1;
+    testFix7.friction = 0.5;
+    var testDef7 = new box2d.b2BodyDef();
+    testDef7.type = box2d.b2Body.b2_staticBody;
+    testDef7.position.x = 430 / 2 / SCALE;
+    testDef7.position.y = 490 / 2 / SCALE;
+    testFix7.shape = new box2d.b2PolygonShape;
+    testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
+    var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
+    //draw smaller platform here.
+    // this.hyperBout.ctx.drawImage(platformImage, testDef7.position.x * 6 + 30, testDef7.position.y * 25);
+    topMiddleLeft.SetUserData('Floor');
+
+    //Bottom Middle Left - P1 Start
+    var testFix7 = new box2d.b2FixtureDef();
+    testFix7.density = 1;
+    testFix7.friction = 0.5;
+    var testDef7 = new box2d.b2BodyDef();
+    testDef7.type = box2d.b2Body.b2_staticBody;
+    testDef7.position.x = 500 / 2 / SCALE;
+    testDef7.position.y = 650 / 2 / SCALE;
+    testFix7.shape = new box2d.b2PolygonShape;
+    testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
+    var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
+    //draw smaller platform here.
+    // this.hyperBout.ctx.drawImage(platformImage, testDef7.position.x * 6 + 30, testDef7.position.y * 25);
+    topMiddleLeft.SetUserData('Floor');
+
     //Top Right - P2 Start
     var testFix2 = new box2d.b2FixtureDef();
     testFix2.density = 1;
     testFix2.friction = 0.5;
     var testDef2 = new box2d.b2BodyDef();
     testDef2.type = box2d.b2Body.b2_staticBody;
-    testDef2.position.x = 1700 / 2 / SCALE;
+    testDef2.position.x = 1650 / 2 / SCALE;
     testDef2.position.y = 240 / 2 / SCALE;
     testFix2.shape = new box2d.b2PolygonShape;
-    testFix2.shape.SetAsBox((300/SCALE)/2, (20 / SCALE) / 2);
+    testFix2.shape.SetAsBox((270/SCALE)/2, (20 / SCALE) / 2);
     var topRightFloor = world.CreateBody(testDef2).CreateFixture(testFix2);
     this.hyperBout.ctx.drawImage(platformImage, testDef2.position.x * 25 - 6, testDef2.position.y * 25);
     topRightFloor.SetUserData('Floor');
@@ -754,9 +785,9 @@ Engine.prototype.setupPhysics = function()
     testDef5.position.y = 500 / 2 / SCALE;
     testFix5.shape = new box2d.b2PolygonShape;
     testFix5.shape.SetAsBox((10/SCALE)/2, (548 / SCALE) / 2);
-    var bottomRightFloor = world.CreateBody(testDef5).CreateFixture(testFix5);
+    var leftWall = world.CreateBody(testDef5).CreateFixture(testFix5);
     this.hyperBout.ctx.drawImage(wallImage, testDef5.position.x - 20, testDef5.position.y - 150);
-    bottomRightFloor.SetUserData("Wall");
+    leftWall.SetUserData("Wall");
 
     //Right Wall
     var testFix6 = new box2d.b2FixtureDef();
@@ -768,9 +799,9 @@ Engine.prototype.setupPhysics = function()
     testDef6.position.y = 500 / 2 / SCALE;
     testFix6.shape = new box2d.b2PolygonShape;
     testFix6.shape.SetAsBox((10/SCALE)/2, (548 / SCALE) / 2);
-    var bottomRightFloor = world.CreateBody(testDef6).CreateFixture(testFix6);
+    var rightWall = world.CreateBody(testDef6).CreateFixture(testFix6);
     this.hyperBout.ctx.drawImage(wallImage, testDef6.position.x + 1080, testDef6.position.y - 150);
-    bottomRightFloor.SetUserData("Wall");
+    rightWall.SetUserData("Wall");
     
     //Box2d has some nice default drawing, so let's draw the ground.
     var debugDraw = new box2d.b2DebugDraw();
@@ -780,7 +811,7 @@ Engine.prototype.setupPhysics = function()
     debugDraw.SetLineThickness(1.0);
     //Says what we want to draw
     debugDraw.SetFlags(box2d.b2DebugDraw.e_shapeBit | box2d.b2DebugDraw.e_jointBit);
-    // world.SetDebugDraw(debugDraw);
+    world.SetDebugDraw(debugDraw);
 };
 
 //Array of input handlers

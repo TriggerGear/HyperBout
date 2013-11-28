@@ -140,6 +140,7 @@ function onSocketConnection(client) {
 function onUsername(data) {
     //Checks to see for duplicates names. Adds the duplication # at end
     var count = 0;
+    var str = data.username;
     for (var i = 0; i < usernameArray.length; i++) 
     {
         if (usernameArray[i] === data.username) 
@@ -149,12 +150,12 @@ function onUsername(data) {
 
         if (usernameArray[i] === data.username +" (1)") 
         {
-            count++;
+            count = str.substring(str.length - 2, str.length - 1);
         }
 
         if (usernameArray[i] === data.username +" (2)") 
         {
-            count++;
+            count = str.substring(str.length - 2, str.length - 1);
         }
     }
 
@@ -215,7 +216,7 @@ function onClientDisconnect() {
 
     // Player not found
     if (!removePlayer) {
-        util.log("Player not found: "+this.id);
+        // util.log("Player not found: "+this.id);
         return;
     }
 
@@ -274,7 +275,7 @@ function onMovePlayer(data) {
 
     // Player not found
     if (!movePlayer) {
-        util.log("Player not found: "+this.id);
+        // util.log("Player not found: "+this.id);
         return;
     }
 
@@ -319,13 +320,14 @@ function onGameEnd(data) {
     util.log("Player " + data.winner + " has reached win score");
     
     //Reset Everything Here and transmit
-    usernameArray = [];
-    readyArray = [];
-    for (i = 0; i < players.length; i++) 
-    {
-        players[i].hp = 5;
-        players[i].points = 0;
-    }
+    //since it is now reloaded, this is no longer needed
+    // usernameArray = [];
+    // readyArray = [];
+    // for (i = 0; i < players.length; i++) 
+    // {
+    //     players[i].hp = 5;
+    //     players[i].points = 0;
+    // }
 
     this.broadcast.emit("game finished", data); 
     this.emit("game finished", data);
