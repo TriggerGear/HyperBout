@@ -43,7 +43,7 @@ function init() {
     players = [];
     xPositions = [];
     yPositions = [];
-    usernameArray = [];    
+    usernameArray = [undefined, undefined, undefined, undefined];    
     readyArray = [];
 
     // Set up Socket.IO to listen on port 8000
@@ -180,7 +180,7 @@ function onUsername(data) {
     if (count == 0)
     {
         util.log("New Player: " + data.username);
-        usernameArray.push(data.username);
+        usernameArray.splice(data.playerNumber - 1, 0, data.username);
         this.emit("username update", {usernames: usernameArray});
         this.broadcast.emit("username update", {usernames: usernameArray});
     }
@@ -189,7 +189,7 @@ function onUsername(data) {
     else
     {
         util.log("New Player: " + data.username +" (" + count+")");
-        usernameArray.push(data.username +" (" + count+")");
+        usernameArray.splice(data.playerNumber - 1, 0, data.username +" (" + count+")");
         this.emit("username update", {usernames: usernameArray});
         this.broadcast.emit("username update", {usernames: usernameArray});
     }
@@ -268,7 +268,6 @@ function onNewPlayer(data) {
     // Need to assign #s properly here
     for(var i = 0; i < players.length; i++)
     {
-        util.log("YOU SUCK " + players[0].playerNumber);
         if(players[i].playerNumber == 1)
             one = true;
         if(players[i].playerNumber == 2)
@@ -365,7 +364,7 @@ function onGameEnd(data) {
     util.log("Player " + data.winner + " has reached win score");
     
     //Reset Everything Here and transmit
-    usernameArray = [];
+    usernameArray = [undefined, undefined, undefined, undefined];
     readyArray = [];
     for (i = 0; i < players.length; i++) 
     {

@@ -193,7 +193,7 @@ $(function(){
                             $("#lobbyForm").show("fade", 800);
                             
                         });
-                        socket.emit("on username input", {username:username});
+                        socket.emit("on username input", {username:username, playerNumber: localPlayer.playerNumber});
                         socket.emit("request chat");
                         //Reenable for next time
                         setTimeout(function()
@@ -215,7 +215,7 @@ $(function(){
                         $("#lobbyForm").show("fade", 800);
                         
                     });
-                    socket.emit("on username input", {username:username});
+                    socket.emit("on username input", {username:username, playerNumber: localPlayer.playerNumber});
                     socket.emit("request chat");
                     //$("#player1").text(username);
                     
