@@ -43,7 +43,7 @@ function init() {
     players = [];
     xPositions = [];
     yPositions = [];
-    usernameArray = [undefined, undefined, undefined, undefined];    
+    usernameArray = [];    
     readyArray = [];
 
     // Set up Socket.IO to listen on port 8000
@@ -364,7 +364,7 @@ function onGameEnd(data) {
     util.log("Player " + data.winner + " has reached win score");
     
     //Reset Everything Here and transmit
-    usernameArray = [undefined, undefined, undefined, undefined];
+    usernameArray = [];
     readyArray = [];
     for (i = 0; i < players.length; i++) 
     {
