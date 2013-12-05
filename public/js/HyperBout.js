@@ -1366,66 +1366,69 @@ Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, 
             {
                 explosions[i].GetShape().SetAsBox((25/SCALE)/2, (70 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion1');
+                break;
                 
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion1')
             {
                 explosions[i].GetShape().SetAsBox((25/SCALE)/2, (60 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion2');
+                break;
                 
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion2')
             {
                 explosions[i].GetShape().SetAsBox((23/SCALE)/2, (50 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion3');
-                
+                break;
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion3')
             {
                 explosions[i].GetShape().SetAsBox((20/SCALE)/2, (40 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion4');
-                
+                break;
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion4')
             {
                 explosions[i].GetShape().SetAsBox((18/SCALE)/2, (30 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion5');
-                
+                break;
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion5')
             {
                 explosions[i].GetShape().SetAsBox((16/SCALE)/2, (20 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion6');
-                
+                break;
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion6')
             {
                 explosions[i].GetShape().SetAsBox((12/SCALE)/2, (15 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion7');
-                
+                break;
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion7')
             {
                 explosions[i].GetShape().SetAsBox((8/SCALE)/2, (10 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion8');
-                
+                break;
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion8')
             {
                 explosions[i].GetShape().SetAsBox((6/SCALE)/2, (4 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion9');
-                
+                break;
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion9')
             {
                 explosions[i].GetShape().SetAsBox((4/SCALE)/2, (2 / SCALE) / 2);
                 explosions[i].SetUserData(playerNumber+'explosion10');
-                
+                break;
             }
             else if(explosions[i].GetUserData().substring(1) == 'explosion10')
             {
                 world.DestroyBody(explosions[i].GetBody());
                 explosions.splice(i, 1);
+                break;
             }
        }
        return true;
