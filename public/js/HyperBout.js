@@ -711,12 +711,12 @@ Engine.prototype.setupPhysics = function()
     testDef.position.x = 430 / 2 / SCALE;
     testDef.position.y = 240 / 2 / SCALE;
     testFix.shape = new box2d.b2PolygonShape;
-    testFix.shape.SetAsBox((270/SCALE)/2, (20 / SCALE) / 2);
+    testFix.shape.SetAsBox((270/SCALE)/2, (10 / SCALE) / 2);
     var topLeftFloor = world.CreateBody(testDef).CreateFixture(testFix);
     this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6 + 30, testDef.position.y * 25);
     topLeftFloor.SetUserData('Floor');
 
-    //Middle Right
+    //Bottom Right
     var testFix7 = new box2d.b2FixtureDef();
     testFix7.density = 1;
     testFix7.friction = 0.5;
@@ -728,10 +728,10 @@ Engine.prototype.setupPhysics = function()
     testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
     var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
     //draw smaller platform here.
-    this.hyperBout.ctx.drawImage(smallPlatformImage, testDef7.position.x , testDef7.position.y );
+    this.hyperBout.ctx.drawImage(smallPlatformImage, testDef7.position.x * 6 + 518, testDef7.position.y * 25 + 45);
     topMiddleLeft.SetUserData('Floor');
 
-    //Middle Left
+    //Bottom Left
     var testFix7 = new box2d.b2FixtureDef();
     testFix7.density = 1;
     testFix7.friction = 0.5;
@@ -743,7 +743,7 @@ Engine.prototype.setupPhysics = function()
     testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
     var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
     //draw smaller platform here.
-    this.hyperBout.ctx.drawImage(smallPlatformImage, testDef7.position.x * 6 + 50, testDef7.position.y * 25);
+    this.hyperBout.ctx.drawImage(smallPlatformImage, testDef7.position.x * 6 + 270, testDef7.position.y * 25 + 45);
     topMiddleLeft.SetUserData('Floor');
 
     //Center
@@ -758,10 +758,10 @@ Engine.prototype.setupPhysics = function()
     testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
     var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
     //draw smaller platform here.
-    // this.hyperBout.ctx.drawImage(platformImage, testDef7.position.x * 6 + 30, testDef7.position.y * 25);
+    this.hyperBout.ctx.drawImage(smallPlatformImage, testDef7.position.x + 482, testDef7.position.y * 25 + 35);
     topMiddleLeft.SetUserData('Floor');
 
-    //Center top left
+    //top left
     var testFix7 = new box2d.b2FixtureDef();
     testFix7.density = 1;
     testFix7.friction = 0.5;
@@ -773,7 +773,7 @@ Engine.prototype.setupPhysics = function()
     testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
     var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
     //draw smaller platform here.
-    // this.hyperBout.ctx.drawImage(platformImage, testDef7.position.x * 6 + 30, testDef7.position.y * 25);
+    this.hyperBout.ctx.drawImage(smallPlatformImage, testDef7.position.x + 337, testDef7.position.y * 25 + 20);
     topMiddleLeft.SetUserData('Floor');
 
     //Center top right
@@ -788,7 +788,7 @@ Engine.prototype.setupPhysics = function()
     testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
     var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
     //draw smaller platform here.
-    // this.hyperBout.ctx.drawImage(platformImage, testDef7.position.x * 6 + 30, testDef7.position.y * 25);
+    this.hyperBout.ctx.drawImage(smallPlatformImage, testDef7.position.x * 6 + 518, testDef7.position.y * 25 + 20);
     topMiddleLeft.SetUserData('Floor');
 
 
@@ -801,7 +801,7 @@ Engine.prototype.setupPhysics = function()
     testDef2.position.x = 1760 / 2 / SCALE;
     testDef2.position.y = 240 / 2 / SCALE;
     testFix2.shape = new box2d.b2PolygonShape;
-    testFix2.shape.SetAsBox((270/SCALE)/2, (20 / SCALE) / 2);
+    testFix2.shape.SetAsBox((270/SCALE)/2, (10 / SCALE) / 2);
     var topRightFloor = world.CreateBody(testDef2).CreateFixture(testFix2);
     this.hyperBout.ctx.drawImage(platformImage, testDef2.position.x * 25 - 6, testDef2.position.y * 25);
     topRightFloor.SetUserData('Floor');
