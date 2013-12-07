@@ -24,6 +24,9 @@ floorImage.src = 'images/floor.png';
 var platformImage = new Image();
 platformImage.src = 'images/log.png';
 
+var smallPlatformImage = new Image();
+smallPlatformImage.src = 'images/platforms/smallplatform.png';
+
 //wall
 var wallImage = new Image();
 wallImage.src = 'images/wall/wall.png';
@@ -713,14 +716,44 @@ Engine.prototype.setupPhysics = function()
     this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6 + 30, testDef.position.y * 25);
     topLeftFloor.SetUserData('Floor');
 
-    //Top Middle Left - P1 Start
+    //Middle Right
     var testFix7 = new box2d.b2FixtureDef();
     testFix7.density = 1;
     testFix7.friction = 0.5;
     var testDef7 = new box2d.b2BodyDef();
     testDef7.type = box2d.b2Body.b2_staticBody;
-    testDef7.position.x = 430 / 2 / SCALE;
-    testDef7.position.y = 490 / 2 / SCALE;
+    testDef7.position.x = 1420 / 2 / SCALE;
+    testDef7.position.y = 700 / 2 / SCALE;
+    testFix7.shape = new box2d.b2PolygonShape;
+    testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
+    var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
+    //draw smaller platform here.
+    this.hyperBout.ctx.drawImage(smallPlatformImage, testDef7.position.x , testDef7.position.y );
+    topMiddleLeft.SetUserData('Floor');
+
+    //Middle Left
+    var testFix7 = new box2d.b2FixtureDef();
+    testFix7.density = 1;
+    testFix7.friction = 0.5;
+    var testDef7 = new box2d.b2BodyDef();
+    testDef7.type = box2d.b2Body.b2_staticBody;
+    testDef7.position.x = 800 / 2 / SCALE;
+    testDef7.position.y = 700 / 2 / SCALE;
+    testFix7.shape = new box2d.b2PolygonShape;
+    testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
+    var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
+    //draw smaller platform here.
+    this.hyperBout.ctx.drawImage(smallPlatformImage, testDef7.position.x * 6 + 50, testDef7.position.y * 25);
+    topMiddleLeft.SetUserData('Floor');
+
+    //Center
+    var testFix7 = new box2d.b2FixtureDef();
+    testFix7.density = 1;
+    testFix7.friction = 0.5;
+    var testDef7 = new box2d.b2BodyDef();
+    testDef7.type = box2d.b2Body.b2_staticBody;
+    testDef7.position.x = 1100 / 2 / SCALE;
+    testDef7.position.y = 550 / 2 / SCALE;
     testFix7.shape = new box2d.b2PolygonShape;
     testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
     var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
@@ -728,20 +761,36 @@ Engine.prototype.setupPhysics = function()
     // this.hyperBout.ctx.drawImage(platformImage, testDef7.position.x * 6 + 30, testDef7.position.y * 25);
     topMiddleLeft.SetUserData('Floor');
 
-    //Bottom Middle Left - P1 Start
+    //Center top left
     var testFix7 = new box2d.b2FixtureDef();
     testFix7.density = 1;
     testFix7.friction = 0.5;
     var testDef7 = new box2d.b2BodyDef();
     testDef7.type = box2d.b2Body.b2_staticBody;
-    testDef7.position.x = 500 / 2 / SCALE;
-    testDef7.position.y = 650 / 2 / SCALE;
+    testDef7.position.x = 800 / 2 / SCALE;
+    testDef7.position.y = 370 / 2 / SCALE;
     testFix7.shape = new box2d.b2PolygonShape;
     testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
     var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
     //draw smaller platform here.
     // this.hyperBout.ctx.drawImage(platformImage, testDef7.position.x * 6 + 30, testDef7.position.y * 25);
     topMiddleLeft.SetUserData('Floor');
+
+    //Center top right
+    var testFix7 = new box2d.b2FixtureDef();
+    testFix7.density = 1;
+    testFix7.friction = 0.5;
+    var testDef7 = new box2d.b2BodyDef();
+    testDef7.type = box2d.b2Body.b2_staticBody;
+    testDef7.position.x = 1420 / 2 / SCALE;
+    testDef7.position.y = 370 / 2 / SCALE;
+    testFix7.shape = new box2d.b2PolygonShape;
+    testFix7.shape.SetAsBox((100/SCALE)/2, (10 / SCALE) / 2);
+    var topMiddleLeft = world.CreateBody(testDef7).CreateFixture(testFix7);
+    //draw smaller platform here.
+    // this.hyperBout.ctx.drawImage(platformImage, testDef7.position.x * 6 + 30, testDef7.position.y * 25);
+    topMiddleLeft.SetUserData('Floor');
+
 
     //Top Right - P2 Start
     var testFix2 = new box2d.b2FixtureDef();
@@ -749,7 +798,7 @@ Engine.prototype.setupPhysics = function()
     testFix2.friction = 0.5;
     var testDef2 = new box2d.b2BodyDef();
     testDef2.type = box2d.b2Body.b2_staticBody;
-    testDef2.position.x = 1650 / 2 / SCALE;
+    testDef2.position.x = 1760 / 2 / SCALE;
     testDef2.position.y = 240 / 2 / SCALE;
     testFix2.shape = new box2d.b2PolygonShape;
     testFix2.shape.SetAsBox((270/SCALE)/2, (20 / SCALE) / 2);

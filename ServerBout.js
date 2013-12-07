@@ -399,7 +399,7 @@ function dropPowerUp()
                         xLocation: spawnLocationX});
         _this.broadcast.emit("power", {spawnID: spawnID, powerUpID: powerUpID, 
                         xLocation: spawnLocationX});
-    }, 30000);
+    }, 60000);
 }
 /**************************************************
 ** GAME HELPER FUNCTIONS
