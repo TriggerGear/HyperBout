@@ -711,9 +711,9 @@ Engine.prototype.setupPhysics = function()
     testDef.position.x = 430 / 2 / SCALE;
     testDef.position.y = 240 / 2 / SCALE;
     testFix.shape = new box2d.b2PolygonShape;
-    testFix.shape.SetAsBox((270/SCALE)/2, (10 / SCALE) / 2);
+    testFix.shape.SetAsBox((245/SCALE)/2, (10 / SCALE) / 2);
     var topLeftFloor = world.CreateBody(testDef).CreateFixture(testFix);
-    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6 + 30, testDef.position.y * 25);
+    this.hyperBout.ctx.drawImage(platformImage, testDef.position.x * 6 + 50, testDef.position.y * 25 + 15);
     topLeftFloor.SetUserData('Floor');
 
     //Bottom Right
@@ -801,9 +801,9 @@ Engine.prototype.setupPhysics = function()
     testDef2.position.x = 1760 / 2 / SCALE;
     testDef2.position.y = 240 / 2 / SCALE;
     testFix2.shape = new box2d.b2PolygonShape;
-    testFix2.shape.SetAsBox((270/SCALE)/2, (10 / SCALE) / 2);
+    testFix2.shape.SetAsBox((245/SCALE)/2, (10 / SCALE) / 2);
     var topRightFloor = world.CreateBody(testDef2).CreateFixture(testFix2);
-    this.hyperBout.ctx.drawImage(platformImage, testDef2.position.x * 25 - 6, testDef2.position.y * 25);
+    this.hyperBout.ctx.drawImage(platformImage, testDef2.position.x * 25 + 20, testDef2.position.y * 25 + 15);
     topRightFloor.SetUserData('Floor');
     
     //Bottom Left Platform- P3 Start
@@ -870,7 +870,7 @@ Engine.prototype.setupPhysics = function()
     debugDraw.SetLineThickness(1.0);
     //Says what we want to draw
     debugDraw.SetFlags(box2d.b2DebugDraw.e_shapeBit | box2d.b2DebugDraw.e_jointBit);
-    world.SetDebugDraw(debugDraw);
+    // world.SetDebugDraw(debugDraw);
 };
 
 //Array of input handlers
