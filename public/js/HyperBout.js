@@ -1400,6 +1400,8 @@ Engine.prototype.createExplosion = function(bombBody, explosions)
     bombExplosion.SetUserData(bombBody.GetUserData().charAt(4)+'explosion0');
 
     explosions.push(bombExplosion);
+    var explosionSound = new Audio('/audiofiles/explosionSound.wav');
+    explosionSound.play();
 };
 
 Engine.prototype.animateExplosions = function(explosionAnimationTime, gameTime, explosions, graveYard, animateType)
